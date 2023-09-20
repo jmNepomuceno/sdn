@@ -1,0 +1,64 @@
+
+https://drive.google.com/file/d/1pTVTsv_n7ZTU12jk7WgGSeSZTpUIu3rF/view?usp=drivesdk
+http://192.168.42.10:8025/#
+
+https://chat.openai.com/c/44ee06cd-630a-4c64-9e3a-1668b3f5c579
+
+id, last_name, first_name, middle_name, birthday, mobile_no, username, password
+
+
+
+SDN
+hospital -> the whos gonna register
+username and password -> hospital upon register
+
+GENERAL FLOW = register -> OTP saved sa database -> send mail -> loading screen -> OTP modal -> confirmation -> "AUTHORIZATION KEY?"
+|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+visual validation = confirmation na navalidate na = prompt/modal NOT SURE IF MODAL OR SIMPLE WINDOW PROMPT????
+
+mobile number , ####-####-### = DONE
+tele number , ###-#### = DONE
+email, #####@gmail.com = DONE
+pag na close yung modal -> destroy or delete the whole row = DONE
+pag mali OTP -> update OTP sa DB ->  cked the RESEND OTP -> update OTP sa DB -> resend OTP = DONE
+set VERIFIED in DB after checking the OTP from user and from DB = DONE
+
+START SESSION - REGISTER - END SESSION
+
+9/18/23
+ZIP CODE -> length = DONE
+HOSPITAL DIRECTOR -> ONLY LETTERS = DONE
+POINT PERSON -> ONLY LETTERS = DONE
+
+VERIFICATION SUCCESS MODAL OR PROMPT
+VERIFICATION NOT SUCCESS MODAL OR PROMPT
+
+//after verification -> back to home page -> SDN main login form
+
+---------------------------------
+admin module -> LoI -> verification
+---------------------------------
+CRCF , OTP
+2 users inside the hospital registered acc
+history log sa SDN
+tutorial view on how to use SDN on first logged
+
+9/19/2023
+change the OTP generation code = DONE
+fix the OTP modal input fields = DONE
+implemenet the CSRF = SOON
+authorization form = DONE
+
+9/20/2023
+AUTHORIZATION -> INTO DATABASE -> DRAFT UNTIL CIPHER KEY IS NOT OFFICIATED.
+UI/UX main/home page
+implementation ng UI/UX main/home page
+admin module sa navbar or side bar, para makapag send ng cipher key
+
+mini to do list
+icon/home button = clicked = close all = refresh page
+
+ISNTALL GITHUB :)))
+
+
