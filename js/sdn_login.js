@@ -16,6 +16,12 @@ $(document).ready(function(){
             data:data,
             success: function(response){
                 // console.log(response)
+
+                //using query parameters
+                // window.location.href = response + "?user=" + encodeURIComponent("admin")
+
+                // using session storage
+                sessionStorage.setItem("user", "admin");
                 window.location.href = response
             }
         })

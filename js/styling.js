@@ -146,6 +146,9 @@ const sdn_hospital_landline_no = document.querySelector('#sdn-landline-no')
 const sdn_email_adress = document.querySelector('#sdn-email-address')
 const sdn_zip_code = document.querySelector('#sdn-zip-code')
 
+// text only for last, first and middle name in sdn authorization form
+const sdn_autho_last_name = document.querySelector('#sdn-autho-last-name-id')
+
 const mobileNumValue = (inputID) => {
     // Remove any non-numeric characters
     let value = inputID.value.replace(/[^0-9]/g, '');
@@ -162,7 +165,17 @@ const mobileNumValue = (inputID) => {
       inputID.value = value;
 }
 
+sdn_autho_last_name.addEventListener('input', function(e){
+    const regex = /^[a-zA-Z\s]*$/;
+
+    if (!regex.test(e.target.value)) {
+      // If a non-text character is entered, remove it from the input.
+      e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+    }
+})
+
 $("#sdn-landline-no").on("input", function(){
+    console.log(sdn_hospital_landline_no.value)
     // Remove any non-numeric characters
     let value = sdn_hospital_landline_no.value.replace(/[^0-9]/g, '');
     // Add dashes at specific positions

@@ -1,12 +1,15 @@
+*{
+    margin:0px;
+    padding:0px;
+}
 body{
     height: screen;
-    background: lavender;
     overflow: hidden;
 }
 
-.loader{
+/* .loader{
     color:red;
-}
+} */
 
 /* .loader {
     border: 16px solid #f3f3f3;

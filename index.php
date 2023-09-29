@@ -1,9 +1,7 @@
 <?php 
-    //session_start();
-
     include('database/connection2.php');
-    include('php/sample_loc_db.php');
-    include('php/csrf/session.php');
+    session_start();
+    // include('php/csrf/session.php');
     // sort($municipality);
     // echo '<br>';
     // echo $_SESSION['_csrf_token'];
@@ -28,7 +26,25 @@
     
     $sdn_autho_id = array("sdn-auth-hospital-code", "sdn-cipher-key" , "sdn-last-name", "sdn-first-name", "sdn-middle-name", "sdn-extension-name", "sdn-username" , "sdn-password", "sdn-confirm-password");
 
+    if($_POST){
+        $sdn_username = $_POST['sdn_username'];
+        $sdn_password = $_POST['sdn_password'];
 
+        //query to check if the user is already logged in.
+        if($sdn_username != "" && $sdn_password != ""){
+            $_SESSION['user_name'] = "John Marvin Nepomuceno";
+            $_SESSION['user_password'] = "password";
+            header('Location: ./main.php');
+        }
+
+
+        //verification for admin user logged in
+        if($sdn_username == "admin" && $sdn_password == "admin"){
+            $_SESSION['user_name'] = $sdn_username;
+            $_SESSION['user_password'] = $sdn_password;
+            header('Location: ./main.php');
+        } 
+    }
 
     // if($_SERVER['REQUEST_METHOD'] == 'POST') {
     //     $hospital_code = $_POST['hospital_code'];
@@ -216,9 +232,9 @@
 
 
                 <div class="nav-div flex flex-row justify-around items-center w-full sm:w-1/4 h-full  mr-10 sm:p-5 text-white text-xl">
-                    <a><label for="" class="cursor-pointer">Home</label></a>
-                    <a><label for="" class="cursor-pointer">Services</label></a>
-                    <a><label for="" class="cursor-pointer">About</label></a>
+                    <a><h4 class="cursor-pointer">Home</h4></a>
+                    <a><h4 class="cursor-pointer">Services</h4></a>
+                    <a><h4 class="cursor-pointer">About</h4></a>
                 </div> 
             </header>
 
@@ -319,7 +335,7 @@
                             <?php for ($x = 0; $x < 8; $x++) { ?>
                                 <div class="w-11/12 h-[90px] border flex flex-col justify-start items-center bg-white border-2 mt-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg font-bold ml-3"> <span class="text-red-600">*</span> <?php echo $tm_fields[$x] ?> </label>
+                                        <label class="text-lg font-bold ml-3" for=<?php echo $tm_id[$x] ?>> <span class="text-red-600">*</span> <?php echo $tm_fields[$x] ?> </label>
                                     </div>
                                     <?php if($x == 7 || $x == 6){ ?>
                                         <input id=<?php echo $tm_id[$x] ?> type="password" name=<?php echo $tm_input_names[$x] ?> class="w-[95%] h-[40%] border-2 rounded-lg outline-none p-2" autocomplete="off">
@@ -372,14 +388,15 @@
                     <div class="flex flex-col justify-start items-center w-full">
                         <div class="w-11/12 h-[100px] rounded-lg border flex flex-col justify-start items-center bg-white border-2 mt-1">
                             <div class="w-full flex flex-row justify-start items-center p-1">
-                                <label for="" class="text-lg font-bold ml-3"> <span class="text-red-600">*</span> Username </label>
+                                <h3 class="text-lg font-bold ml-3"> <span class="text-red-600">*</span> Username </h3>
                             </div>
-                            <input type="text" name="username" class="uppercase w-[95%] h-[50%] border-2 border-sdnRegistraionColor rounded-lg outline-none p-2" required autocomplete="off">
+                            <input type="text" name="username" id="tms-username-txt" class="uppercase w-[95%] h-[50%] border-2 border-sdnRegistraionColor rounded-lg outline-none p-2" required autocomplete="off">
+                            
                         </div>
 
                         <div class="w-11/12 h-[100px] rounded-lg border flex flex-col justify-start items-center bg-white border-2 mt-3">
                             <div class="w-full flex flex-row justify-start items-center p-1">
-                                <label for="" class="text-lg font-bold ml-3"> <span class="text-red-600">*</span> Password </label>
+                                <h3 class="text-lg font-bold ml-3"> <span class="text-red-600">*</span> Password </h3>
                             </div>
                             <input type="password" name="password" class="uppercase w-[95%] h-[50%] border-2 border-sdnRegistraionColor rounded-lg outline-none p-2" required autocomplete="off">
                         </div>
@@ -413,73 +430,139 @@
                         </p>
                     </div>
                     <div class="sdn-registration-modal-div w-full h-[70%] overflow-y-scroll flex flex-col justify-start items-center bg-teleCreateAccColor p-2">
-                        <form action="index.php" class="w-full h-full flex flex-col justify-start items-center" method="post" novalidate>
-                            <input type="hidden" name="_csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
-                            <?php for ($x = 0; $x < count($sdn_fields); $x++) { ?>
-                                <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
-                                    <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-xs sm:text-xl  ml-3"> <span class="text-red-600"></span> <?php echo $sdn_fields[$x] ?> </label>
-                                    </div>
-                                    <?php if($x == 7){ ?>
-                                        <input type="email" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
-                                    <?php }else if($x == 10){ ?>
-                                        <input type="text" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z]/i.test(event.key)">
-                                    <?php }else if($x == 12){ ?>
-                                        <input type="text" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z]/i.test(event.key)">
-                                    <?php }else if($x == 6){ ?>
-                                        <input type="number" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="pointer-events-none border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2 text-center" required autocomplete="off">
-                                    <?php }else if($x == 2){ ?>
-                                        <!-- <input type="number" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off"> -->
-                                        <select id="sdn-region-select" required onchange="getLocations('region')" name="region" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
-                                            <option value="" class="">Choose a Region</option>
-                                            <?php 
-                                                $stmt = $pdo->query('SELECT region_code, region_description from region');
-                                                while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-                                                    echo '<option value="' , $data['region_code'] , '">' , $data['region_description'] , '</option>';
-                                                }                                        
-                                            ?>
-                                        </select>
-                                    <?php }else if($x == 3){ ?>
-                                        <!-- <input type="number" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off"> -->
-                                        <select id="sdn-province-select" required onchange="getLocations('province')" name="province" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
-                                            <option value="" class="">Choose a Province</option>
-                                        </select>
-                                    <?php }else if($x == 4){ ?>
-                                        <!-- <input type="number" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off"> -->
-                                        <select id="sdn-city-select" required onchange="getLocations('city')" name="municipality" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
-                                            <option value="" class="">Choose a Municipality</option>
-                                        </select>
+                        <form action="index.php" id="sdn-modal-field" class="w-full h-full flex flex-col justify-start items-center" method="post" novalidate>
+                            
 
-                                    <?php }else if($x == 5){ ?>
-                                        <!-- <input type="number" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off"> -->
-                                        <select id="sdn-brgy-select" name="barangay" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
-                                            <option value="" class="">Choose a Barangay</option>
-                                        </select>
-                                    <?php } else { ?>
-                                        <input type="text" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class=" border-2 border-sdnRegistraionColor uppercase w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
-                                    <?php } ?> 
-                                    <!-- <input type="text" id=<?php echo $sdn_id[$x] ?> name=<?php echo $sdn_input_names[$x] ?> class=" border-2 border-sdnRegistraionColor uppercase w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off"> -->
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-name" > <span class="text-red-600"></span> Hospital Name </label>   
                                 </div>
-                            <?php } ?>
+                                <input type="text" id="sdn-hospital-name" name="hospital_name" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-code" > <span class="text-red-600"></span> Hospital Code </label>   
+                                </div>
+                                <input type="number" id="sdn-hospital-code" name="hospital_code" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-region-select" > <span class="text-red-600"></span> Adress: Region </label>   
+                                </div>
+                                <select id="sdn-region-select" required onchange="getLocations('region' , 'sdn-region')" name="region" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none" autocomplete="off">
+                                    <option value="" class="">Choose a Region</option>
+                                    <?php 
+                                        $stmt = $pdo->query('SELECT region_code, region_description from region');
+                                        while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
+                                            echo '<option value="' , $data['region_code'] , '">' , $data['region_description'] , '</option>';
+                                        }                                        
+                                    ?>
+                                    </select>
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-province-select" > <span class="text-red-600"></span> Address: Province </label>   
+                                </div>
+                                <select id="sdn-province-select" required onchange="getLocations('province' , 'pa-region')" name="province" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                    <option value="" class="">Choose a Province</option>
+                                </select>
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-city-select" > <span class="text-red-600"></span> Address: Municipality </label>   
+                                </div>
+                                <select id="sdn-city-select" required onchange="getLocations('city', 'pa-city')" name="municipality" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                    <option value="" class="">Choose a Municipality</option>
+                                </select>
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-brgy-select" > <span class="text-red-600"></span> Address: Barangay </label>   
+                                </div>
+                                <select id="sdn-brgy-select" name="barangay" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                    <option value="" class="">Choose a Barangay</option>
+                                </select>
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-zip-code" > <span class="text-red-600"></span> Zip Code </label>   
+                                </div>
+                                <input type="number" id="sdn-zip-code" name="zip_code" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-email-address" > <span class="text-red-600"></span> Email Address </label>   
+                                </div>
+                                <input type="email" id="sdn-email-address" name="email_address" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">>
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-landline-no" > <span class="text-red-600"></span> Hospital Landline No. </label>   
+                                </div>
+                                <input type="text" id="sdn-landline-no" name="landline_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-mobile-no" > <span class="text-red-600"></span> Hospital Mobile No. </label>   
+                                </div>
+                                <input type="text" id="sdn-hospital-mobile-no" name="hospital_mobile_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-director" > <span class="text-red-600"></span> Hospital Director </label>   
+                                </div>
+                                <input type="text" id="sdn-hospital-director" name="hospital_director" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z]/i.test(event.key)">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-director-mobile-no" > <span class="text-red-600"></span> Hospital Director Mobile No. </label>   
+                                </div>
+                                <input type="text" id="sdn-hospital-director-mobile-no" name="hospital_director_mobile_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-point-person" > <span class="text-red-600"></span> Point Person </label>   
+                                </div>
+                                <input type="text" id="sdn-point-person" name="point_person" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z]/i.test(event.key)">
+                            </div>
+
+                            <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
+                                <div class="w-full flex flex-row justify-start items-center p-1">
+                                    <label class="text-xs sm:text-xl  ml-3" for="sdn-point-person-mobile-no" > <span class="text-red-600"></span> Point Person Mobile No. </label>   
+                                </div>
+                                <input type="text" id="sdn-point-person-mobile-no" name="point_person_mobile_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                            </div>
 
                             <!-- <div class="flex flex-col justify-start items-center w-full border-2 border-t-sdnRegistraionColor mt-3">
                                 <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-xs sm:text-lg font-bold ml-3"> <span class="text-red-600">*</span> Username</label>
+                                        <label class="text-xs sm:text-lg font-bold ml-3"> <span class="text-red-600">*</span> Username</label>
                                     </div>
                                     <input type="text" name='username' class="border-2 border-sdnRegistraionColor uppercase w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                                 </div>
 
                                 <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-xs sm:text-lg font-bold ml-3"> <span class="text-red-600">*</span> Password</label>
+                                        <label class="text-xs sm:text-lg font-bold ml-3"> <span class="text-red-600">*</span> Password</label>
                                     </div>
                                     <input type="text" name='password' class="border-2 border-sdnRegistraionColor uppercase w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                                 </div>
 
                                 <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-xs sm:text-lg font-bold ml-3"> <span class="text-red-600">*</span> Confirm Password</label>
+                                        <label class="text-xs sm:text-lg font-bold ml-3"> <span class="text-red-600">*</span> Confirm Password</label>
                                     </div>
                                     <input type="text" name='confirm_password' class="border-2 border-sdnRegistraionColor uppercase w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                                 </div>
@@ -494,55 +577,55 @@
                     <!-- SDN AUTORIZATION MODAL DIV -->
 
                     <div class="sdn-authorization-modal-div hidden w-full h-[70%] overflow-y-scroll flex flex-col justify-start items-center bg-teleCreateAccColor p-2">
-                        <form class="w-full h-full flex flex-col justify-start items-center">
+                        <form class="w-full h-full flex flex-col justify-start items-center" id="sdn-autho-form">
                             
                             <!-- HOSPITAL CODE AND CIPHER KEY DIV -->
                             <div class="w-11/12 h-auto border-2 border-b-[#808080] flex flex-col justify-around items-center">
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Hospital Code </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-hospital-code-id"> <span class="text-red-600">*</span> Hospital Code </label>
                                     </div>
-                                    <input id="hospital-code-id" type="number" name="sdn-hospital-code" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-hospital-code-id" type="number" name="sdn-hospital-code" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Cipher Key </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-cipher-key-id"> <span class="text-red-600">*</span> Cipher Key </label>
                                     </div>
-                                    <input id="cipher-key-id" type="text" name="sdn-cipher-key" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-cipher-key-id" type="text" name="sdn-cipher-key" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
                             </div>
 
                             <!-- LAST, FIRST, MIDDLE, EXTENSION NAME -->
                             <div class="w-11/12 h-auto border-2 border-b-[#808080] flex flex-col justify-around items-center mt-3">
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Last Name </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-last-name-id"> <span class="text-red-600">*</span> Last Name </label>
                                     </div>
-                                    <input id="last-name-id" type="text" name="sdn-last-name" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-last-name-id" type="text" name="sdn-last-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> First Name </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-first-name-id"> <span class="text-red-600">*</span> First Name </label>
                                     </div>
-                                    <input id="first-name-id" type="text" name="sdn-first-name" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-first-name-id" type="text" name="sdn-first-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Middle Name </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-middle-name-id"> <span class="text-red-600">*</span> Middle Name </label>
                                     </div>
-                                    <input id="middle-name-id" type="text" name="sdn-middle-name" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-middle-name-id" type="text" name="sdn-middle-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Extension Name </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-ext-name-id"> <span class="text-red-600">*</span> Extension Name </label>
                                     </div>
-                                    <input id="ext-name-id" type="text" name="sdn-extension-name" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-ext-name-id" type="text" name="sdn-extension-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
                             </div>
@@ -550,31 +633,31 @@
                             <!-- Username, Password and Confirm Password div -->
                             <div class="w-11/12 h-auto flex flex-col justify-around items-center mt-3">
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Username </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-username"> <span class="text-red-600">*</span> Username </label>
                                     </div>
-                                    <input id="sdn-autho-username" type="text" name="sdn-username" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-username" type="text" name="sdn-username" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Password </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-password"> <span class="text-red-600">*</span> Password </label>
                                     </div>
-                                    <input id="sdn-autho-password" type="text" name="sdn-first-name" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-password" type="text" name="sdn-first-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
-                                <div class="w-full h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
+                                <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label for="" class="text-lg ml-3"> <span class="text-red-600">*</span> Confirm Password </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-confirm-password"> <span class="text-red-600">*</span> Confirm Password </label>
                                     </div>
-                                    <input id="sdn-autho-confirm-password" type="text" name="sdn-confirm-password" class="w-[95%] h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-confirm-password" type="text" name="sdn-confirm-password" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
                             </div>
 
                             <h1 class="text-red-600 hidden" id="tms-match-h1"> Password do not match!</h1>
                             <div class="w-full flex flex-row justify-center items-center mt-3 mb-3">
-                                <button name="sdn-autho-register-btn" id="sdn-autho-register-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4">Verify</button>
+                                <button name="sdn-autho-verify-btn" id="sdn-autho-verify-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4">Verify</button>
                             </div>
                         </form>
 
@@ -597,7 +680,6 @@
                 </div>
 
                 <div class="w-11/12 h-28 sm:h-36 flex flex-row justify-between items-center rounded-2xl ">
-
                     <div class="w-[48px] sm:w-[90px] h-full rounded-lg bg-white flex flex-col justify-center items-center text-6xl">
                         <input type="number" id="otp-input-1" class="w-full h-full rounded-lg text-center outline-none" placeholder="-">
                     </div>
@@ -651,7 +733,7 @@
             </div>
 
             <!-- SDN LOGIN MODAL -->
-            <div class="sdn-login-modal-div z-10 absolute flex flex-col justify-center items-center w-full h-screen">
+            <div class="sdn-login-modal-div hidden absolute flex flex-col justify-center items-center w-full h-screen">
                 <div class="absolute flex flex-col justify-start items-center gap-3 w-11/12 sm:w-2/6 h-[400px] translate-y-[50px] sm:translate-y-[50px] translate-x-50px border bg-[#ecf0f1] rounded-lg">
                     <div class="bg-mainColor w-full h-[50px] rounded-t-lg text-white flex flex-row justify-between items-center">
                         <h3 class="ml-5 text-xl">SERVICE DELIVERY NETWORK</h3>
@@ -671,18 +753,18 @@
                             <h1 class="text-white text-xl ml-2">Telemedicine Service</h1>
                         </div>
                     </div> -->
-                    <form class="w-full h-full flex flex-col justify-around items-center rounded-lg"> 
+                    <form action="index.php" method="POST" class="w-full h-full flex flex-col justify-around items-center rounded-lg"> 
                         <div class="flex flex-col justify-start items-center w-full">
                             <div class="w-11/12 h-[100px] rounded-lg border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 mt-1">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
-                                    <label for="" class="text-lg font-bold ml-3"> <span class="text-red-600">*</span> Username </label>
+                                    <label class="text-lg font-bold ml-3" for="sdn-username"> <span class="text-red-600">*</span> Username </label>
                                 </div>
                                 <input type="text" name="sdn_username" id="sdn-username" class="w-[95%] h-[50%] border-2 border-sdnRegistraionColor rounded-lg outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 h-[100px] rounded-lg border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
-                                    <label for="" class="text-lg font-bold ml-3"> <span class="text-red-600">*</span> Password </label>
+                                    <label class="text-lg font-bold ml-3" for="sdn-password"> <span class="text-red-600">*</span> Password </label>
                                 </div>
                                 <input type="password" name="sdn_password" id="sdn-password" class="w-[95%] h-[50%] border-2 border-sdnRegistraionColor rounded-lg outline-none p-2" required autocomplete="off">
                             </div>
@@ -765,7 +847,6 @@
     <script src="./js/resend_otp.js?v=<?php echo time(); ?>"></script>
     <script src="./js/verify_otp.js?v=<?php echo time(); ?>"></script>
     <script src="./js/location.js?v=<?php echo time(); ?>"></script>
-    <script src="./js/sdn_login.js?v=<?php echo time(); ?>"></script>
-
+    <!-- <script src="./js/sdn_login.js?v=<?php echo time(); ?>"></script> -->
 </body>
 </html>

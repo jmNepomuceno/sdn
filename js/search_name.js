@@ -1,19 +1,46 @@
-<?php
+function calculateAge(dateOfBirth) {
+    // Create a Date object for the current date
+    const currentDate = new Date();
 
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- <link rel="stylesheet" href="index.css"> -->
-</head>
-<body>
-// SEARCH QUERY RESULT
+    // Parse the date of birth string into a Date object
+    const dob = new Date(dateOfBirth);
+
+    // Calculate the time difference in milliseconds
+    const timeDiff = currentDate - dob;
+
+    // Calculate the age in years
+    const age = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365.25));
+
+    return age;
+}
+
+
+$(document).ready(function(){
+    $('#search-patient-btn').on('click' , function(event){
+        event.preventDefault();
+
+        const search_lname = document.querySelector('#search-lname').value
+        const search_fname = document.querySelector('#search-fname').value
+        const search_mname = document.querySelector('#search-mname').value
+
+        const data = {
+            search_lname: search_lname,
+            search_fname: search_fname,
+            search_mname: search_mname
+        }
+
+        // console.log(data)
+
+        // // console.log(data.otp_number, " type of " , typeof(data.otp_number))
+        // // console.log(total)
+        $.ajax({
+            url: './php/search_name.php',
+            method: "POST",
+            data:data,
+            success: function(response){
+                console.log(response)
+
+                // SEARCH QUERY RESULT
                 const search_query_result = document.querySelector('#search-result-div')
                 while (search_query_result.hasChildNodes()) {
                     search_query_result.removeChild(search_query_result.firstChild);
@@ -89,23 +116,22 @@
                         document.querySelector('#hperson-last-name').value = response[i].pat_last_name
                         document.querySelector('#hperson-first-name').value = response[i].pat_first_name
                         document.querySelector('#hperson-middle-name').value = response[i].pat_middle_name
-                        // document.querySelector('#hperson-ext-name').value = response[i].pat_last_name
+                        document.querySelector('#hperson-ext-name').value = response[i].pat_suffix_name
 
                         //converting of birthdate
                         const timestamp = Date.parse(response[i].pat_bdate);
                         const date = new Date(timestamp)
                         let year = date.getFullYear()
                         let month = (date.getMonth() <= 9 ) ? "0" + (date.getMonth() + 1).toString() : date.getMonth()
-                        let day = date.getDate()
+                        let day = (date.getDate() < 10) && "0" + date.getDate().toString()
                         document.querySelector('#hperson-birthday').value = year.toString() + "-" + month.toString() + "-" + day.toString()
 
                         //calculating the age based on day of birth
-
                         const dateOfBirth = year.toString() + "-" + month.toString() + "-" + day.toString()
                         const age = calculateAge(dateOfBirth);
                         document.querySelector('#hperson-age').value = age
 
-                        document.querySelector('#hperson-gender').value = response[0].patsex
+                        document.querySelector('#hperson-gender').value = response[i].patsex
 
 
                         let cstat = ""
@@ -116,7 +142,7 @@
                             case "4": cstat = "Widowed";break;
                             default: break;
                         }
-                        document.querySelector('#hperson-civil-status').value = cstat
+                        document.querySelector('#hperson-civil-status').value = response[i].patcstat
                         
 
                         // let religion_strings = 
@@ -139,4 +165,8 @@
 
                     })
                 }
-</html>
+            }
+        })
+
+    })
+})
