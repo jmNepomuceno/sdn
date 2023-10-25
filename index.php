@@ -1,10 +1,20 @@
 <?php 
     include('database/connection2.php');
     session_start();
+    // $_SESSION['hospital_code'];
     // include('php/csrf/session.php');
     // sort($municipality);
     // echo '<br>';
     // echo $_SESSION['_csrf_token'];
+
+    // if (!empty($_SESSION)) {
+    //     // Iterate through all the session variables and their values
+    //     foreach ($_SESSION as $key => $value) {
+    //         echo "Session variable: $key = $value<br>";
+    //     }
+    // } else {
+    //     echo "The session is empty.";
+    // }
 
     // echo $province['Aurora']['province_code'];
     $tm_fields = array("Last Name","First Name","Middle Name", "Birthday" ,"Mobile No." ,"Username" ,"Password" ,"Confirm Password");
@@ -27,107 +37,106 @@
     $sdn_autho_id = array("sdn-auth-hospital-code", "sdn-cipher-key" , "sdn-last-name", "sdn-first-name", "sdn-middle-name", "sdn-extension-name", "sdn-username" , "sdn-password", "sdn-confirm-password");
 
     if($_POST){
+        $_SESSION["process_timer"] = [] ;
+         
         $sdn_username = $_POST['sdn_username'];
         $sdn_password = $_POST['sdn_password'];
+        $account_validity = false;
+        // //query to check if the user is already logged in.
+        // if($sdn_username != "" && $sdn_password != ""){
+        //     $_SESSION['user_name'] = "John Marvin Nepomuceno";
+        //     $_SESSION['user_password'] = "password";
+        //     header('Location: ./main.php');
+        // }
 
-        //query to check if the user is already logged in.
-        if($sdn_username != "" && $sdn_password != ""){
-            $_SESSION['user_name'] = "John Marvin Nepomuceno";
-            $_SESSION['user_password'] = "password";
-            header('Location: ./main.php');
+        // login verifaction for the outside users
+        if($sdn_username != "admin" && $sdn_password != "admin"){
+            try{
+                $stmt = $pdo->prepare('SELECT * FROM sdn_users WHERE username = ? AND password = ?');
+                $stmt->execute([$sdn_username , $sdn_password]);
+                $data_child = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                if(count($data_child) == 1){
+                    $account_validity = true;
+                }
+
+                // echo '<pre>'; print_r($data_child); echo '</pre>';
+                // echo $data_child[0]['hospital_code'];
+
+
+                // $stmt_all_data = $pdo->prepare("SELECT sdn_hospital.*
+                //                                 FROM sdn_hospital
+                //                                 JOIN sdn_users ON sdn_hospital.hospital_code = sdn_users.hospital_code
+                //                                 WHERE sdn_users.hospital_code = 6574");
+
+                // $stmt_all_data->execute();
+                // $data_all_data = $stmt_all_data->fetchAll(PDO::FETCH_ASSOC);
+                
+                if($account_validity == true){
+                    $stmt = $pdo->prepare('SELECT * FROM sdn_hospital WHERE hospital_code = ?');
+                    $stmt->execute([$data_child[0]['hospital_code']]);
+                    $data_parent = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    
+                    // echo '<pre>'; print_r($data_parent); echo '</pre>';
+                    $_SESSION['hospital_code'] = $data_parent[0]['hospital_code'];
+                    $_SESSION['hospital_name'] = $data_parent[0]['hospital_name'];
+                    $_SESSION['hospital_email'] = $data_parent[0]['hospital_email'];
+                    $_SESSION['hospital_landline'] = $data_parent[0]['hospital_landline'];
+                    $_SESSION['hospital_mobile'] = $data_parent[0]['hospital_mobile'];
+                    $_SESSION['hospital_name'] = $data_parent[0]['hospital_name'];
+
+                    $_SESSION['user_name'] = $data_parent[0]['hospital_name'];
+                    $_SESSION['user_password'] = $data_child[0]['password'];
+                    $_SESSION['first_name'] = $data_child[0]['user_firstname'];
+                    $_SESSION['last_name'] = $data_child[0]['user_lastname'];
+                    $_SESSION['middle_name'] = $data_child[0]['user_middlename'];
+                    $_SESSION['user_type'] = 'outside';
+
+
+                    header('Location: ./main.php');
+                }else{
+                    echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                            <script type="text/javascript">
+                                var jQuery = $.noConflict(true);
+                                jQuery(document).ready(function() {
+                                    jQuery("#modal-title").text("Warning")
+                                    jQuery("#modal-icon").addClass("fa-triangle-exclamation")
+                                    jQuery("#modal-icon").removeClass("fa-circle-check")
+                                    jQuery("#modal-body").text("Invalid username and password!")
+                                    jQuery("#ok-modal-btn").text("Close")
+                                    jQuery("#myModal").modal("show");
+                                });
+                            </script>';
+                }
+                
+            }catch(PDOException $e){
+                echo "Error: " . $e->getMessage();
+            }
+
         }
-
+        
 
         //verification for admin user logged in
         if($sdn_username == "admin" && $sdn_password == "admin"){
-            $_SESSION['user_name'] = $sdn_username;
-            $_SESSION['user_password'] = $sdn_password;
+            $_SESSION['user_name'] = "Bataan General Hospital and Medical Center";
+            $_SESSION['hospital_code'] = '1437';
+            $_SESSION['hospital_name'] = "Bataan General Hospital and Medical Center";
+            $_SESSION['hospital_landline'] = '333-3333';
+            $_SESSION['hospital_mobile'] = '3333-3333-333';
+            // $_SESSION['user_name'] = "Administrator";
+            // $_SESSION['user_password'] = $sdn_password;
+
+            // $_SESSION['user_name'] = '';
+            // $_SESSION['user_password'] = '';
+            $_SESSION['last_name'] = 'Administrator';
+            $_SESSION['first_name'] = '';
+            $_SESSION['middle_name'] = '';
+            $_SESSION['user_type'] = 'admin';
+            // $_SESSION["process_timer"] = [];
             header('Location: ./main.php');
         } 
     }
-
-    // if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //     $hospital_code = $_POST['hospital_code'];
-    //     $hospital_name = $_POST['hospital_name'];
-    //     $hospital_region_code = $_POST['hospital_region_code'];
-    //     $hospital_province_code = $_POST['hospital_province_code'];
-    //     $hospital_municipality_code = $_POST['hospital_municipality_code'];
-    //     $hospital_barangay_code = ['hospital_barangay_code'];
-    //     $hospital_zip_code = ['hospital_zip_code'];
-    //     $hospital_email = $_POST['hospital_email'];
-    //     $hospital_landline = $_POST['hospital_landline'];
-    //     $hospital_mobile = $_POST['hospital_mobile'];
-    //     $hospital_director = $_POST['hospital_director'];
-    //     $hospital_director_mobile = $_POST['hospital_director_mobile'];
-    //     $hospital_isVerified =$_POST['hospital_isVerified'];
-    //     $hospital_OTP =$_POST['hospital_OTP'];
-    //     $hospital_autKey =$_POST['hospital_autKey'];
-    //     $hospital_isAuthorized = $_POST['hospital_isAuthorized'];
-
-    //     $hash = password_hash($password, PASSWORD_DEFAULT);
-
-    //     if ($password === $confirmPassword) {
-    //         if(empty($hospital_code) || empty($hospital_name) || empty($hospital_region_code) || empty($hospital_province_code) || empty($hospital_municipality_code) || empty($hospital_barangay_code)|| empty($hospital_zip_code)|| empty($hospital_email)|| empty($hospital_landline)|| empty($hospital_mobile)|| empty($hospital_director)|| empty($hospital_director_mobile)|| empty($hospital_isVerified)|| empty($hospital_OTP)|| empty($hospital_autKey)|| empty($hospital_isAuthorized)) {
-    //         // $status = "All fields are compulsory.";
-    //         } 
-    //             else {
-
-    //             $sql = "INSERT INTO sdn (hospital_code, hospital_name, hospital_region_code, hospital_province_code,
-    //                             hospital_municipality_code, hospital_barangay_code, hospital_zip_code, hospital_email, hospital_landline, hospital_mobile, hospital_director,hospital_director_mobile,hospital_isVerified ,hospital_OTP ,hospital_autKey ,hospital_isAuthorized )
-                        
-    //                         VALUES (:hospital_code, :hospital_name, :hospital_region_code, :hospital_province_code, :hospital_municipality_code,
-    //                             :hospital_barangay_code, :hospital_zip_code, :hospital_email, :hospital_landline, :hospital_mobile, :hospital_director, :hospital_director_mobile , :hospital_isVerified , :hospital_OTP,hospital_autKey ,hospital_isAuthorized)";    
-
-    //             $stmt = $pdo->prepare($sql);
-                
-    //             $stmt->execute([ 'hospital_code' => $hospital_code,
-    //                             'hospital_name' => $hospital_name,
-    //                             'hospital_region_code' => $hospital_region_code,
-    //                             'hospital_province_code' => $hospital_province_code,
-    //                             'hospital_municipality_code' => $hospital_municipality_code,
-    //                             'hospital_barangay_code' => $hospital_barangay_code,
-    //                             'hospital_zip_code' => $hospital_zip_code,
-    //                             'hospital_email' => $hospital_email,
-    //                             'hospital_landline' => $hospital_landline, // Fix this line
-    //                             'hospital_mobile' => $hospital_mobile,
-    //                             'hospital_director' => $hospital_director,
-    //                             'hospital_director_mobile' => $hospital_director_mobile,
-    //                             'hospital_isVerified' => $hospital_isVerified,
-    //                             'hospital_OTP' => $hospital_OTP,
-    //                             'hospital_autKey' => $hospital_autKey,
-    //                             'hospital_isAuthorized' => $hospital_isAuthorized,
-                                
-    //             ]);
-                    
-    //             $hospital_name = "";
-    //             $point_person = ""; 
-    //             $address_province = "";
-    //             $address_municipality = "";
-    //             $address_barangay = "";
-    //             $email_address = "";
-    //             $landline_no = "";
-    //             $mobile_no = "";
-    //             $alternate_no = "";
-    //             $username = "";
-    //             $password = "";
-
-    //             // echo "Registered Successfully";
-    //             echo isset($stmt);
-    //         }
-    //     }
-    // }
-    
-    // if($_POST){
-    //     $sdn_username = $_POST['sdn_username'];
-    //     $sdn_password = $_POST['sdn_password'];
-    
-    //     // echo $sdn_password;
-
-    //     if($sdn_username == "admin" && $sdn_password == "admin"){
-    //         header("Location: ./php/components/home.php");
-    //     }
-    // }
-   
 ?>
 
 
@@ -140,8 +149,9 @@
     <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="index.css">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <!-- <link rel="stylesheet" href="index.css"> -->
+    <link rel="stylesheet" href="output.css">
 
     <style>
         .loader {
@@ -171,44 +181,7 @@
       }
     </style>
 
-    <script>
-        tailwind.config = {
-            theme: {
-            extend: {
-                height: {
-                    300: '300px',
-                    82: '82px',
-                },
-                width: {
-                    450: '450px',   
-                },
-                margin:{
-                    415: '415px',
-                    50 : '50px'
-                },
-                backgroundColor: {
-                    mainColor: '#2f3e46',
-                    // mainColor: '#138275',
-                    // mainColor : '#028910',
-                    // mainColor : '#3cec97',
-                    loginHereBtn : '#198754',
-                    teleCreateAccColor : '#e6e6e6'
-                },
-                borderColor: {
-                    // loginBorder: '#f2f2f2',
-                    // mainColor: '#2f3e46',
-                    subDivColor: '#2f3e46',
-                    // titleDivColor : '#94abb8'
-                    titleDivColor : '#3cec97',
-                    sdnRegistraionColor : '#999999',
-                },
-                borderWidth:{
-                    415 : '415px'
-                }
-            } 
-            }
-        }
-    </script>
+    
 
     
 </head>
@@ -410,12 +383,12 @@
 
             <!-- SDN MODAL -->
 
-            <div class="sdn-modal-div hidden absolute flex flex-col justify-center items-center w-full h-screen ">
+            <div id='sdn-modal-div-id' class="sdn-modal-div hidden flex flex-col justify-center items-center w-full h-screen ">
                 <div class="sdn-sub-modal-div flex flex-col justify-start items-center w-11/12 sm:w-2/5 h-5/6 bg-teleCreateAccColor">
                     <div class="w-full h-[50px] sm:h-[70px] bg-cyan-950 flex flex-row justify-between items-center">
                         <h1 class="text-white text-lg sm:text-2xl ml-5 ">SERVICE DELIVERY NETWORK</h1>
                         <!-- <i class="fa-solid fa-x"></i> -->
-                        <button class="sdn-btn-close text-xl sm:text-3xl mr-5 text-white">X</button>
+                        <button class="sdn-btn-close text-xl sm:text-3xl mr-5 text-white bg-transparent">X</button>
                     </div>
 
                     <div class="w-full h-[70px] flex flex-row justify-start items-end border-2 border-b-sdnRegistraionColor bg-teleCreateAccColor">
@@ -466,7 +439,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-province-select" > <span class="text-red-600"></span> Address: Province </label>   
                                 </div>
-                                <select id="sdn-province-select" required onchange="getLocations('province' , 'pa-region')" name="province" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                <select id="sdn-province-select" required onchange="getLocations('province' , 'sdn-province')" name="province" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
                                     <option value="" class="">Choose a Province</option>
                                 </select>
                             </div>
@@ -475,7 +448,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-city-select" > <span class="text-red-600"></span> Address: Municipality </label>   
                                 </div>
-                                <select id="sdn-city-select" required onchange="getLocations('city', 'pa-city')" name="municipality" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                <select id="sdn-city-select" required onchange="getLocations('city', 'sdn-city')" name="municipality" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
                                     <option value="" class="">Choose a Municipality</option>
                                 </select>
                             </div>
@@ -500,7 +473,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-email-address" > <span class="text-red-600"></span> Email Address </label>   
                                 </div>
-                                <input type="email" id="sdn-email-address" name="email_address" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">>
+                                <input type="email" id="sdn-email-address" name="email_address" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
@@ -623,7 +596,7 @@
 
                                 <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
-                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-ext-name-id"> <span class="text-red-600">*</span> Extension Name </label>
+                                        <label class="text-base sm:text-lg ml-3" for="sdn-autho-ext-name-id"> Extension Name </label>
                                     </div>
                                     <input id="sdn-autho-ext-name-id" type="text" name="sdn-extension-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
@@ -644,14 +617,14 @@
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base sm:text-lg ml-3" for="sdn-autho-password"> <span class="text-red-600">*</span> Password </label>
                                     </div>
-                                    <input id="sdn-autho-password" type="text" name="sdn-first-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-password" type="password" name="sdn-first-name" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
 
                                 <div class="w-full h-[70px] sm:h-[90px] border flex flex-col justify-start items-center bg-[#d9d9d9] border-2 rounded-lg mb-3">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base sm:text-lg ml-3" for="sdn-autho-confirm-password"> <span class="text-red-600">*</span> Confirm Password </label>
                                     </div>
-                                    <input id="sdn-autho-confirm-password" type="text" name="sdn-confirm-password" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="sdn-autho-confirm-password" type="password" name="sdn-confirm-password" class="w-[95%] h-[40%] sm:h-[45%] border-2 border-[#666666] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
                             </div>
 
@@ -777,6 +750,31 @@
                 </div>
             </div>
 
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header flex flex-row justify-between items-center">
+                        <div class="flex flex-row justify-between items-center">
+                            <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Verification</h5>
+                            <i id="modal-icon" class="fa-solid fa-triangle-exclamation ml-2"></i>
+                            <!-- <i class="fa-solid fa-circle-check"></i> -->
+                        </div>
+                        <button type="button" class="close text-3xl" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="modal-body" class="modal-body">
+                        Verified OTP
+                    </div>
+                    <div class="modal-footer">
+                        <button id="ok-modal-btn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">OK</button>
+                        <button id="yes-modal-btn" type="button" class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">Yes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
         </div>
             <!-- <header class="header-div w-full h-28 border flex flex-row justify-between items-center">
                 <img src="./assets/login_imgs/main_bg.png" alt="logo-img" class="border border-black w-22 h-full ml-10">

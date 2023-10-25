@@ -393,7 +393,7 @@ create_acc_div.addEventListener('mouseout', function(){
 cc_login_btn.addEventListener('click', () =>{
     main_div.style.filter = "blur(8px)"
     modal_div.style.display = 'flex'
-    modal_div.style.zIndex = '10'
+    modal_div.style.zIndex = '10' // z-10
     main_div.style.zIndex = '0'
 }, false)
 
@@ -446,13 +446,19 @@ sdn_sub_modal.addEventListener('click', () =>{
     modal_div.style.display = 'none'
     modal_div.style.zIndex = '0'
 
-    sdn_modal_div.style.display = 'flex'
-    sdn_modal_div.style.zIndex = '10'
+    // sdn_modal_div.style.display = 'flex'
+    // sdn_modal_div.style.zIndex = '10'
+
+    sdn_modal_div.classList.remove('hidden')
+    sdn_modal_div.classList.add('absolute')
 })
 
 // SDN create account close button
 sdn_close_btn.addEventListener('click', () => {
-    sdn_modal_div.style.display = 'none'
+    // sdn_modal_div.style.display = 'none'
+
+    sdn_modal_div.classList.add('hidden')
+    sdn_modal_div.classList.remove('absolute')
     sdn_modal_div.style.zIndex = '0'
 
     main_div.style.filter = "blur(0)"
@@ -503,4 +509,8 @@ sdn_registration_nav_btn.addEventListener('click', () =>{
 // show OTP modal after clicking registration button
 // sdn_register_button.addEventListener('click' , () =>{
 //     console.log("here")
+// })
+
+// $(document).ready(function(){
+//     $('#myModal').modal('show');
 // })

@@ -22,11 +22,46 @@ $(document).ready(function(){
             data:data,
             success: function(response){
                 console.log(response)
+                if(response === 'verified'){
+                    console.log('here')
+                    $('#myModal').modal('show');
+                }
                 // sdn_loading_modal_div.classList.remove('z-10')
                 // sdn_loading_modal_div.classList.add('hidden')
-                // const otp_modal_div = document.querySelector('.otp-modal-div');
-                // otp_modal_div.className = "otp-modal-div z-10 absolute flex flex-col justify-start items-center gap-3 w-11/12 sm:w-2/6 h-80 translate-y-[200px] sm:translate-y-[350px] translate-x-50px border bg-white rounded-lg"
+                const otp_modal_div = document.querySelector('.otp-modal-div');
+                otp_modal_div.classList.add('hidden')
+                otp_modal_div.classList.remove('absolute')
 
+                $('#sdn-hospital-name').val('')
+                $('#sdn-hospital-code').val('')
+
+                $('#sdn-region-select').val('')
+                $('#sdn-province-select').val('')
+                $('#sdn-city-select').val('')
+                $('#sdn-brgy-select').val('')
+                $('#sdn-zip-code').val('')
+                $('#sdn-email-address').val('')
+                $('#sdn-landline-no').val('')
+
+                $('#sdn-hospital-mobile-no').val('')
+
+                $('#sdn-hospital-director').val('')
+                $('#sdn-hospital-director-mobile-no').val('')
+
+                $('#sdn-point-person').val('')
+                $('#sdn-point-person-mobile-no').val('')
+
+                const sdn_modal_div = document.querySelector('.sdn-modal-div')
+                const main_div = document.querySelector('.main-div')
+                const modal_div = document.querySelector('.modal-div')
+                
+                sdn_modal_div.classList.add('hidden')
+                sdn_modal_div.classList.remove('absolute')
+                sdn_modal_div.style.zIndex = '0'
+
+                main_div.style.filter = "blur(0)"
+                modal_div.style.zIndex = '0'
+                main_div.style.zIndex = '10'
             }
         })
 

@@ -1,8 +1,14 @@
 <?php
-    // session_start();
+    session_start();
     include('../database/connection2.php');
     // include('php/admin_module.php')
     // echo isset($_SESSION["user_name"]);    
+    // echo isset($_SESSION["user_name"]);
+    // Use JavaScript to log the PHP variable to the browser's console
+    // echo '<script>';
+    // echo 'console.log("PHP Variable Value: ' . isset($_SESSION["user_name"]) . '");';
+    // echo '</script>';
+
 ?>
 
 <!DOCTYPE html>
@@ -10,31 +16,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>SDN</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../output.css">
 
 </head>
 <body>
+    <input id="tertiary-case" type="hidden" name="tertiary-case" value="">
+    <input id="hpercode-input" type="hidden" name="hpercode-input" value="">
+    <input id="hpatcode-input" type="hidden" name="hpatcode-input" value=<?php echo $_SESSION["hospital_code"] ?>>
+
     <main id="patient-reg-form-div" class="flex flex-col justify-start items-center w-full h-full bg-white duration-0">
 
-        <div class="w-full h-[50px] flex flex-row flex flex-row justify-between items-center">
+        <div class="w-full h-[50px] flex flex-row flex flex-row justify-start items-center">
             <div class="w-[20%] h-full flex flex-row justify-around items-center">
                 <button class="h-[79%] w-[78px] mt-3 z-10 border-t-2 border-r-2 border-l-2 border-[#bfbfbf] bg-white">Patient</button>
                 <button class="text-blue-500 h-[79%] w-[100px] mt-3 bg-white">Admission</button>
                 <button class="text-blue-500 h-[79%] w-[100px] mt-3 bg-white">Referral</button>
             </div>
-
-            <button id="check-if-registered-btn" class="w-[492px] h-[80%] mr-2 flex flex-row justify-around items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                <i class="cursor-pointer fa-solid fa-magnifying-glass text-2xl text-white"></i>
-                <h3 class="cursor-pointer">Check if the patient is already registered</h3>
+            <div id="privacy-reminder-div" class="hidden w-[75%] h-[60%] flex flex-row justify-around items-baseline rounded-lg bg-amber-100 mt-3">
+                <p class="text-sm"> <span class="font-bold">Notice: </span>For data integrity purposes. Changing of Name and Birthday will be restricted. Please send an email to bataan.bghmc.ihomp@gmail.com for your request of patient name change. </p>
+                <button class="text-lg">x</button>
+            </div>
+        <!-- w-[492px] -->
+            <button id="check-if-registered-btn" class="absolute w-[50px] h-[40px] mr-2 right-0 flex flex-row justify-around items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg outline-none delay-150 duration-150">
+                <i  class="cursor-pointer fa-solid fa-magnifying-glass text-2xl text-white"></i>
+                <h3 id="check-if-registered-h3" class="hidden cursor-pointer">Check if the patient is already registered</h3>
             </button>
         </div>
             
 
-        <div id="check-if-registered-div" class="right-[8px] top-[92px] flex flex-col justify-start items-center bg-white border-b-2 border-r-2 border-l-2 border-[#bfbfbf] fixed w-[492px] h-[80%] rounded-b-lg">
+        <div id="check-if-registered-div" class="hidden right-[8px] top-[92px] flex flex-col justify-start items-center bg-white border-b-2 border-r-2 border-l-2 border-[#bfbfbf] fixed w-[493px] h-[80%] rounded-b-lg delay-150 duration-150">
             <div class="w-full h-[18%] flex flex-col justify-between items-center">
 
                 <div class="w-full h-[50%] mt-2 ">
@@ -143,7 +159,7 @@
                                         <div class="w-full flex flex-row justify-start items-center p-1">
                                             <label class="text-base" for="hperson-age"> Age </label>
                                         </div>
-                                        <input id="hperson-age" type="number" name="hperson-age" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none" autocomplete="off" placeholder="0">
+                                        <input id="hperson-age" tabindex="-1" disabled="disabled" type="number" name="hperson-age" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none" autocomplete="off" placeholder="0">
                                     </div>
 
                                 </div>
@@ -315,7 +331,7 @@
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base ml-3" for="hperson-home-phone-no-pa"> Home Phone No. </label>
                                     </div>
-                                    <input id="hperson-home-phone-no-pa" type="number" name="hperson-home-phone-no-pa" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="hperson-home-phone-no-pa" type="text" name="hperson-home-phone-no-pa" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
                                 
                                 <div class="w-[50%] h-full flex-col justify-around items-center">
@@ -383,7 +399,7 @@
                                     </div>
                                     <!-- <input id="hperson-ext-name" type="text" name="hperson-ext-name" class=" w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
                                     <select id="hperson-province-select-ca" required onchange="getLocations('province' , 'ca-province')" name="province" class="text-sm w-[93%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
-                                        <option value="" class="">Choose a Province</option>
+                                        <option value="ABUCAY" class="">Choose a Province</option>
                                     </select>
                                 </div>
                             </div>
@@ -415,7 +431,7 @@
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base ml-3" for="hperson-home-phone-no-ca"> Home Phone No. </label>
                                     </div>
-                                    <input id="hperson-home-phone-no-ca" type="number" name="hperson-home-phone-no-ca" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
+                                    <input id="hperson-home-phone-no-ca" type="text" name="hperson-home-phone-no-ca" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
                                 
                                 <div class="w-[50%] h-full flex-col justify-around items-center">
@@ -439,10 +455,10 @@
 
                     </div>
 
-                    <div class="patient-form-btns w-full mt-3 h-[50px] right-[25%] bottom-[7px] flex flex-row justify-end items-center">
+                    <!-- <div class="patient-form-btns w-full mt-3 h-[50px] right-[25%] bottom-[7px] flex flex-row justify-end items-center border-2 border-black">
                         <button id="add-patform-btn-id" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Add</button>
-                        <h3 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2 h-[40px]">Clear</h3>
-                    </div>
+                        <h3 id="clear-patform-btn-id" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2 h-[40px]">Clear</h3>
+                    </div> -->
                 </div>
 
                 <div id="patient-reg-form-div-3" class="w-[30%] h-full flex flex-col justify-start items-center">
@@ -474,7 +490,7 @@
                                         <label class="text-base ml-3" for="hperson-region-select-cwa"> Region </label>
                                     </div>
                                     <!-- <input id="hperson-middle-name" type="text" name="hperson-middle-name" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-region-select-cwa" required onchange="getLocations('region' , 'cwa-region')" name="region" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer" autocomplete="off">
+                                    <select id="hperson-region-select-cwa" required onchange="getLocations('region' , 'cwa-region')" name="region" class="ml-3 text-sm w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer" autocomplete="off">
                                         <option value="" class="">Choose a Region</option>
                                         <?php 
                                             $stmt = $pdo->query('SELECT region_code, region_description from region');
@@ -490,7 +506,7 @@
                                         <label class="text-base" for="hperson-province-select-cwa"> Province </label>
                                     </div>
                                     <!-- <input id="hperson-ext-name" type="text" name="hperson-ext-name" class=" w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-province-select-cwa" required onchange="getLocations('province' , 'cwa-province')" name="province" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
+                                    <select id="hperson-province-select-cwa" required onchange="getLocations('province' , 'cwa-province')" name="province" class="ml-3 text-sm w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
                                         <option value="" class="">Choose a Province</option>
                                     </select>
                                 </div>
@@ -502,8 +518,8 @@
                                         <label class="text-base ml-3" for="hperson-city-select-cwa"> Municipality / City </label>
                                     </div>
                                     <!-- <input id="hperson-middle-name" type="text" name="hperson-middle-name" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-city-select-cwa" required onchange="getLocations('city' , 'cwa-city')" name="city" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
-                                        <option value="" class="">Choose a Municipality/City</option>
+                                    <select id="hperson-city-select-cwa" required onchange="getLocations('city' , 'cwa-city')" name="city" class="ml-3 text-sm w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
+                                        <option value="" class="">Choose a Municipality</option>
                                     </select>
                                 </div>
                                 
@@ -512,7 +528,7 @@
                                         <label class="text-base" for="hperson-brgy-select-cwa"> Barangay </label>
                                     </div>
                                     <!-- <input id="hperson-ext-name" type="text" name="hperson-ext-name" class=" w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-brgy-select-cwa" name="brgy" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
+                                    <select id="hperson-brgy-select-cwa" name="brgy" class="ml-3 text-sm w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
                                         <option value="" class="">Choose a Barangay</option>
                                     </select>
                                 </div>
@@ -597,26 +613,17 @@
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base ml-3" for="hperson-region-select-ofw"> Region </label>
                                     </div>
-                                    <!-- <input id="hperson-middle-name" type="text" name="hperson-middle-name" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-region-select-ofw" required onchange="getLocations('region' , 'ofw-region')" name="region" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer" autocomplete="off">
-                                        <option value="" class="">Choose a Region</option>
-                                        <?php 
-                                            $stmt = $pdo->query('SELECT region_code, region_description from region');
-                                            while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
-                                                echo '<option value="' , $data['region_code'] , '">' , $data['region_description'] , '</option>';
-                                            }                                        
-                                        ?>
-                                    </select>
+                                    <input id="hperson-region-select-ofw" type="text" name="hperson-region-select-ofw" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
                                 </div>
                                 
                                 <div class="w-[50%] h-full flex-col justify-around items-center">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base" for="hperson-province-select-ofw"> Province </label>
                                     </div>
-                                    <!-- <input id="hperson-ext-name" type="text" name="hperson-ext-name" class=" w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-province-select-ofw" required onchange="getLocations('province' , 'ofw-province')" name="province" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
+                                    <input id="hperson-province-select-ofw" type="text" name="hperson-province-select-ofw" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
+                                    <!-- <select id="hperson-province-select-ofw" required onchange="getLocations('province' , 'ofw-province')" name="province" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
                                         <option value="" class="">Choose a Province</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                             </div>
 
@@ -625,20 +632,20 @@
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base ml-3" for="hperson-city-select-ofw"> Municipality / City </label>
                                     </div>
-                                    <!-- <input id="hperson-middle-name" type="text" name="hperson-middle-name" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-city-select-ofw" required onchange="getLocations('city' , 'ofw-city')" name="city" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
+                                    <input id="hperson-city-select-ofw" type="text" name="hperson-city-select-ofw" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
+                                    <!-- <select id="hperson-city-select-ofw" required onchange="getLocations('city' , 'ofw-city')" name="city" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
                                         <option value="" class="">Choose a Municipality/City</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                                 
                                 <div class="w-[50%] h-full flex-col justify-around items-center">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base" for="hperson-country-select-ofw"> Country </label>
                                     </div>
-                                    <!-- <input id="hperson-ext-name" type="text" name="hperson-ext-name" class=" w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off"> -->
-                                    <select id="hperson-country-select-ofw" required name="country" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
+                                    <input id="hperson-country-select-ofw" type="text" name="hperson-country-select-ofw" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off">
+                                    <!-- <select id="hperson-country-select-ofw" required name="country" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none cursor-pointer">
                                         <option value="" class="">Choose a Country</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                             </div>
 
@@ -664,10 +671,46 @@
 
     </main>
 
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header flex flex-row justify-between items-center">
+                <div class="flex flex-row justify-between items-center">
+                    <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <i id="modal-icon" class="fa-solid fa-triangle-exclamation ml-2"></i>
+                    <!-- <i class="fa-solid fa-circle-check"></i> -->
+                </div>
+                <button type="button" class="close text-3xl" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                Please fill out the required fields.
+            </div>
+            <div class="modal-footer">
+                <button id="ok-modal-btn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">OK</button>
+                <button id="yes-modal-btn" type="button" class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">Yes</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- FUNCTION BUTTONS -->
+    <div class="patient-form-btns absolute w-[52.5%] mt-3 h-[50px] right-[30%] bottom-0 flex flex-row justify-between items-center">
+        <div class="w-[35%] flex flex-row justify-between items-center mr-2">
+            <button id="er-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">ER</button>
+            <button id="ob-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">OB</button>
+            <button id="opd-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">OPD</button>
+            <button id="pcr-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">PCR</button>
+        </div>
+        <div class="w-[18%] flex flex-row justify-between items-center mr-2">
+            <button id="add-patform-btn-id" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mr-2">Add</button>
+            <button id="clear-patform-btn-id" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]">Clear</button>
+        </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
     
     <script src="./js/patient_register_form.js?v=<?php echo time(); ?>"></script>
     <script src="./js/search_name.js?v=<?php echo time(); ?>"></script>

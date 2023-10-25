@@ -13,16 +13,24 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="index.css">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="../output.css">
+
+    <style>
+        .dataTables_length {
+        margin-top:0;
+        margin-bottom:5px;
+    }   
+    </style>
 
 </head>
 <body>
     <div class="w-full h-full flex flex-col justify-center items-center bg-white">
-        <div class="w-full h-[10%] flex flex-row justify-around items-center mt-3">
+        <div class="w-full h-[10%] flex flex-row justify-around items-center -mt-[10px]">
 
             <div class="w-[10%] h-[100%] flex flex-col justify-center items-left">
-                <label class="ml-1 font-bold">Referral No.</label>
+                <label class="ml-1 font-bold">Referral No2222.</label>
                 <input type="textbox" class="w-full border-2 border-[#bfbfbf] rounded-md outline-none">
             </div>
             
@@ -90,12 +98,12 @@
         
 
 
-        <section class=" w-[98%] h-[90%] flex flex-row justify-center items-center rounded-lg border-2 border-black">
+        <section class=" w-[98%] h-[80%] flex flex-row justify-center items-center rounded-lg border-2 border-[#bfbfbf] mt-3">
             
-            <div class="w-[98%] h-[95%]  flex flex-col rounded-lg overflow-y-auto">
-                <label class="">Showing Results</label>
+            <div class="w-[98%] h-[95%]  flex flex-col justify-start rounded-lg overflow-y-auto">
+                <!-- <label class="">Showing Results</label> -->
 
-                <table class="h-[94%]">
+                <!-- <table class="h-[94%]">
                     <tr class="flex flex-row justify-start items-center text-center">
                         <th class="w-[20%] bg-[#e6e6e6]">Reference No. </th>
                         <th class="w-[17%] bg-[#e6e6e6]">Patient's Name</th>
@@ -139,7 +147,7 @@
                             </p>
                         </td>      
             
-                        <!-- <td class="w-[15%] h-full border border-slate-800 bg-green-700 "> -->
+                        
                         <td class="w-[14.6%] h-full text-center">
                             <div></div>
                         </td> 
@@ -159,7 +167,7 @@
 
                         <td class="w-[16.7%] h-full flex flex-row justify-center items-center">
                             <p class="w-[100%]  text-left text-center">
-                                DORONILA, ROBERTO PEDROSA
+                                asd, ROBERTO PEDROSA
                             </p>
                         </td>
 
@@ -184,7 +192,7 @@
                             </p>
                         </td>      
             
-                        <!-- <td class="w-[15%] h-full border border-slate-800 bg-green-700 "> -->
+                        
                         <td class="w-[14.6%] h-full text-center">
                             <div></div>
                         </td> 
@@ -204,7 +212,7 @@
 
                         <td class="w-[16.7%] h-full flex flex-row justify-center items-center">
                             <p class="w-[100%]  text-left text-center">
-                                DORONILA, ROBERTO PEDROSA
+                                fff, ROBERTO PEDROSA
                             </p>
                         </td>
 
@@ -229,7 +237,6 @@
                             </p>
                         </td>      
             
-                        <!-- <td class="w-[15%] h-full border border-slate-800 bg-green-700 "> -->
                         <td class="w-[14.6%] h-full text-center">
                             <div></div>
                         </td> 
@@ -240,15 +247,128 @@
                         </td>
                     </tr>
                     
-                </table>
+                </table> -->
+
+                <!-- <table id="myDataTable" class="display">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="w-[20%] bg-[#e6e6e6]">Reference No. </th>
+                            <th class="w-[17%] bg-[#e6e6e6]">Patient's Name</th>
+                            <th class="w-[7%] bg-[#e6e6e6]">Type</th>
+                            <th class="w-[17%] bg-[#e6e6e6]">Agency</th>
+                            <th class="w-[15%] bg-[#e6e6e6]">Date/Time</th>
+                            <th class="w-[15%] bg-[#e6e6e6]">Response Time</th>
+                            <th class="w-[10%] bg-[#e6e6e6]"> Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        // SQL query to fetch data from your table
+                        $sql = "SELECT * FROM hperson ORDER BY created_at DESC";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute();
+                        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        $index = 0;
+                        $previous = 0;
+
+                        // Loop through the data and generate table rows
+                        foreach ($data as $row) {
+                            $dateTimeString =  $row['created_at'];
+                            $dateTime = new DateTime($dateTimeString);
+
+                            // Format the DateTime object as needed
+                            $formattedDateTime = $dateTime->format("Y-m-d H:i:s");
+
+                            $year = $dateTime->format("Y");
+                            $month = $dateTime->format("m");
+                            $day = $dateTime->format("d");
+                            $hours = $dateTime->format("H");
+                            $minutes = $dateTime->format("i");
+                            $seconds = $dateTime->format("s");
+
+                            $type_color;
+                            if($row['type'] == 'OPD'){
+                                $type_color = 'bg-amber-600';
+                            }else if($row['type'] == 'OB'){
+                                $type_color = 'bg-green-500';
+                            }else if($row['type'] == 'ER'){
+                                $type_color = 'bg-sky-700';
+                            }
+
+                            
+
+                            if($previous == 0){
+                                $index += 1;
+                            }else{
+                                if($day == $previous){
+                                    $index += 1;
+                                }else{
+                                    $index = 1;
+                                }  
+                            }
+                            echo '<tr class="h-[61px]">
+                                    <td>R3-BTN-BGHMC-' . $year . '-' . $month . '-' . $day . '-' . $index . '</td>
+                                    <td>' . $row['patlast'] , ", " , $row['patfirst'] , " " , $row['patmiddle']  . '</td>
+                                    <td class="h-full font-bold text-center ' . $type_color . ' ">' . $row['type'] . '</td>
+                                    <td>
+                                        <label class="text-sm ml-1"> Referred: Limay District Hospital </label>
+                                    </td>
+                                    <td> 
+                                       <label> Referred: ' . $row['created_at'] . ' </label>
+                                    </td>
+                                    <td>Processing: </td>
+                                    <td class=" font-bold text-center bg-gray-500">
+                                        <div class="flex flex-row justify-around items-center"> 
+                                            ' . $row['status'] . '
+
+                                            <i class="fa-solid fa-pencil cursor-pointer hover:text-white"></i>
+                                        </div>
+                                    </td>
+                                </tr>';
+
+                            $previous = $day;
+                        }
+
+                        // Close the database connection
+                        $pdo = null;
+                        ?>
+                    </tbody>
+                </table> -->
+
             </div>
         </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="./js/main_styling.js?v=<?php echo time(); ?>"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script type="text/javascript"  charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+    <script src="./js/incoming_form.js?v=<?php echo time(); ?>"></script>
+
+    <script>
+    // $(document).ready(function () {
+    //     $('#myDataTable').DataTable();
+    // });
+
+    $(document).ready(function() {
+        $('#myDataTable').DataTable({
+            "order": [[0, "desc"]] // Sort the first column in descending order (change column index as needed)
+        });
+        var dataTable = $('#myDataTable').DataTable();
+
+        // Disable the search input
+        dataTable.search('').draw();
+
+        // Disable the search button
+        $('.dataTables_filter').addClass('hidden');
+
+        
+    });
+</script>
 </body>
 </html>

@@ -2,7 +2,31 @@
     include("../database/connection2.php");
 
     //PERSONAL INFORMATIONS // 16
-    $hpercode = $_POST['hpercode']; //1
+
+    // get the last value of hpercode from the database
+    $sql = "SELECT hpercode FROM hperson ORDER BY hpercode DESC LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    $last_number = substr($data['hpercode'], 6);
+
+    $hpercodePrefix = "BGHMC-"; // Set the prefix
+    $new_number = $last_number + 1; // Increment the last number
+
+    $zeros = "0";
+
+    if($new_number <= 9){
+        $zeros = "000";
+    }else if($new_number <= 99){
+        $zeros = "00";
+    }else if($new_number <= 999){
+        $zeros = "0";
+    }else if($new_number <= 9999){
+        $zeros = "";
+    }
+
+    $hpercode = $hpercodePrefix . $zeros . $new_number;
+
     $hpatcode = $_POST['hpatcode']; //2
     $patlast = $_POST['patlast']; //3
     $patfirst = $_POST['patfirst']; //4
@@ -61,9 +85,11 @@
     $pat_region_ofw = $_POST['pat_region_ofw'];
     $pat_province_ofw = $_POST['pat_province_ofw'];
     $pat_city_ofw = $_POST['pat_city_ofw'];
+    $pat_country_ofw = $_POST['pat_country_ofw'];
     $pat_office_mobile_no_ofw = $_POST['pat_office_mobile_no_ofw'];
     $pat_mobile_no_ofw = $_POST['pat_mobile_no_ofw'];
 
+    $created_at = $_POST['created_at'];
 
 
     
@@ -98,8 +124,9 @@
             pat_bldg, pat_street_block, pat_region, pat_province, pat_municipality, pat_barangay, pat_email, pat_homephone_no, pat_mobile_no,
             pat_curr_bldg , pat_curr_street, pat_curr_region, pat_curr_province , pat_curr_municipality, pat_curr_barangay, pat_email_ca, pat_curr_homephone_no, pat_curr_mobile_no, 
             pat_work_bldg, pat_work_street, pat_work_region, pat_work_province, pat_work_municipality, pat_work_barangay,pat_namework_place, pat_work_landline_no, pat_work_email_add, 
-            ofw_employers_name, ofw_occupation, ofw_place_of_work, ofw_bldg, ofw_street, ofw_region, ofw_province, ofw_municipality, ofw_office_phone_no, ofw_mobile_phone_no)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,  ?,?,?,?,?,?,?,?,?,  ?,?,?,?,?,?,?,?,?,  ?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?)";
+            ofw_employers_name, ofw_occupation, ofw_place_of_work, ofw_bldg, ofw_street, ofw_region, ofw_province, ofw_municipality, ofw_country , ofw_office_phone_no, ofw_mobile_phone_no,
+            created_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,  ?,?,?,?,?,?,?,?,?,  ?,?,?,?,?,?,?,?,?,  ?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?, ?)";
 
     $stmt = $pdo->prepare($sql);
 
@@ -159,8 +186,11 @@
     $stmt->bindParam(49, $pat_region_ofw, PDO::PARAM_STR);
     $stmt->bindParam(50, $pat_province_ofw, PDO::PARAM_STR);
     $stmt->bindParam(51, $pat_city_ofw, PDO::PARAM_INT);
-    $stmt->bindParam(52, $pat_office_mobile_no_ofw, PDO::PARAM_STR);
-    $stmt->bindParam(53, $pat_mobile_no_ofw, PDO::PARAM_STR);
+    $stmt->bindParam(52, $pat_country_ofw, PDO::PARAM_INT);
+    $stmt->bindParam(53, $pat_office_mobile_no_ofw, PDO::PARAM_STR);
+    $stmt->bindParam(54, $pat_mobile_no_ofw, PDO::PARAM_STR);
+
+    $stmt->bindParam(55, $created_at, PDO::PARAM_STR);
 
     $stmt->execute();
 

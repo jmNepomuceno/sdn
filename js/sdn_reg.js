@@ -44,12 +44,23 @@ $(document).ready(function(){
             method: "POST",
             data:data,
             success: function(response){
-                console.log(response)
-                sdn_loading_modal_div.classList.remove('z-10')
-                sdn_loading_modal_div.classList.add('hidden')
-                const otp_modal_div = document.querySelector('.otp-modal-div');
-                otp_modal_div.className = "otp-modal-div z-10 absolute flex flex-col justify-start items-center gap-3 w-11/12 sm:w-2/6 h-80 translate-y-[200px] sm:translate-y-[350px] translate-x-50px border bg-white rounded-lg"
+                if(response === 'Invalid'){
+                    sdn_loading_modal_div.classList.add('hidden')
+                    $('#modal-title').text('Warning')
+                    $('#modal-icon').addClass('fa-triangle-exclamation')
+                    $('#modal-icon').removeClass('fa-circle-check')
+                    $('#modal-body').text('Hospital Code is already registered!')
+                    $('#ok-modal-btn').text('OK')
 
+                    $('#myModal').modal('show');
+                }else{
+                    sdn_loading_modal_div.classList.remove('z-10')
+                    sdn_loading_modal_div.classList.add('hidden')
+                    const otp_modal_div = document.querySelector('.otp-modal-div');
+                    otp_modal_div.className = "otp-modal-div z-10 absolute flex flex-col justify-start items-center gap-3 w-11/12 sm:w-2/6 h-80 translate-y-[200px] sm:translate-y-[350px] translate-x-50px border bg-white rounded-lg"
+
+                }
+                
             }
         })
     })

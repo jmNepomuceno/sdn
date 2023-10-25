@@ -21,7 +21,7 @@ $(document).ready(function(){
                 // window.location.href = response + "?user=" + encodeURIComponent("admin")
 
                 // using session storage
-                sessionStorage.setItem("user", "admin");
+                // sessionStorage.setItem("user", "admin");
                 window.location.href = response
             }
         })

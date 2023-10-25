@@ -13,8 +13,8 @@
 
     $user_OTP = $data[0]['hospital_OTP'];
 
-    echo $user_OTP;
-    echo $otp_number;
+    // echo $user_OTP;
+    // echo $otp_number;
 
     if($user_OTP == $otp_number){
         //update the row with verified = TRUE
@@ -26,7 +26,7 @@
         $stmt->bindParam(':verify', $verify, PDO::PARAM_BOOL);
 
         if ($stmt->execute()) {
-            echo 'verified';
+            echo "verified";
         }
     }else{
         echo "not verified";

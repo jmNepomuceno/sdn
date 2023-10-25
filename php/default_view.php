@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../output.css">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
 </head>
 <body>
-        <div id="default-div" class="flex flex-col justify-center items-center w-full h-full bg-white duration-0">
-            <img class="absolute w-[25%] h-[50%] opacity-10" src="./assets/login_imgs/main_bg.png" alt="sdn-main-bg">
+        <div id="default-div" class="flex flex-col justify-center items-center w-full h-full duration-0">
+            <img class="absolute w-[25%] h-[50%] opacity-10" src="./assets/login_imgs/main_bg.png" alt="sdn-main-bg" />
             <h1 class="font-bold text-8xl">Service Delivery Network</h1>
             <h3 class="text-3xl mt-3">Bataan General Hospital and Medical Center</h3>
 
