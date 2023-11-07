@@ -22,6 +22,7 @@
 
     $pat_clicked_code = $_POST['pat_clicked_code'];
     $elapsedTime = $_POST['elapsedTime'];
+    $table_index = $_POST['table_index'];
 
     // echo $table_index; 
     $already = false;
@@ -33,18 +34,20 @@
             $index = $i;
             break;
         }
-    }
+    } 
 
     //echo $already . " / " . $index .  " \n";
 
-    if($already == true){
-        //echo "true \n"; 
+    if($already === true){
+        // echo "true \n"; 
         $_SESSION["process_timer"][$index]['elapsedTime'] = $elapsedTime;
     }else{
         //echo "false \n";
+        
         $_SESSION["process_timer"][] = array( 
             'pat_clicked_code' => $pat_clicked_code, 
             'elapsedTime' => $elapsedTime,
+            'table_index' => $table_index
         );
 
         $sql = "UPDATE incoming_referrals SET status='On-Process' WHERE hpercode= '". $pat_clicked_code ."' ";
@@ -58,5 +61,8 @@
     //     echo $_SESSION["process_timer"][$i]['elapsedTime'] . " ";
     //     echo $_SESSION["process_timer"][$i]['table_index'];
     // }
+
+    $temp = json_encode($_SESSION["process_timer"]);
+    echo $temp;
 
 ?>

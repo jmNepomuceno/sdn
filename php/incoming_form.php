@@ -3,20 +3,20 @@
     include('../database/connection2.php');
     // echo isset($_SESSION["process_timer"]);
 
-    echo count($_SESSION["process_timer"]);   
+    // echo count($_SESSION["process_timer"]);   
     $timer_running = false;
     if(count($_SESSION["process_timer"]) >= 1){
-        echo "here";
+        // echo "here";
         for($i = 0; $i < count($_SESSION["process_timer"]); $i++){
             foreach ($_SESSION["process_timer"][$i] as $key => $value) {
-                echo "Key: $key, Value: $value<br>";
+                // echo "Key: $key, Value: $value<br>";
             }
         }
         $timer_running = true;
     }
 
 
-    echo $timer_running;
+    // echo $timer_running;
     // if(count($_SESSION["process_timer"]) >= 1){
     //     for($i = 0; $i < count($_SESSION["process_timer"]); $i++){
     //         echo $_SESSION['process_timer'][$i]['elapsedTime'] . '<br/>';
@@ -35,6 +35,12 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> -->
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
     <link rel="stylesheet" href="../output.css">
 
     <style>
@@ -46,13 +52,13 @@
 
 </head>
 <body>
-    <button id="pending-stop-btn" class="border-2 border-black">Stop</button>
+    <!-- <button id="pending-stop-btn" class="border-2 border-black">Stop</button> -->
     <input id="timer-running-input" type="hidden" name="timer-running-input" value=<?php echo $timer_running ?>>
 
     <!-- <input id="timer-running-input" type="hidden" name="timer-running-input" value="false"> -->
 
-    <div class="w-full h-full flex flex-col justify-center items-center bg-white">
-        <div class="w-full h-[5%] flex flex-row justify-around items-center -mt-[10px]">
+    <div class="w-full h-full flex flex-col justify-start items-center bg-white">
+        <div class="w-full h-[5%] flex flex-row justify-around items-center mt-4">
 
             <div class="w-[10%] h-[100%] flex flex-col justify-center items-left">
                 <label class="ml-1 font-bold">Referral No.</label>
@@ -121,9 +127,9 @@
                 </select>
             </div>
 
-
-            <div class="w-[9.5%] h-[100%] flex flex-col justify-center items-center">
-                <button id='incoming-search-btn' class="w-[80%] h-[90%] rounded bg-green-300 border-2 border-black">Search</button>
+            <div class="w-[15%] h-full flex flex-row justify-around items-center font-bold text-white">
+                <button id='incoming-clear-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46]">Clear</button>
+                <button id='incoming-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46]">Search</button>
             </div>
         </div>
         
@@ -132,7 +138,6 @@
         <section class=" w-[98%] h-[80%] flex flex-row justify-center items-center rounded-lg border-2 border-[#bfbfbf] mt-3">
             
             <div class="w-[98%] h-[95%]  flex flex-col justify-start rounded-lg overflow-y-auto">
-
                 <table id="myDataTable" class="display">
                     <thead>
                         <tr class="text-center">
@@ -150,7 +155,7 @@
                             // SQL query to fetch data from your table
                             // echo  "here";
                             try{
-                                $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to='". $_SESSION["hospital_name"] ."' ORDER BY date_time DESC";
+                                $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to='". $_SESSION["hospital_name"] ."' ORDER BY date_time ASC";
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->execute();
                                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -172,7 +177,6 @@
                                     }
 
                                     
-
                                     if($previous == 0){
                                         $index += 1;
                                     }else{
@@ -208,9 +212,9 @@
                                             </td>
                                             
                                             <td class=" font-bold text-center bg-gray-500">
-                                                <div class="pat-status-incoming flex flex-row justify-around items-center"> 
-                                                    ' . $row['status'] . '
-
+                                                <div class=" flex flex-row justify-around items-center"> 
+                                                    
+                                                    <label class="pat-status-incoming"> ' . $row['status'] . ' </label>
                                                     <i class="pencil-btn fa-solid fa-pencil cursor-pointer hover:text-white"></i>
                                                     <input class="hpercode" type="hidden" name="hpercode" value= ' . $row['hpercode'] . '>
 
@@ -276,6 +280,7 @@
                     <div class="flex flex-row justify-end items-center w-full">
                         <button id="pending-start-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-4 rounded-sm text-black"> Start </button>
                         <button class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Forward </button>
+                        <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Approved </button>
                     </div>
                     
 
@@ -339,6 +344,31 @@
                 </div>
 
              </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header flex flex-row justify-between items-center">
+                <div class="flex flex-row justify-between items-center">
+                    <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <i id="modal-icon" class="fa-solid fa-triangle-exclamation ml-2"></i>
+                    <!-- <i class="fa-solid fa-circle-check"></i> -->
+                </div>
+                <button type="button" class="close text-3xl" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                Please fill out the required fields.
+            </div>
+            <div class="modal-footer">
+                <button id="ok-modal-btn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">OK</button>
+                <button id="yes-modal-btn" type="button" class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">Yes</button>
+            </div>
+            </div>
         </div>
     </div>
 

@@ -1,6 +1,7 @@
 $(document).ready(function(){
     var search_clicked = false;
-    
+    // console.log($('#current-page-input').val())
+
     // data table functionalities
     $('#myDataTable').DataTable({
         "bSort": false
@@ -18,7 +19,9 @@ $(document).ready(function(){
     var totalRecords = table.rows().count();
 
     let pencil_index_clicked = 0;
+    let pencil_index_clicked_temp = 0;
     let pat_clicked_code = 0
+    let pat_clicked_code_temp = 0;
 
     var search_clicked = false;
     let processing_time;
@@ -30,15 +33,54 @@ $(document).ready(function(){
 
     // Initialize a timer variable
     var idleTimer;
-    var global_response;
+    let global_realtime_update; 
+    let global_timer_continue;
+    let global_hpercode;
+
     // Add event listeners for user activity
     document.addEventListener("mousemove", resetIdleTimer);
     document.addEventListener("keydown", resetIdleTimer);
 
+    //CHECK IF THERE IS PREVIOUS TIMER THAT CURRENTLY RUNNING BEFORE LOGGING OUT
+    let prev_running_timer_before_logout = []
+
+    for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
+        if(document.querySelectorAll('.pat-status-incoming')[i].textContent === " On-Process "){
+            prev_running_timer_before_logout.push(i)
+        }
+    }
+
+    $.ajax({
+        url: './php/save_process_time.php',
+        method: "POST",
+        data : {what: 'continue'},
+        success: function(response){
+            response = JSON.parse(response);  
+            console.log(response)
+
+            for(let i = 0; i < prev_running_timer_before_logout.length; i++){
+                try_arr[i]['func'](prev_running_timer_before_logout[i] , response[i].progress_timer , response[i].hpercode);
+            }
+
+            // PRINT MO NA LANG BUKAS YUNG VALUE GL HF TOMORROW! :))))((((())))))(((())))
+
+        }
+    })
+
+    
+
+    if($('#current-page-input').val() !== "incoming_page"){
+        // console.log('asdf')
+        processing_time_running = true
+    }
+
     // Function to reset the idle timer
     function resetIdleTimer() {
         // console.log('reset idle timer')
+        // console.log(processing_time_running)
+        
         if(processing_time_running === false){
+            // console.log('pota')
             clearTimeout(incoming_time)
             clearTimeout(idleTimer); // Clear the previous timer
             idleTimer = setTimeout(userIsIdle, idleTime); // Set a new timer
@@ -50,14 +92,16 @@ $(document).ready(function(){
         // console.log("User is idle. You can perform idle actions here.");
 
         if(processing_time_running === false){
+            // console.log('here')
             fetchMySQLData_incoming(); 
         }
     }
     
     // console.log($('#timer-running-input').val())
     if($('#timer-running-input').val() === '1'){   
-        // console.log("here")
-        console.log(true)
+        console.log("here")
+        // console.log(true)
+        processing_time_running = true;
         const data = {
             timer_running : true,
         }
@@ -72,6 +116,9 @@ $(document).ready(function(){
                 response = JSON.parse(response);
                 console.log(response)
 
+                global_realtime_update = response
+                
+
                 // console.log(document.querySelectorAll('.hpercode')[index].value)
 
                 const stopwatchDisplay = document.querySelectorAll('.stopwatch');
@@ -80,7 +127,6 @@ $(document).ready(function(){
                 // }
 
                 let continue_timer_arr = []
-
                 for(let i = 0; i < document.querySelectorAll('.hpercode').length; i++){
                     for(let j = 0; j < response.length; j++){
                         if(response[j]['pat_clicked_code'] === document.querySelectorAll('.hpercode')[i].value){
@@ -89,8 +135,12 @@ $(document).ready(function(){
                     }
                 }
 
-                console.log('index: ' + continue_timer_arr)
+                global_timer_continue = continue_timer_arr
+
+                // console.log('index: ' + continue_timer_arr)
                 // print the value then fixed the other bug
+                // console.log('yawa')
+                console.log(response)
                 for(let i = 0; i < continue_timer_arr.length; i++){
                     stopwatchDisplay[continue_timer_arr[i]].textContent = response[i].elapsedTime
                 }
@@ -98,18 +148,34 @@ $(document).ready(function(){
             }
         })
     }
+    
 
     const ajax_method = (index, event) => {
+        // console.log('okay')
         // console.log(document.querySelectorAll('.hpercode')[index].value)
-        pencil_index_clicked = index
-        pat_clicked_code = document.querySelectorAll('.hpercode')[index].value
-        console.log(pat_clicked_code)
+
+        // if(processing_time_running === true){
+        //     index -= 1
+        // }
+
+        pencil_index_clicked_temp = index
+        // pat_clicked_code = document.querySelectorAll('.hpercode')[index].value
+        pat_clicked_code_temp = document.querySelectorAll('.hpercode')[index].value
+
+        // console.log(pat_clicked_code)
+
+        global_hpercode = document.querySelectorAll('.hpercode')[index].value
+
+        // for(let i = 0; i < document.querySelectorAll('.hpercode').length; i++){
+        //     console.log(document.querySelectorAll('.hpercode')[i].value)
+        // }
 
         const data = {
             status : 'Approved',
             hpercode: document.querySelectorAll('.hpercode')[index].value
         }
 
+        console.log(data)
         $.ajax({
             url: './php/process_pending.php',
             method: "POST",
@@ -195,7 +261,7 @@ $(document).ready(function(){
     }
 
     const populateTbody = (response) =>{
-        console.log('tbody')
+        console.log('tbody' , processing_time_running)
         // console.log("plain: " + response)
         response = JSON.parse(response);
         global_response = response
@@ -275,12 +341,12 @@ $(document).ready(function(){
 
             const td_processing_div = document.createElement('div')
             td_processing_div.className = 'flex flex-row justify-around items-center'
-            td_processing_div.textContent = "Processing"
+            td_processing_div.textContent = "Processing: "
             const td_processing_div_2 = document.createElement('div')
 
-            td_processing_div_2.textContent = (true) ? "00:00:01" : "00:00:00"
-            td_processing_div_2.id = 'stopwatch'
-
+            td_processing_div_2.textContent = "00:00:00"
+            // td_processing_div_2.id = 'stopwatch'
+            td_processing_div_2.className = 'stopwatch'
 
             // <td class="border-2 border-black">
             //     <div class="flex flex-row justify-around items-center">
@@ -342,11 +408,20 @@ $(document).ready(function(){
 
         }
 
+        if(global_timer_continue){
+            for(let i = 0; i  < global_timer_continue.length; i++){
+                // console.log('mags')
+                console.log(global_realtime_update[i].elapsedTime)
+                document.querySelectorAll('.stopwatch')[global_timer_continue[i]].textContent = global_realtime_update[i].elapsedTime
+                // document.querySelectorAll('.stopwatch')[global_timer_continue[i]].textContent = "00:00:17"
+            }
+        }
+        
         const ajax_method = (index) => {
             console.log('hgere')
-            pencil_index_clicked = index
-            console.log(document.querySelectorAll('.hpercode')[index].value)
-    
+            // pencil_index_clicked = index
+            pencil_index_clicked_temp = index
+            pat_clicked_code_temp = document.querySelectorAll('.hpercode')[index].value
             const data = {
                 status : 'Approved',
                 hpercode: document.querySelectorAll('.hpercode')[index].value
@@ -362,7 +437,6 @@ $(document).ready(function(){
                     pendingFunction(response)
                 }
             })
-            
         }
     
         const pencil_elements = document.querySelectorAll('.pencil-btn');
@@ -373,7 +447,10 @@ $(document).ready(function(){
             });
         });
 
+        if(processing_time_running === false){
         incoming_time = setTimeout(fetchMySQLData_incoming, 5000);
+
+        }
     }
 
     function fetchMySQLData_incoming() {
@@ -384,11 +461,8 @@ $(document).ready(function(){
                 from_where : 'incoming'
             },
             success: function(response) {
-                
                 populateTbody(response)
-
             }
-            
         });
         
     }
@@ -397,7 +471,14 @@ $(document).ready(function(){
 
     //incoming-search-btn
     $('#incoming-search-btn').on('click' , function(event){
+        // console.log(processing_time_running)
+        processing_time_running = true;
+        // console.log(processing_time_running)
+        // clearTimeout(incoming_time)
+        // clearTimeout(idleTimer);
+        
         let data = {
+            get_all : false,
             ref_no : $('#incoming-referral-no-search').val(),
             last_name : $('#incoming-last-name-search').val(),
             first_name : $('#incoming-first-name-search').val(),
@@ -406,19 +487,51 @@ $(document).ready(function(){
             agency : $('#incoming-agency-select').val(),
             status : $('#incoming-status-select').val()
         }
-        console.log(data)
+        // console.log(data.middle_name)
+        if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === ""){
+            $('#modal-title').text('Warning')
+            $('#modal-icon').addClass('fa-triangle-exclamation')
+            $('#modal-icon').removeClass('fa-circle-check')
+            $('#modal-body').text('Fill at least one bar.')
+            $('#ok-modal-btn').text('Ok')
+
+            $('#myModal').modal('show');
+        }else{
+            $.ajax({
+                url: './php/incoming_search.php',
+                method: "POST",
+                data:data,
+                success: function(response){
+                    // console.log(response)
+                    
+                    populateTbody(response)
+    
+                }
+            })
+        }
+    })
+
+    $('#incoming-clear-search-btn').on('click' , function(event){
+        // console.log(processing_time_running)
+        processing_time_running = false;
+        // console.log(processing_time_running)
+        // clearTimeout(incoming_time)
+        // clearTimeout(idleTimer);
+        const data = {
+            get_all : true
+        }
+
         $.ajax({
             url: './php/incoming_search.php',
             method: "POST",
             data:data,
             success: function(response){
                 // console.log(response)
+                
                 populateTbody(response)
 
             }
         })
-
-
     })
 
     //$('#pendingModal').removeClass('hidden')
@@ -426,9 +539,30 @@ $(document).ready(function(){
         $('#pendingModal').addClass('hidden')
     })
 
+    $('#yes-modal-btn').on('click' , function(event){
+        console.log('here')
+        // $.ajax({
+        //     url: 'php/logout.php',
+        //     success: function(data) {
+        //         window.location.href = "./index.php" 
+        //     }
+        // });
+    })
+
     let intervalIDs = {};
-    
-    const try_timer = (index) =>{
+
+    function parseTimeToMilliseconds(timeString) {
+        const [hours, minutes, seconds] = timeString.split(":");
+        // console.log(hours, minutes, seconds)
+        const totalMilliseconds = ((parseInt(hours, 10) * 60 + parseInt(minutes, 10)) * 60 + parseInt(seconds, 10)) * 1000;
+        return totalMilliseconds;
+        //5000
+    }
+
+
+    const try_timer = (index , timeVar, after_reload) =>{ // after reload  = hpercode or pat_clicked_code
+        console.log(index, timeVar)
+        // console.log(pat_clicked_code)
         const stopwatchDisplay = document.querySelectorAll('.stopwatch');
         let startTime = 0; 
         let elapsedTime = 0;
@@ -438,29 +572,79 @@ $(document).ready(function(){
             return date.toISOString().substr(11, 8);
         }
 
-        startTime = new Date().getTime() - elapsedTime;
+        if(timeVar !== "0"){
+            startTime =  parseTimeToMilliseconds(timeVar);
+        }else{
+            startTime = new Date().getTime() - elapsedTime;
+        }
+        // console.log(startTime)
+        // startTime = new Date().getTime() - elapsedTime;
 
         const uniqueIdentifier = `interval_${index}`;
+
         intervalIDs[uniqueIdentifier] = setInterval(() => {
+            
+            let data;
+            if(timeVar === "0"){
+                console.log('pisti')
+                const currentTime = new Date().getTime();
+                elapsedTime = currentTime - startTime;
+                // console.log(elapsedTime)
+                try_arr[index].time += 1;
+                // console.log(formatTime(elapsedTime))
+                stopwatchDisplay[index].textContent = formatTime(elapsedTime)
 
-            const currentTime = new Date().getTime();
-            elapsedTime = currentTime - startTime;
+                if(elapsedTime >= 5000){
+                    stopwatchDisplay[index].style.color = "red"
+                }
+                data = {
+                    timer_running : false,
+                    pat_clicked_code : after_reload,
+                    elapsedTime : formatTime(elapsedTime),
+                    table_index : index
+    
+                }
+            }else{
+                // console.log('ysaew')
+                try_arr[index].time += 1;
+                startTime += 1000
+                // console.log(startTime)
+                // console.log(formatTime(startTime))
+                stopwatchDisplay[index].textContent = formatTime(startTime)
+                
+                //120000 = 2 mins
+                if(startTime >= 5000){
+                    stopwatchDisplay[index].style.color = "red"
+                }
 
-            try_arr[index].time += 1;
-            stopwatchDisplay[index].textContent = formatTime(elapsedTime)
-            const data = {
-                timer_running : false,
-                pat_clicked_code : pat_clicked_code,
-                elapsedTime : formatTime(elapsedTime),
+                // console.log('patcode: ' + after_reload, ' --- index: ' + index)
+                data = {
+                    timer_running : true,
+                    pat_clicked_code : after_reload,
+                    elapsedTime : formatTime(startTime),
+                    table_index : index
+
+                }
             }
-            console.log(data)
 
+            // console.log(data)  
             $.ajax({
                url: './php/process_timer.php',
                method: "POST",
                data:data,
-               success: function(response){               
-                   console.log(response)
+               success: function(response){             
+                    response = JSON.parse(response);  
+                    // console.log(response)
+
+                    // for(let i = 0; i< document.querySelectorAll('.pat-status-incoming').length; i++){
+                    //     // console.log(document.querySelectorAll('.pat-status-incoming')[i].textContent)
+                    //     document.querySelectorAll('.pat-status-incoming')[i].textContent = "asdf"
+                    // }
+
+                    for(let i = 0; i < response.length; i++){
+                        document.querySelectorAll('.pat-status-incoming')[response[i].table_index].textContent = "On-Process"
+                    }
+
                 //    stopwatchDisplay[index].textContent = formatTime(elapsedTime);     
                 //    prev_pencil_clicked_index = pencil_index_clicked;          
                }
@@ -468,19 +652,53 @@ $(document).ready(function(){
         }, 1000);
 
         $('#pendingModal').addClass('hidden')
-
     }
 
+    // eto yung mag hahandle ng variables before ng reload
     let try_arr = [
         // {index : 0, time: 0 , func : try_timer},
         // {index : 1, time: 0 , func : try_timer},
         // {index : 2, time: 0 , func : try_timer}
     ]
 
+    // eto naman mag hahandle ng variables after ng reload
+    let after_reload = []
+
     for(let j = 0; j < totalRecords; j++){
         try_arr.push({index : j, time: 0 , func : try_timer})
     }
 
+    if($('#timer-running-input').val() === '1'){
+        // console.log(try_arr)    
+        // try_arr[pencil_index_clicked]['func']('00:02:04');
+        // try_arr[pencil_index_clicked]['func'](pencil_index_clicked);
+
+        $.ajax({
+            url: './php/fetch_onProcess.php',
+            method: "POST",
+            success: function(response){               
+                response = JSON.parse(response);
+                // response.pop()
+
+                // for(let i = 0; i < response.length; i++){
+                //     try_arr[response[i].table_index].time = response[i].elapsedTime
+                // }
+                // console.log(response)
+                after_reload = response
+                console.log(after_reload)
+
+                for(let i = 0; i < response.length; i++){
+                    try_arr[after_reload[i].table_index]['func'](after_reload[i].table_index , after_reload[i].elapsedTime, after_reload[i].pat_clicked_code);
+                }
+            }
+         })
+
+        console.log(try_arr)    
+
+        
+
+    }
+    
     $('#pending-start-btn').on('click' , function(event){
         // clearTimeout(incoming_time)
         // console.log(pencil_index_clicked)
@@ -489,10 +707,46 @@ $(document).ready(function(){
         //     console.log(document.querySelectorAll('.hpercode')[i].value + " , " + i)
         // }
         processing_time_running = true;
+
         var prev_pencil_clicked_index
 
-        // process_timerFunction(processing_time_running, prev_pencil_clicked_index)
-        try_arr[pencil_index_clicked]['func'](pencil_index_clicked);
+        pat_clicked_code = pat_clicked_code_temp
+        pencil_index_clicked = pencil_index_clicked_temp
+        console.log("pat_clicked_code: " + pat_clicked_code + " - pencil_index_clicked: " + pencil_index_clicked)
+        $.ajax({
+            url: './php/fetch_onProcess.php',
+            method: "POST",
+            success: function(response){     
+                response = JSON.parse(response);           
+                console.log(response) 
+                // console.log(global_hpercode)
+
+                let hpercode_index = 0;
+                for(let i = 0; i < document.querySelectorAll('.hpercode').length; i++){
+                    if( document.querySelectorAll('.hpercode')[i].value === global_hpercode){
+                        hpercode_index = i;
+                    }
+                }
+
+                // document.querySelectorAll('.pat-status-incoming')[hpercode_index].textContent = "On-Process"
+
+                // document.querySelectorAll('.pat-status-incoming')[global_timer_continue[i]].textContent = "On-Process"
+                // stopwatchDisplay[index].textContent = formatTime(elapsedTime);     
+                // prev_pencil_clicked_index = pencil_index_clicked;          
+            }
+         })
+
+        // for(let i = 0; i  < global_timer_continue.length; i++){
+        //     document.querySelectorAll('.pat-status-incoming')[global_timer_continue[i]].textContent = "On-Process"
+        // }
+        // process_timerFunction(processing_time_running, prev_pencil_clicked_index) 
+        try_arr[pencil_index_clicked]['func'](pencil_index_clicked , "0" , pat_clicked_code);
+        
+        // location.reload()
+
+        // for(let i = 0; i < document.querySelectorAll('.hpercode').length; i++){
+        // console.log(document.querySelectorAll('.hpercode')[i].value)
+        // }
 
         // Event listener to start the stopwatch
         // document.getElementById('startButton').addEventListener('click', function() {
@@ -584,4 +838,6 @@ $(document).ready(function(){
             delete intervalIDs['interval_0'];
         }
     })
+
+    
 })

@@ -714,6 +714,7 @@
     
     <script src="./js/patient_register_form.js?v=<?php echo time(); ?>"></script>
     <script src="./js/search_name.js?v=<?php echo time(); ?>"></script>
-
+    <!-- <script src="./js/incoming_form.js?v=<?php echo time(); ?>"></script> -->
+    
 </body>
 </html>

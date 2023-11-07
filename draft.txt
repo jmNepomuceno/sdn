@@ -248,4 +248,8 @@ edit button mga fields
                         }
 
                         ?>
-    <!-- <input id="timer-running-input" type="hidden" name="timer-running-input" value=<?php echo $timer_running ?>> -->
+<!-- <input id="timer-running-input" type="hidden" name="timer-running-input" value=<?php echo $timer_running ?>> -->
+
+mondy 0
+wednesday 3
+friday 5
