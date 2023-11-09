@@ -5,16 +5,30 @@
 
     // echo count($_SESSION["process_timer"]);   
     $timer_running = false;
+
+    $post_value_reload = '';
+
     if(count($_SESSION["process_timer"]) >= 1){
         // echo "here";
-        for($i = 0; $i < count($_SESSION["process_timer"]); $i++){
-            foreach ($_SESSION["process_timer"][$i] as $key => $value) {
-                // echo "Key: $key, Value: $value<br>";
-            }
-        }
+        // for($i = 0; $i < count($_SESSION["process_timer"]); $i++){
+        //     foreach ($_SESSION["process_timer"][$i] as $key => $value) {
+        //         echo "Key: $key, Value: $value<br>";
+        //     }
+        // }
         $timer_running = true;
     }
 
+    $sql = "SELECT * FROM incoming_referrals WHERE progress_timer!=''";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if(count($data) > 0){
+        $_SESSION['post_value_reload'] = 'true';
+        $post_value_reload = $_SESSION['post_value_reload'];
+    }
+
+    
 
     // echo $timer_running;
     // if(count($_SESSION["process_timer"]) >= 1){
@@ -54,6 +68,8 @@
 <body>
     <!-- <button id="pending-stop-btn" class="border-2 border-black">Stop</button> -->
     <input id="timer-running-input" type="hidden" name="timer-running-input" value=<?php echo $timer_running ?>>
+    <input id="post-value-reload-input" type="hidden" name="post-value-reload-input" value=<?php echo $post_value_reload ?>>
+    
 
     <!-- <input id="timer-running-input" type="hidden" name="timer-running-input" value="false"> -->
 
@@ -348,12 +364,12 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="myModal-incoming" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header flex flex-row justify-between items-center">
                 <div class="flex flex-row justify-between items-center">
-                    <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <h5 id="modal-title-incoming" class="modal-title-incoming" id="exampleModalLabel">Warning</h5>
                     <i id="modal-icon" class="fa-solid fa-triangle-exclamation ml-2"></i>
                     <!-- <i class="fa-solid fa-circle-check"></i> -->
                 </div>
@@ -361,12 +377,12 @@
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div id="modal-body" class="modal-body">
+            <div id="modal-body-incoming" class="modal-body-incoming ml-2">
                 Please fill out the required fields.
             </div>
             <div class="modal-footer">
-                <button id="ok-modal-btn" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">OK</button>
-                <button id="yes-modal-btn" type="button" class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">Yes</button>
+                <button id="ok-modal-btn-incoming" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">OK</button>
+                <button id="yes-modal-btn-incoming" type="button" class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">Yes</button>
             </div>
             </div>
         </div>

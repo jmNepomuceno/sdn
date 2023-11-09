@@ -3,26 +3,11 @@
     session_start();
     include('../database/connection2.php');
 
-    // echo $_POST["timer_running"];
-
-    // if($_POST["timer_running"] === true){
-    //     echo "motherucker";
-    //     // $temp_array = array();
-    //     // for($i=0; $i< count($_SESSION["process_timer"]); $i++){
-    //     //     $temp_array[] =  '{"pat_clicked_code" :  "' .$_SESSION["process_timer"][$i]["pat_clicked_code"].'" ,  elapsedTime: "' .$_SESSION["process_timer"][$i]["elapsedTime"].'"}';
-    //     // }  
-
-    //     // echo $temp_array;
-
-    //     // $_SESSION["process_timer"] = json_encode($_SESSION["process_timer"]);
-    //     // echo $_SESSION["process_timer"];
-    // }else{
-        
-    // }
-
     $pat_clicked_code = $_POST['pat_clicked_code'];
     $elapsedTime = $_POST['elapsedTime'];
     $table_index = $_POST['table_index'];
+    $approved_bool = $_POST['approved_bool'];
+    $approved_hpercode = $_POST['approved_clicked_hpercode'];
 
     // echo $table_index; 
     $already = false;
@@ -47,7 +32,8 @@
         $_SESSION["process_timer"][] = array( 
             'pat_clicked_code' => $pat_clicked_code, 
             'elapsedTime' => $elapsedTime,
-            'table_index' => $table_index
+            'table_index' => $table_index,
+            'approved_bool' => $approved_bool
         );
 
         $sql = "UPDATE incoming_referrals SET status='On-Process' WHERE hpercode= '". $pat_clicked_code ."' ";
@@ -61,6 +47,17 @@
     //     echo $_SESSION["process_timer"][$i]['elapsedTime'] . " ";
     //     echo $_SESSION["process_timer"][$i]['table_index'];
     // }
+    
+    $i = 0;
+    if($_POST['approved_bool'] === 'true'){
+        foreach ($_SESSION["process_timer"] as $key => &$item) {
+            if ($item['pat_clicked_code'] === $approved_hpercode) {
+                $item['approved_bool'] = 'true';
+                // unset($item['pat_clicked_code']);
+            }
+        }
+        unset($item);
+    }
 
     $temp = json_encode($_SESSION["process_timer"]);
     echo $temp;

@@ -93,6 +93,7 @@
                     $_SESSION['middle_name'] = $data_child[0]['user_middlename'];
                     $_SESSION['user_type'] = 'outside';
 
+                    $_SESSION['post_value_reload'] = 'false';
 
                     header('Location: ./main.php');
                 }else{
@@ -134,6 +135,8 @@
             $_SESSION['middle_name'] = '';
             $_SESSION['user_type'] = 'admin';
             // $_SESSION["process_timer"] = [];
+            $_SESSION['post_value_reload'] = 'false';
+
             header('Location: ./main.php');
         } 
     }

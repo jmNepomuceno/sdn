@@ -15,6 +15,8 @@ $(document).ready(function(){
     // Disable the search button
     $('.dataTables_filter').addClass('hidden');
 
+    let modal_filter = ''
+
     var table = $('#myDataTable').DataTable();
     var totalRecords = table.rows().count();
 
@@ -22,6 +24,8 @@ $(document).ready(function(){
     let pencil_index_clicked_temp = 0;
     let pat_clicked_code = 0
     let pat_clicked_code_temp = 0;
+    let approved_clicked_bool = 'false';
+    let approved_clicked_hpercode = 0;
 
     var search_clicked = false;
     let processing_time;
@@ -41,33 +45,9 @@ $(document).ready(function(){
     document.addEventListener("mousemove", resetIdleTimer);
     document.addEventListener("keydown", resetIdleTimer);
 
-    //CHECK IF THERE IS PREVIOUS TIMER THAT CURRENTLY RUNNING BEFORE LOGGING OUT
-    let prev_running_timer_before_logout = []
-
-    for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
-        if(document.querySelectorAll('.pat-status-incoming')[i].textContent === " On-Process "){
-            prev_running_timer_before_logout.push(i)
-        }
-    }
-
-    $.ajax({
-        url: './php/save_process_time.php',
-        method: "POST",
-        data : {what: 'continue'},
-        success: function(response){
-            response = JSON.parse(response);  
-            console.log(response)
-
-            for(let i = 0; i < prev_running_timer_before_logout.length; i++){
-                try_arr[i]['func'](prev_running_timer_before_logout[i] , response[i].progress_timer , response[i].hpercode);
-            }
-
-            // PRINT MO NA LANG BUKAS YUNG VALUE GL HF TOMORROW! :))))((((())))))(((())))
-
-        }
-    })
-
-    
+    // $(window).on('beforeunload', function() {
+    //     return 'Are you sure you want to leave this page?';
+    // });
 
     if($('#current-page-input').val() !== "incoming_page"){
         // console.log('asdf')
@@ -96,16 +76,47 @@ $(document).ready(function(){
             fetchMySQLData_incoming(); 
         }
     }
-    
-    // console.log($('#timer-running-input').val())
-    if($('#timer-running-input').val() === '1'){   
-        console.log("here")
+
+    // console.log($('#timer-running-input').val() === '1'  , $('#post-value-reload-input').val())
+
+    // ETO TRY MO BUKAS, NAG DADALAWANG RUN KASI YUNG TIMER, KAPAG MAY VALUE AFTER REFRESH SAKA PAG MAY VALUE AFTER LOGGING OUT. gl hf bukas :))))))
+
+    if($('#post-value-reload-input').val() === 'true' && $('#timer-running-input').val() !== '1' ){
+        let prev_running_timer_before_logout = []
+        console.log("reload")
+
+        for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
+            if(document.querySelectorAll('.pat-status-incoming')[i].textContent === " On-Process "){
+                prev_running_timer_before_logout.push(i)
+            }
+        }
+
+        $.ajax({
+            url: './php/save_process_time.php',
+            method: "POST",
+            data : {what: 'continue'},
+            success: function(response){
+                response = JSON.parse(response);  
+                // console.log(response)
+
+                for(let i = 0; i < prev_running_timer_before_logout.length; i++){
+                    try_arr[i]['func'](prev_running_timer_before_logout[i] , response[i].progress_timer , response[i].hpercode);
+                }
+
+            }
+        })
+    }
+
+    if($('#timer-running-input').val() === '1' && $('#post-value-reload-input').val() !== '1'){   
+        console.log("refresh")  
         // console.log(true)
         processing_time_running = true;
         const data = {
             timer_running : true,
         }
-
+        console.log(pencil_index_clicked)
+        // document.querySelectorAll('.pat-status-incoming')[pencil_index_clicked].textContent = "Approved" 
+        
         $.ajax({
             url: './php/continue_process_timer.php',
             method: "POST",
@@ -175,7 +186,7 @@ $(document).ready(function(){
             hpercode: document.querySelectorAll('.hpercode')[index].value
         }
 
-        console.log(data)
+        // console.log(data)
         $.ajax({
             url: './php/process_pending.php',
             method: "POST",
@@ -489,13 +500,13 @@ $(document).ready(function(){
         }
         // console.log(data.middle_name)
         if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === ""){
-            $('#modal-title').text('Warning')
+            $('#modal-title-incoming').text('Warning')
             $('#modal-icon').addClass('fa-triangle-exclamation')
             $('#modal-icon').removeClass('fa-circle-check')
-            $('#modal-body').text('Fill at least one bar.')
-            $('#ok-modal-btn').text('Ok')
+            $('#modal-body-incoming').text('Fill at least one bar.')
+            $('#ok-modal-btn-incoming').text('Ok')
 
-            $('#myModal').modal('show');
+            $('#myModal-incoming').modal('show');
         }else{
             $.ajax({
                 url: './php/incoming_search.php',
@@ -539,14 +550,40 @@ $(document).ready(function(){
         $('#pendingModal').addClass('hidden')
     })
 
-    $('#yes-modal-btn').on('click' , function(event){
+    $('#yes-modal-btn-incoming').on('click' , function(event){
         console.log('here')
-        // $.ajax({
-        //     url: 'php/logout.php',
-        //     success: function(data) {
-        //         window.location.href = "./index.php" 
-        //     }
-        // });
+        if(modal_filter === 'approval_confirmation'){
+            console.log(pencil_index_clicked_temp)
+            console.log(intervalIDs , `interval_${pencil_index_clicked}` , typeof `interval_${pencil_index_clicked}`)
+
+            if (intervalIDs.hasOwnProperty(`interval_${pencil_index_clicked_temp}`)) {
+                console.log('here')
+                // `interval_${pencil_index_clicked}`
+                clearInterval(intervalIDs['interval_' + pencil_index_clicked_temp]);
+                delete intervalIDs['interval_' + pencil_index_clicked_temp];
+
+                // console.log(`interval_${pencil_index_clicked_temp}`)
+                // processing_time_running = true
+                document.querySelectorAll('.pat-status-incoming')[pencil_index_clicked_temp].textContent = "Approved"
+            }
+            console.log(global_hpercode)
+
+            approved_clicked_bool = 'true';
+            approved_clicked_hpercode = global_hpercode
+            $.ajax({
+                url: './php/approved_pending.php',
+                method: "POST",
+                data : {
+                    hpercode : global_hpercode
+                },
+                success: function(response){     
+                    // response = JSON.parse(response);    
+                    console.log(response)         
+                    $('#pendingModal').addClass('hidden')
+                    location.reload();
+                }
+             })
+        }
     })
 
     let intervalIDs = {};
@@ -561,7 +598,7 @@ $(document).ready(function(){
 
 
     const try_timer = (index , timeVar, after_reload) =>{ // after reload  = hpercode or pat_clicked_code
-        console.log(index, timeVar)
+        // console.log(index, timeVar)
         // console.log(pat_clicked_code)
         const stopwatchDisplay = document.querySelectorAll('.stopwatch');
         let startTime = 0; 
@@ -582,8 +619,10 @@ $(document).ready(function(){
 
         const uniqueIdentifier = `interval_${index}`;
 
+        // console.log(uniqueIdentifier)
+
         intervalIDs[uniqueIdentifier] = setInterval(() => {
-            
+            console.log("approved click bool: " + approved_clicked_bool)
             let data;
             if(timeVar === "0"){
                 console.log('pisti')
@@ -601,11 +640,12 @@ $(document).ready(function(){
                     timer_running : false,
                     pat_clicked_code : after_reload,
                     elapsedTime : formatTime(elapsedTime),
-                    table_index : index
-    
+                    table_index : index,
+                    approved_bool : approved_clicked_bool,
+                    approved_clicked_hpercode : approved_clicked_hpercode
                 }
             }else{
-                // console.log('ysaew')
+                console.log('ysaew')
                 try_arr[index].time += 1;
                 startTime += 1000
                 // console.log(startTime)
@@ -622,34 +662,41 @@ $(document).ready(function(){
                     timer_running : true,
                     pat_clicked_code : after_reload,
                     elapsedTime : formatTime(startTime),
-                    table_index : index
-
+                    table_index : index,
+                    approved_bool : approved_clicked_bool,
+                    approved_clicked_hpercode : approved_clicked_hpercode
                 }
             }
 
-            // console.log(data)  
+            console.log(data)  
             $.ajax({
                url: './php/process_timer.php',
                method: "POST",
                data:data,
                success: function(response){             
                     response = JSON.parse(response);  
-                    // console.log(response)
+                    console.log(response)
 
                     // for(let i = 0; i< document.querySelectorAll('.pat-status-incoming').length; i++){
                     //     // console.log(document.querySelectorAll('.pat-status-incoming')[i].textContent)
                     //     document.querySelectorAll('.pat-status-incoming')[i].textContent = "asdf"
                     // }
 
+                    // di na gumaagana yung nasa process_timer.php kasi, pag clinick mo na yung approved humihinto na yung timer para doon sa index na yun.
+                    // its either get mo yung index ng nag stop na timer tas pasa mo sa processtimer php or mag resign ka na lang. pero gl hf pa din 2morrow.
+
+                    //asdf
                     for(let i = 0; i < response.length; i++){
-                        document.querySelectorAll('.pat-status-incoming')[response[i].table_index].textContent = "On-Process"
+                        if(response[i].approved_bool === 'false'){
+                            document.querySelectorAll('.pat-status-incoming')[response[i].table_index].textContent = "On-Process"
+                        }
                     }
 
                 //    stopwatchDisplay[index].textContent = formatTime(elapsedTime);     
                 //    prev_pencil_clicked_index = pencil_index_clicked;          
                }
             })
-        }, 1000);
+        }, 1000); 
 
         $('#pendingModal').addClass('hidden')
     }
@@ -712,13 +759,13 @@ $(document).ready(function(){
 
         pat_clicked_code = pat_clicked_code_temp
         pencil_index_clicked = pencil_index_clicked_temp
-        console.log("pat_clicked_code: " + pat_clicked_code + " - pencil_index_clicked: " + pencil_index_clicked)
+        // console.log("pat_clicked_code: " + pat_clicked_code + " - pencil_index_clicked: " + pencil_index_clicked)
         $.ajax({
             url: './php/fetch_onProcess.php',
             method: "POST",
             success: function(response){     
                 response = JSON.parse(response);           
-                console.log(response) 
+                // console.log(response) 
                 // console.log(global_hpercode)
 
                 let hpercode_index = 0;
@@ -767,77 +814,25 @@ $(document).ready(function(){
         // stopwatchDisplay.textContent = '00:00:00';
         // });
     })
-    
-    const process_timerFunction = (index) =>{
-        // Variables to store time values
-        console.log(pencil_index_clicked)
-        let startTime = 0; // The timestamp when the stopwatch started
-        let elapsedTime = 0; // The total elapsed time in milliseconds
-    
-        // Reference to the display element
-        const stopwatchDisplay = document.querySelectorAll('.stopwatch');
 
-        // Function to format the time in HH:MM:SS format
-        function formatTime(milliseconds) {
-            const date = new Date(milliseconds);
-            return date.toISOString().substr(11, 8);
-        }
+    $('#pending-approved-btn').on('click' , function(event){
+        // pencil_index_clicked
+        // pat_clicked_code
+        // document.querySelectorAll('.pat-status-incoming')[response[i].table_index].textContent = "On-Process"
 
-        // Function to update the stopwatch display
-        function updateStopwatch() {
+        $('#modal-title-incoming').text('Warning')
+        $('#modal-icon').addClass('fa-triangle-exclamation')
+        $('#modal-icon').removeClass('fa-circle-check')
+        $('#modal-body-incoming').text('Approval Confirmation')
+        $('#yes-modal-btn-incoming').removeClass('hidden')
+        $('#ok-modal-btn-incoming').text('No')
 
-           const stopwatchDisplay = document.querySelectorAll('.stopwatch');
+        modal_filter = 'approval_confirmation'
 
-           const currentTime = new Date().getTime();
-           elapsedTime = currentTime - startTime;
-
-           const uniqueIdentifier = `interval_${index}`;
-           intervalIDs[uniqueIdentifier] = setInterval(() => {
-                console.log('here')
-               try_arr[index].time += 1;
-               stopwatchDisplay[index].textContent = elapsedTime
-           }, 1000);
-            
-
-           // papano gagana yung isang timer sa madaming functionalities, gl hf tomorrow :)))))
-           let data = {
-               pat_clicked_code : pat_clicked_code,
-               elapsedTime : formatTime(elapsedTime)
-           }
-           stopwatchDisplay[pencil_index_clicked].textContent = formatTime(elapsedTime);   
-           console.log(data)
-
-           // $.ajax({
-           //     url: './php/process_timer.php',
-           //     method: "POST",
-           //     data:data,
-           //     success: function(response){               
-           //         console.log(response)
-           //         stopwatchDisplay[pencil_index_clicked].textContent = formatTime(elapsedTime);     
-           //         prev_pencil_clicked_index = pencil_index_clicked;          
-           //     }
-           // })
-        }
-
-       //  if(prev_pencil_clicked_index != pencil_index_clicked){
-       //      clearInterval(processing_time);
-       //      elapsedTime = 0;
-       //      stopwatchDisplay.textContent = '00:00:00';
-       //  }
-
-        startTime = new Date().getTime() - elapsedTime;
-        updateStopwatch();
-        // processing_time = setInterval(updateStopwatch, 1000); // Update every second
-        $('#pendingModal').addClass('hidden')
-   }
-
-    $('#pending-stop-btn').on('click' , function(event){
-        if (intervalIDs.hasOwnProperty('interval_0')) {
-            console.log('here')
-            clearInterval(intervalIDs['interval_0']);
-            delete intervalIDs['interval_0'];
-        }
+        $('#myModal-incoming').modal('show');
     })
-
-    
 })
+
+// garcia
+// pakyaw
+// saunders
