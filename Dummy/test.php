@@ -35,44 +35,19 @@
 
 
     <script>
-        // Variables to store time values
-        let startTime = 0; // The timestamp when the stopwatch started
-        let elapsedTime = 0; // The total elapsed time in milliseconds
-    
-        // Reference to the display element
-        const stopwatchDisplay = document.getElementById('stopwatch');
+        var timeString = "00:00:28"; // Example time string in "hh:mm:ss" format
+        var match = timeString.match(/(\d+):(\d+):(\d+)/);
 
-        // Function to format the time in HH:MM:SS format
-        function formatTime(milliseconds) {
-        const date = new Date(milliseconds);
-        return date.toISOString().substr(11, 8);
+        if (match) {
+        var hours = parseInt(match[1], 10);
+        var minutes = parseInt(match[2], 10);
+        var seconds = parseInt(match[3], 10);
+
+        var totalMinutes = hours * 60 + minutes + seconds / 60;
+        console.log(totalMinutes); // Output: 3.466666666666667
+        } else {
+        console.log("No time components found in the string");
         }
-
-        // Function to update the stopwatch display
-        function updateStopwatch() {
-        const currentTime = new Date().getTime();
-        elapsedTime = currentTime - startTime;
-        stopwatchDisplay.textContent = formatTime(elapsedTime);
-        }
-
-        // Event listener to start the stopwatch
-        document.getElementById('startButton').addEventListener('click', function() {
-        startTime = new Date().getTime() - elapsedTime;
-        updateStopwatch();
-        timer = setInterval(updateStopwatch, 1000); // Update every second
-        });
-
-        // Event listener to stop the stopwatch
-        document.getElementById('stopButton').addEventListener('click', function() {
-        clearInterval(timer);
-        });
-
-        // Event listener to reset the stopwatch
-        document.getElementById('resetButton').addEventListener('click', function() {
-        clearInterval(timer);
-        elapsedTime = 0;
-        stopwatchDisplay.textContent = '00:00:00';
-        });
     </script>
 </body>
 </html>

@@ -132,7 +132,7 @@
                     <option value="All"> All</option>
                     <option value="On Process"> On Process</option>
                     <option value="Deferred"> Deferred</option>
-                    <option value="Aproved"> Aproved</option>
+                    <option value="Approved"> Approved</option>
                     <option value="Cancelled"> Cancelled</option>
                     <option value="Arrived"> Arrived</option>
                     <option value="Checked"> Checked</option>
@@ -214,8 +214,8 @@
                                                 </div>
                                             </td>
                                             <td> 
-                                                <label class="text-xs"> Referred: ' . $row['date_time'] . ' </label>
-                                                <label class="text-xs"> Processed: asdf</label>
+                                                <label class="text-md"> Referred: ' . $row['date_time'] . ' </label>
+                                                <label class="text-md"> Processed: </label>
                                             </td>
                                             <td>
                                                 <div class="flex flex-row justify-around items-center">

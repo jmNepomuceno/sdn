@@ -49,7 +49,7 @@
     $landline_no = $_SESSION['hospital_landline'];
     $mobile_no = $_SESSION['hospital_mobile'];
 
-    $referred_time =  $year . '-' .  $month . '-' .  $day  . ' ' .  $hours . ':' .  $minutes . ':' .  $seconds;
+    $referred_time =  $year . '/' .  $month . '/' .  $day  . ' - ' .  $hours . ':' .  $minutes . ':' .  $seconds;
     $status = 'Pending';
 
     /////////////////////////////////////////////////

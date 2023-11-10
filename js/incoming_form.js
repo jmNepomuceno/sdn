@@ -108,13 +108,13 @@ $(document).ready(function(){
     }
 
     if($('#timer-running-input').val() === '1' && $('#post-value-reload-input').val() !== '1'){   
-        console.log("refresh")  
+        // console.log("refresh")  
         // console.log(true)
         processing_time_running = true;
         const data = {
             timer_running : true,
         }
-        console.log(pencil_index_clicked)
+        // console.log(pencil_index_clicked)
         // document.querySelectorAll('.pat-status-incoming')[pencil_index_clicked].textContent = "Approved" 
         
         $.ajax({
@@ -122,7 +122,7 @@ $(document).ready(function(){
             method: "POST",
             data:data,
             success: function(response){
-                // console.log(response)
+                console.log(response)
 
                 response = JSON.parse(response);
                 console.log(response)
@@ -278,7 +278,7 @@ $(document).ready(function(){
         global_response = response
         let index = 0;
         let previous = 0;
-        // console.log("json: " + response)
+        console.log(response)
         const incoming_tbody = document.querySelector('#incoming-tbody')
         // console.log(incoming_tbody.hasChildNodes())
         while (incoming_tbody.hasChildNodes()) {
@@ -339,12 +339,12 @@ $(document).ready(function(){
             const td_time = document.createElement('td')
 
             const td_time_div_label_1 = document.createElement('label')
-            td_time_div_label_1.textContent = "Referred: " + response[i]['date_time']
-            td_time_div_label_1.className = `text-xs`
+            td_time_div_label_1.textContent = " Referred: " + response[i]['date_time']
+            td_time_div_label_1.className = `text-md`
 
             const td_time_div_label_2 = document.createElement('label')
-            td_time_div_label_2.textContent = "Processed: "
-            td_time_div_label_2.className = `text-xs`
+            td_time_div_label_2.textContent = " Processed: "
+            td_time_div_label_2.className = `text-md`
 
 
             const td_processing = document.createElement('td')
@@ -355,7 +355,23 @@ $(document).ready(function(){
             td_processing_div.textContent = "Processing: "
             const td_processing_div_2 = document.createElement('div')
 
-            td_processing_div_2.textContent = "00:00:00"
+            td_processing_div_2.textContent = (response[i]['final_progressed_timer'] === "") ? "00:00:00" : response[i]['final_progressed_timer']
+            
+            var timeString = td_processing_div_2.textContent; // Example time string in "hh:mm:ss" format
+            var match = timeString.match(/(\d+):(\d+):(\d+)/);
+
+            if (match) {
+                var hours = parseInt(match[1], 10);
+                var minutes = parseInt(match[2], 10);
+                var seconds = parseInt(match[3], 10);
+
+                var totalMinutes = hours * 60 + minutes + seconds / 60;
+                // console.log(totalMinutes); // Output: 3.466666666666667
+                if(totalMinutes > 0.05){ // to be change
+                    td_processing_div_2.style.color = 'red'
+                }
+            }
+
             // td_processing_div_2.id = 'stopwatch'
             td_processing_div_2.className = 'stopwatch'
 
@@ -498,8 +514,8 @@ $(document).ready(function(){
             agency : $('#incoming-agency-select').val(),
             status : $('#incoming-status-select').val()
         }
-        // console.log(data.middle_name)
-        if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === ""){
+        console.log(data)
+        if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === "" && data.status === ""){
             $('#modal-title-incoming').text('Warning')
             $('#modal-icon').addClass('fa-triangle-exclamation')
             $('#modal-icon').removeClass('fa-circle-check')
@@ -513,9 +529,13 @@ $(document).ready(function(){
                 method: "POST",
                 data:data,
                 success: function(response){
-                    // console.log(response)
                     
                     populateTbody(response)
+
+                    response = JSON.parse(response);    
+                    console.log(response)
+
+
     
                 }
             })
@@ -554,7 +574,10 @@ $(document).ready(function(){
         console.log('here')
         if(modal_filter === 'approval_confirmation'){
             console.log(pencil_index_clicked_temp)
-            console.log(intervalIDs , `interval_${pencil_index_clicked}` , typeof `interval_${pencil_index_clicked}`)
+            console.log(intervalIDs , `interval_${pencil_index_clicked_temp}` , typeof `interval_${pencil_index_clicked}`)
+
+            const stopwatchDisplay = document.querySelectorAll('.stopwatch');
+            const all_hpercode = document.querySelectorAll('.hpercode');
 
             if (intervalIDs.hasOwnProperty(`interval_${pencil_index_clicked_temp}`)) {
                 console.log('here')
@@ -570,14 +593,28 @@ $(document).ready(function(){
 
             approved_clicked_bool = 'true';
             approved_clicked_hpercode = global_hpercode
+
+            let index = 0;
+
+            for(let i = 0; i < all_hpercode.length; i++){
+                if(all_hpercode[i].value === global_hpercode){
+                    index = i;
+                }
+            }
+
+            const data = {
+                hpercode : global_hpercode,
+                timer : stopwatchDisplay[index].textContent
+            }
+
+            console.log(data);
+
             $.ajax({
                 url: './php/approved_pending.php',
                 method: "POST",
-                data : {
-                    hpercode : global_hpercode
-                },
+                data : data,
                 success: function(response){     
-                    // response = JSON.parse(response);    
+                    response = JSON.parse(response);    
                     console.log(response)         
                     $('#pendingModal').addClass('hidden')
                     location.reload();
@@ -598,7 +635,7 @@ $(document).ready(function(){
 
 
     const try_timer = (index , timeVar, after_reload) =>{ // after reload  = hpercode or pat_clicked_code
-        // console.log(index, timeVar)
+        console.log(index, timeVar)
         // console.log(pat_clicked_code)
         const stopwatchDisplay = document.querySelectorAll('.stopwatch');
         let startTime = 0; 
@@ -622,10 +659,10 @@ $(document).ready(function(){
         // console.log(uniqueIdentifier)
 
         intervalIDs[uniqueIdentifier] = setInterval(() => {
-            console.log("approved click bool: " + approved_clicked_bool)
+            // console.log("approved click bool: " + approved_clicked_bool)
             let data;
             if(timeVar === "0"){
-                console.log('pisti')
+                // console.log('pisti')
                 const currentTime = new Date().getTime();
                 elapsedTime = currentTime - startTime;
                 // console.log(elapsedTime)
@@ -645,7 +682,7 @@ $(document).ready(function(){
                     approved_clicked_hpercode : approved_clicked_hpercode
                 }
             }else{
-                console.log('ysaew')
+                // console.log('ysaew')
                 try_arr[index].time += 1;
                 startTime += 1000
                 // console.log(startTime)
@@ -668,14 +705,14 @@ $(document).ready(function(){
                 }
             }
 
-            console.log(data)  
+            // console.log(data)  
             $.ajax({
                url: './php/process_timer.php',
                method: "POST",
                data:data,
                success: function(response){             
                     response = JSON.parse(response);  
-                    console.log(response)
+                    // console.log(response)
 
                     // for(let i = 0; i< document.querySelectorAll('.pat-status-incoming').length; i++){
                     //     // console.log(document.querySelectorAll('.pat-status-incoming')[i].textContent)
@@ -732,7 +769,7 @@ $(document).ready(function(){
                 // }
                 // console.log(response)
                 after_reload = response
-                console.log(after_reload)
+                // console.log(after_reload)
 
                 for(let i = 0; i < response.length; i++){
                     try_arr[after_reload[i].table_index]['func'](after_reload[i].table_index , after_reload[i].elapsedTime, after_reload[i].pat_clicked_code);

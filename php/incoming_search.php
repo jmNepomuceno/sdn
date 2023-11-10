@@ -17,8 +17,8 @@
         $middle_name = $_POST['middle_name'];
         $case_type = $_POST['case_type'];
         $agency = $_POST['agency'];
-        // $status = $_POST['status'];
-        $status = 'Pending';
+        $status = $_POST['status'];
+        // $status = 'Pending';
 
 
         // referred_by='". $agency ."'
@@ -81,5 +81,5 @@
     $jsonString = json_encode($data);
     echo $jsonString;
 
-    
+    // echo gettype(json_encode($data));
 ?>
