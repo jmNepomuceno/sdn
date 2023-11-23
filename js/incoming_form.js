@@ -41,13 +41,65 @@ $(document).ready(function(){
     let global_timer_continue;
     let global_hpercode;
 
+    const stopwatchDisplay = document.querySelectorAll('.stopwatch');
+
+    let hpercode_with_timer_running = []
+    let table_list = [];
+    let dom_table_list = []
+    let status_table_list = []
+    let secs_add = 0
+
+    table_list = jsonData
+    status_table_list = document.querySelectorAll('.pat-status-incoming')
+
+    dom_table_list = stopwatchDisplay
     // Add event listeners for user activity
     document.addEventListener("mousemove", resetIdleTimer);
     document.addEventListener("keydown", resetIdleTimer);
 
+    
+
     // $(window).on('beforeunload', function() {
     //     return 'Are you sure you want to leave this page?';
     // });
+    
+    // check if the logout date has a value for all the data
+    let logout_date_has_value = false;
+
+    for(let i = 0; i < logout_data.length; i++){
+        console.log(logout_data[i].logout_date)
+        if(logout_data[i].logout_date !== undefined){
+            logout_date_has_value = true
+            break;
+        }
+    }
+
+    if(logout_date_has_value){
+        console.log('here')
+        var dateString1 = login_data
+        var dateString2 = logout_data[0].logout_date
+    
+        // Create Date objects
+        console.log(dateString1)
+        var date1 = new Date(dateString1);
+        var date2 = new Date(dateString2);
+    
+        // Calculate the difference in milliseconds
+        var differenceInMilliseconds = date1 - date2; 
+    
+        // Convert milliseconds to seconds
+        secs_add = differenceInMilliseconds
+    
+        console.log(secs_add)
+    }
+    
+
+    for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
+        
+        if(document.querySelectorAll('.pat-status-incoming')[i].textContent === ' On-Process '){
+            hpercode_with_timer_running.push({ 'hpercode' : document.querySelectorAll('.hpercode')[i].value})
+        }
+    }
 
     if($('#current-page-input').val() !== "incoming_page"){
         // console.log('asdf')
@@ -72,7 +124,6 @@ $(document).ready(function(){
         // console.log("User is idle. You can perform idle actions here.");
 
         if(processing_time_running === false){
-            // console.log('here')
             fetchMySQLData_incoming(); 
         }
     }
@@ -109,7 +160,6 @@ $(document).ready(function(){
 
     if($('#timer-running-input').val() === '1' && $('#post-value-reload-input').val() !== '1'){   
         // console.log("refresh")  
-        // console.log(true)
         processing_time_running = true;
         const data = {
             timer_running : true,
@@ -122,10 +172,10 @@ $(document).ready(function(){
             method: "POST",
             data:data,
             success: function(response){
-                console.log(response)
+                // console.log(response)
 
                 response = JSON.parse(response);
-                console.log(response)
+                // console.log(response)
 
                 global_realtime_update = response
                 
@@ -151,7 +201,7 @@ $(document).ready(function(){
                 // console.log('index: ' + continue_timer_arr)
                 // print the value then fixed the other bug
                 // console.log('yawa')
-                console.log(response)
+                // console.log(response)
                 for(let i = 0; i < continue_timer_arr.length; i++){
                     stopwatchDisplay[continue_timer_arr[i]].textContent = response[i].elapsedTime
                 }
@@ -279,6 +329,9 @@ $(document).ready(function(){
         let index = 0;
         let previous = 0;
         console.log(response)
+        table_list = response
+
+
         const incoming_tbody = document.querySelector('#incoming-tbody')
         // console.log(incoming_tbody.hasChildNodes())
         while (incoming_tbody.hasChildNodes()) {
@@ -343,8 +396,21 @@ $(document).ready(function(){
             td_time_div_label_1.className = `text-md`
 
             const td_time_div_label_2 = document.createElement('label')
-            td_time_div_label_2.textContent = " Processed: "
+            td_time_div_label_2.textContent = " Processed: " + response[i]['final_progressed_timer']
             td_time_div_label_2.className = `text-md`
+
+            if(response[i]['final_progressed_timer'] !== null){
+                // Input time duration in "hh:mm:ss" format
+                let timeString = response[i]['final_progressed_timer'];
+
+                // Split the time string into hours, minutes, and seconds
+                let [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+                // Calculate the total duration in milliseconds
+                let totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+
+                // console.log(totalMilliseconds); // Output: 99000
+            }
 
 
             const td_processing = document.createElement('td')
@@ -355,7 +421,7 @@ $(document).ready(function(){
             td_processing_div.textContent = "Processing: "
             const td_processing_div_2 = document.createElement('div')
 
-            td_processing_div_2.textContent = (response[i]['final_progressed_timer'] === "") ? "00:00:00" : response[i]['final_progressed_timer']
+            td_processing_div_2.textContent = (response[i]['final_progressed_timer'] === null || response[i]['final_progressed_timer'] === "") ? "00:00:00" : response[i]['final_progressed_timer']
             
             var timeString = td_processing_div_2.textContent; // Example time string in "hh:mm:ss" format
             var match = timeString.match(/(\d+):(\d+):(\d+)/);
@@ -374,8 +440,9 @@ $(document).ready(function(){
 
             // td_processing_div_2.id = 'stopwatch'
             td_processing_div_2.className = 'stopwatch'
-
-            // <td class="border-2 border-black">
+            // console.log(td_processing_div_2)
+            dom_table_list.push(td_processing_div_2)
+            // <td class="border-2 border-black">-
             //     <div class="flex flex-row justify-around items-center">
             //         Processing: 
             //         <div> 
@@ -386,13 +453,14 @@ $(document).ready(function(){
             // </td>
 
             //start
-
+            console.log(dom_table_list[i].textContent)
             const td_status = document.createElement('td')
             td_status.className = `font-bold text-center bg-gray-500`
 
             const td_status_div = document.createElement('div')
             td_status_div.className = `pat-status-incoming flex flex-row justify-around items-center`
             td_status_div.textContent = response[i]['status']
+            status_table_list.push(td_status_div)
 
             const td_status_div_i = document.createElement('i')
             td_status_div_i.className = `pencil-btn fa-solid fa-pencil cursor-pointer hover:text-white`
@@ -433,14 +501,43 @@ $(document).ready(function(){
 
             previous = response[i]['reference_num'];
 
+            
+            if(response[i].status === 'On-Process'){
+                hpercode_with_timer_running.push({ 'hpercode' : response[i].hpercode})
+            }
+
+            // console.log(hpercode_with_timer_running)
+
+            // console.log(document.querySelectorAll('.stopwatch'))
+            // console.log(dom_table_list)
+
+            // for(let j = 0; j < hpercode_with_timer_running.length; j++){
+            //     if(hpercode_with_timer_running[j].hpercode === response[i].hpercode){
+            //         td_processing_div_2.textContent = "00:00:00"
+            //     }
+            // }
         }
 
         if(global_timer_continue){
             for(let i = 0; i  < global_timer_continue.length; i++){
                 // console.log('mags')
-                console.log(global_realtime_update[i].elapsedTime)
+                // console.log(global_realtime_update[i].elapsedTime)
+                
+                //andito yung mali. para ready ka na agad sa tuesday :))
+
+                // console.log(global_timer_continue)
+                // console.log(table_list)
+
+                // if(global_timer_continue.length === table_list.length){
+                //     document.querySelectorAll('.stopwatch')[i].textContent = global_realtime_update[i].elapsedTime
+                // }else{
+                //     document.querySelectorAll('.stopwatch')[global_timer_continue[i]].textContent = global_realtime_update[i].elapsedTime
+                // }
+
                 document.querySelectorAll('.stopwatch')[global_timer_continue[i]].textContent = global_realtime_update[i].elapsedTime
+
                 // document.querySelectorAll('.stopwatch')[global_timer_continue[i]].textContent = "00:00:17"
+
             }
         }
         
@@ -472,11 +569,10 @@ $(document).ready(function(){
             element.addEventListener('click', function() {
                 ajax_method(index)
             });
-        });
+        }); 
 
         if(processing_time_running === false){
-        incoming_time = setTimeout(fetchMySQLData_incoming, 5000);
-
+            incoming_time = setTimeout(fetchMySQLData_incoming, 5000);
         }
     }
 
@@ -499,11 +595,13 @@ $(document).ready(function(){
     //incoming-search-btn
     $('#incoming-search-btn').on('click' , function(event){
         // console.log(processing_time_running)
-        processing_time_running = true;
+        // processing_time_running = true;
         // console.log(processing_time_running)
         // clearTimeout(incoming_time)
         // clearTimeout(idleTimer);
-        
+        processing_time_running = true;
+        $('#incoming-clear-search-btn').removeClass('opacity-30 pointer-events-none')
+ 
         let data = {
             get_all : false,
             ref_no : $('#incoming-referral-no-search').val(),
@@ -515,7 +613,7 @@ $(document).ready(function(){
             status : $('#incoming-status-select').val()
         }
         console.log(data)
-        if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === "" && data.status === ""){
+        if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === "" && data.status === 'Pending'){
             $('#modal-title-incoming').text('Warning')
             $('#modal-icon').addClass('fa-triangle-exclamation')
             $('#modal-icon').removeClass('fa-circle-check')
@@ -523,28 +621,31 @@ $(document).ready(function(){
             $('#ok-modal-btn-incoming').text('Ok')
 
             $('#myModal-incoming').modal('show');
+
         }else{
             $.ajax({
                 url: './php/incoming_search.php',
                 method: "POST",
                 data:data,
                 success: function(response){
-                    
+                    search_clicked = true
+                    dom_table_list = []
+                    status_table_list = []
                     populateTbody(response)
 
                     response = JSON.parse(response);    
                     console.log(response)
 
-
-    
                 }
             })
         }
+        
+        
     })
 
     $('#incoming-clear-search-btn').on('click' , function(event){
         // console.log(processing_time_running)
-        processing_time_running = false;
+        // processing_time_running = false;
         // console.log(processing_time_running)
         // clearTimeout(incoming_time)
         // clearTimeout(idleTimer);
@@ -558,8 +659,18 @@ $(document).ready(function(){
             data:data,
             success: function(response){
                 // console.log(response)
-                
+                dom_table_list = []
                 populateTbody(response)
+
+                $('#incoming-referral-no-search').val("")
+                $('#incoming-last-name-search').val("")
+                $('#incoming-first-name-search').val("")
+                $('#incoming-middle-name-search').val("")
+                $('#incoming-type-select').val("")
+                $('#incoming-agency-select').val("")
+                $('#incoming-status-select').val('Pending')
+
+                $('#incoming-clear-search-btn').addClass('opacity-30 pointer-events-none')
 
             }
         })
@@ -635,9 +746,11 @@ $(document).ready(function(){
 
 
     const try_timer = (index , timeVar, after_reload) =>{ // after reload  = hpercode or pat_clicked_code
-        console.log(index, timeVar)
+        // console.log(index, timeVar)
         // console.log(pat_clicked_code)
-        const stopwatchDisplay = document.querySelectorAll('.stopwatch');
+        
+        
+        // const stopwatchDisplay = document.querySelectorAll('.stopwatch');
         let startTime = 0; 
         let elapsedTime = 0;
 
@@ -659,39 +772,150 @@ $(document).ready(function(){
         // console.log(uniqueIdentifier)
 
         intervalIDs[uniqueIdentifier] = setInterval(() => {
+            processing_time_running = true;
+
             // console.log("approved click bool: " + approved_clicked_bool)
             let data;
             if(timeVar === "0"){
                 // console.log('pisti')
+                console.log(dom_table_list)
                 const currentTime = new Date().getTime();
-                elapsedTime = currentTime - startTime;
-                // console.log(elapsedTime)
-                try_arr[index].time += 1;
-                // console.log(formatTime(elapsedTime))
-                stopwatchDisplay[index].textContent = formatTime(elapsedTime)
 
-                if(elapsedTime >= 5000){
-                    stopwatchDisplay[index].style.color = "red"
+                startTime += secs_add
+                secs_add = 0
+
+                elapsedTime = currentTime - startTime;
+
+                try_arr[index].time += 1;    
+                // console.log(formatTime(elapsedTime))
+
+                console.log(hpercode_with_timer_running)
+
+                // stopwatchDisplay[index].textContent = formatTime(elapsedTime)   
+                //for initial load or whenever refreshed
+                if(search_clicked === false){
+                    // console.log("came from refresh, no value on table list")
+                    dom_table_list[index].textContent = formatTime(elapsedTime)  
                 }
+                if(hpercode_with_timer_running.length >= 1 && table_list.length >= 1 && search_clicked === true){
+                    // console.log(table_list)
+                    // console.log(hpercode_with_timer_running)
+
+                    let processing_in_table = false;
+                    for(let i = 0; i < table_list.length; i++){
+                        for(let j = 0; j < hpercode_with_timer_running.length; j++){
+                            // console.log(table_list[i].hpercode , hpercode_with_timer_running[j].hpercode)
+                            if(table_list[i].hpercode === hpercode_with_timer_running[j].hpercode){
+                                processing_in_table = true;
+                            }
+                        }
+                    }
+                    if(processing_in_table === true){
+                        dom_table_list[index].textContent = formatTime(elapsedTime) 
+                        dom_table_list[index].style.color = "red"
+                    }else{
+                        for(let i = 0; i < dom_table_list.length; i++){
+                            dom_table_list[i].textContent = "00:00:00"
+                        }
+                    }
+                }
+
+                // else{
+                //     stopwatchDisplay[index].textContent = "00:00:00"
+                //     // hanapin mo bat nag i stay yung value ng timer kapag nag search na.
+                // }
+                
+
+                //120000 = 2 mins
+                if(elapsedTime >= 5000 && search_clicked === false){
+                    dom_table_list[index].style.color = "red"
+                }
+
                 data = {
                     timer_running : false,
                     pat_clicked_code : after_reload,
                     elapsedTime : formatTime(elapsedTime),
                     table_index : index,
                     approved_bool : approved_clicked_bool,
-                    approved_clicked_hpercode : approved_clicked_hpercode
+                    approved_clicked_hpercode : approved_clicked_hpercode,
+                    secs_add : secs_add
                 }
+
+                // console.log(secs_add)
             }else{
                 // console.log('ysaew')
+                let index_inside_table_list = 0
+
                 try_arr[index].time += 1;
                 startTime += 1000
-                // console.log(startTime)
+
+                startTime += secs_add
+                secs_add = 0;
+
+                // console.log(global_timer_continue)
+                // console.log(table_list)
+
+
+                // console.log(dom_table_list)
                 // console.log(formatTime(startTime))
-                stopwatchDisplay[index].textContent = formatTime(startTime)
+                // hpercode_with_timer_running
+
+                // console.log(hpercode_with_timer_running.length)
+                // console.log(hpercode_with_timer_running)
+                // stopwatchDisplay[index].textContent = formatTime(startTime)   
+
+                // if(index > table_list.length - 1){
+                //     console.log('here')
+                //     for(let i = 0; i < global_timer_continue.length; i++){
+                //         if(global_timer_continue[i] === parseInt(index)){
+                //             index_inside_table_list = i
+                //         }
+                //     }
+
+                //     index = index_inside_table_list
+                // }
+
+                // console.log(index)
+
+                //for initial load or whenever refreshed
+                if(search_clicked === false){
+                    // console.log("came from refresh, no value on table list")
+                    dom_table_list[index].textContent = formatTime(startTime)  
+                }
                 
+                else if(hpercode_with_timer_running.length >= 1 && table_list.length >= 1 && search_clicked === true){
+                    console.log(index)
+                    // console.log(hpercode_with_timer_running)
+
+                    let processing_in_table = false;
+                    for(let i = 0; i < table_list.length; i++){
+                        for(let j = 0; j < hpercode_with_timer_running.length; j++){
+                            // console.log(table_list[i].hpercode , hpercode_with_timer_running[j].hpercode)
+                            if(table_list[i].hpercode === hpercode_with_timer_running[j].hpercode){
+                                processing_in_table = true;
+                            }
+                        }
+                    }
+                    if(processing_in_table === true){
+                        dom_table_list[index].textContent = formatTime(startTime) 
+                        dom_table_list[index].style.color = "red"
+                    }else{
+                        for(let i = 0; i < dom_table_list.length; i++){
+                            dom_table_list[i].textContent = "00:00:00"
+                        }
+                    }
+                }
+
+                // else{
+                //     stopwatchDisplay[index].textContent = "00:00:00"
+                //     // hanapin mo bat nag i stay yung value ng timer kapag nag search na.
+                // }
+                
+
                 //120000 = 2 mins
-                if(startTime >= 5000){
-                    stopwatchDisplay[index].style.color = "red"
+                if(startTime >= 5000 && search_clicked === false){
+                    // console.log(index)
+                    dom_table_list[index].style.color = "red"
                 }
 
                 // console.log('patcode: ' + after_reload, ' --- index: ' + index)
@@ -701,11 +925,12 @@ $(document).ready(function(){
                     elapsedTime : formatTime(startTime),
                     table_index : index,
                     approved_bool : approved_clicked_bool,
-                    approved_clicked_hpercode : approved_clicked_hpercode
+                    approved_clicked_hpercode : approved_clicked_hpercode, 
+                    secs_add : secs_add
                 }
             }
 
-            // console.log(data)  
+            // console.log(secs_add)  
             $.ajax({
                url: './php/process_timer.php',
                method: "POST",
@@ -713,7 +938,8 @@ $(document).ready(function(){
                success: function(response){             
                     response = JSON.parse(response);  
                     // console.log(response)
-
+                    
+                    // console.log(hpercode_with_timer_running)
                     // for(let i = 0; i< document.querySelectorAll('.pat-status-incoming').length; i++){
                     //     // console.log(document.querySelectorAll('.pat-status-incoming')[i].textContent)
                     //     document.querySelectorAll('.pat-status-incoming')[i].textContent = "asdf"
@@ -722,19 +948,24 @@ $(document).ready(function(){
                     // di na gumaagana yung nasa process_timer.php kasi, pag clinick mo na yung approved humihinto na yung timer para doon sa index na yun.
                     // its either get mo yung index ng nag stop na timer tas pasa mo sa processtimer php or mag resign ka na lang. pero gl hf pa din 2morrow.
 
-                    //asdf
-                    for(let i = 0; i < response.length; i++){
-                        if(response[i].approved_bool === 'false'){
-                            document.querySelectorAll('.pat-status-incoming')[response[i].table_index].textContent = "On-Process"
+                    // console.log(table_list , response)
+                    let index_array = [];
+                    // console.log(table_list , response)
+                    for(let i = 0; i < table_list.length; i++){
+                        for(let j = 0; j < response.length; j++){
+                            if(table_list[i].hpercode === response[j].pat_clicked_code){
+                                index_array.push(i)
+                            }
                         }
                     }
-
-                //    stopwatchDisplay[index].textContent = formatTime(elapsedTime);     
-                //    prev_pencil_clicked_index = pencil_index_clicked;          
+                    console.log(index_array)
+                    for(let i = 0; i < index_array.length; i++){
+                        status_table_list[index_array[i]].textContent = "On-Process"
+                    }
                }
             })
         }, 1000); 
-
+        
         $('#pendingModal').addClass('hidden')
     }
 
@@ -790,7 +1021,6 @@ $(document).ready(function(){
         // for(let i = 0; i < document.querySelectorAll('.hpercode').length; i++){
         //     console.log(document.querySelectorAll('.hpercode')[i].value + " , " + i)
         // }
-        processing_time_running = true;
 
         var prev_pencil_clicked_index
 
@@ -868,8 +1098,16 @@ $(document).ready(function(){
 
         $('#myModal-incoming').modal('show');
     })
+
+    // $('#incoming-referral-no-search').val("")
+    // $('#incoming-last-name-search').val("")
+    // $('#incoming-first-name-search').val("")
+    // $('#incoming-middle-name-search').val("")
+    // $('#incoming-type-select').val("")
+    // $('#incoming-agency-select').val("")
+    // $('#incoming-status-select').val('Pending')
 })
 
-// garcia
-// pakyaw
-// saunders
+// process timer total date and time
+// tas pag nag log out, add mo yung [log out time - log in again] sa prev progress time nila.
+// on process pencil button should not be clickable on another account

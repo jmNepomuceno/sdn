@@ -11,14 +11,6 @@
     //     // Add a delay (e.g., sleep for 5 seconds)
     //     sleep(2); // Sleep for 5 seconds
     // }
-
-    
-    // $sql = "SELECT status FROM incoming_referrals WHERE status='Pending' ORDER BY date_time DESC";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-    // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // $count = count($data);
 ?>
 
 <!DOCTYPE html>

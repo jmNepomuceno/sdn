@@ -8,7 +8,7 @@
             // echo "here";
             for($i = 0; $i < count($_SESSION["process_timer"]); $i++){
                 $sql = "UPDATE incoming_referrals SET progress_timer = '". $_SESSION["process_timer"][$i]['elapsedTime'] ."' , refer_to_code='". $_SESSION['hospital_code'] ."'  
-                WHERE hpercode='". $_SESSION["process_timer"][$i]['pat_clicked_code'] ."'";
+                , logout_date='". $_POST['date'] ."' WHERE hpercode='". $_SESSION["process_timer"][$i]['pat_clicked_code'] ."'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
             }

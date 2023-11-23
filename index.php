@@ -137,6 +137,28 @@
             // $_SESSION["process_timer"] = [];
             $_SESSION['post_value_reload'] = 'false';
 
+            // Get the current date and time
+            $timezone = new DateTimeZone('Asia/Manila'); // Replace 'Your/Timezone' with your actual time zone
+            $currentDateTime = new DateTime("",$timezone);
+
+            // Format date components
+            $year = $currentDateTime->format('Y');
+            $month = $currentDateTime->format('m');
+            $day = $currentDateTime->format('d');
+
+            $hours = $currentDateTime->format('H');
+            $minutes = $currentDateTime->format('i');
+            $seconds = $currentDateTime->format('s');
+
+            $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
+
+            $_SESSION['login_time'] = $final_date;
+
+            $sql = "UPDATE incoming_referrals SET login_time = '". $final_date ."' , login_user='". $sdn_username ."' ";
+
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+
             header('Location: ./main.php');
         } 
     }

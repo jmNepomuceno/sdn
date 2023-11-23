@@ -6,8 +6,9 @@
     $get_all = $_POST['get_all'];
     // echo $get_all;
 
+    
     if($get_all === 'true'){
-        $sql = "SELECT * FROM incoming_referrals WHERE refer_to = '" . $_SESSION["hospital_name"] . "'";
+        $sql = "SELECT * FROM incoming_referrals WHERE refer_to = '" . $_SESSION["hospital_name"] . "' AND (status='Pending' OR status='On-Process')";
         // echo 'true';
     }
     if($get_all === 'false'){
@@ -48,7 +49,7 @@
         }
 
         if (!empty($case_type)) {
-            $conditions[] = "type = '" . $case_type . "'";
+            $conditions[] = "type = '" . $case_type . "'"; 
         }
 
         if (!empty($agency)) {
@@ -56,7 +57,17 @@
         }
 
         if (!empty($status)) {
-            $conditions[] = "status = '" . $status . "'";
+            if($status === 'All'){
+                $conditions[] = "(status='Pending' OR status='On-Process' OR status='Deferred' OR status='Approved' OR status='Cancelled'
+                OR status='Arrived' OR status='Checked' OR status='Admitted' OR status='Discharged' OR status='For Follow Up' OR status='Referred Back')";
+            }
+            // else if($status === 'Pending'){
+            //     $conditions[] = "status='Pending' OR status='On-Process'";
+            // }
+            else{
+                // $conditions[] = "(status='Pending' OR status='On-Process')";
+                $conditions[] = "status = '" . $status . "'";
+            }
         }
 
         if (count($conditions) > 0) {
@@ -76,7 +87,7 @@
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  
 
-    // echo count($data);
+    // echo count($data);3
 
     $jsonString = json_encode($data);
     echo $jsonString;

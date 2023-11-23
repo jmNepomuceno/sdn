@@ -36,7 +36,23 @@
     //         echo $_SESSION['process_timer'][$i]['elapsedTime'] . '<br/>';
     //     }
     // }
+
+    $sql = "SELECT * FROM incoming_referrals WHERE logout_date!='null' AND refer_to = '" . $_SESSION["hospital_name"] . "' ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // echo '<pre>'; print_r($data); echo '</pre>';
     
+    $logout_data = json_encode($data);
+    // $login_data = $_SESSION['login_time'];
+
+
+    // echo json_encode($data);
+    // echo $_SESSION['login_time'];
+
+    // $logout_data = 3;
+    // $login_data = 3;
 ?>
 
 <!DOCTYPE html>
@@ -130,7 +146,7 @@
                 <select id='incoming-status-select' class="w-full border-2 border-[#bfbfbf] rounded-md">
                     <option value="Pending">Pending</option>
                     <option value="All"> All</option>
-                    <option value="On Process"> On Process</option>
+                    <option value="On-Process"> On-Process</option>
                     <option value="Deferred"> Deferred</option>
                     <option value="Approved"> Approved</option>
                     <option value="Cancelled"> Cancelled</option>
@@ -144,7 +160,7 @@
             </div>
 
             <div class="w-[15%] h-full flex flex-row justify-around items-center font-bold text-white">
-                <button id='incoming-clear-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46]">Clear</button>
+                <button id='incoming-clear-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46] opacity-30 pointer-events-none">Clear</button>
                 <button id='incoming-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46]">Search</button>
             </div>
         </div>
@@ -177,7 +193,8 @@
                                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 // echo count($data);
-                                
+                                $jsonData = json_encode($data);
+
                                 $index = 0;
                                 $previous = 0;
 
@@ -404,6 +421,11 @@
     //     $('#myDataTable').DataTable();
     // });
 
+        var jsonData = <?php echo $jsonData; ?>;
+        var logout_data = <?php echo $logout_data; ?>;
+        var login_data = "<?php echo $_SESSION['login_time']; ?>";
+
+        // console.log(logout_data)
     
     </script>
 </body>

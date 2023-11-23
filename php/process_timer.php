@@ -22,7 +22,11 @@
     } 
 
     //echo $already . " / " . $index .  " \n";
-
+    if($_POST['secs_add'] === '0'){
+        $sql = "UPDATE incoming_referrals SET logout_date=null, progress_timer=null, refer_to_code=null";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+    }
     if($already === true){
         // echo "true \n"; 
         $_SESSION["process_timer"][$index]['elapsedTime'] = $elapsedTime;
