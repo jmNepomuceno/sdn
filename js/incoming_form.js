@@ -10,7 +10,7 @@ $(document).ready(function(){
     var dataTable = $('#myDataTable').DataTable();
     $('#myDataTable thead th').removeClass('sorting sorting_asc sorting_desc');
     // Disable the search input 
-    dataTable.search('').draw();
+    dataTable.search('').draw(); 
 
     // Disable the search button
     $('.dataTables_filter').addClass('hidden');
@@ -38,8 +38,10 @@ $(document).ready(function(){
     // Initialize a timer variable
     var idleTimer;
     let global_realtime_update; 
-    let global_timer_continue;
-    let global_hpercode;
+    let global_timer_continue = [];
+    let global_hpercode; // current clicked value
+    let global_hpercode_all = document.querySelectorAll('.hpercode')
+    let global_hpercode_arr = [];
 
     const stopwatchDisplay = document.querySelectorAll('.stopwatch');
 
@@ -48,6 +50,10 @@ $(document).ready(function(){
     let dom_table_list = []
     let status_table_list = []
     let secs_add = 0
+
+    let status_search = ""
+
+    let intervalIDs = {};
 
     table_list = jsonData
     status_table_list = document.querySelectorAll('.pat-status-incoming')
@@ -175,7 +181,7 @@ $(document).ready(function(){
                 // console.log(response)
 
                 response = JSON.parse(response);
-                // console.log(response)
+                console.log(response)
 
                 global_realtime_update = response
                 
@@ -422,7 +428,9 @@ $(document).ready(function(){
             const td_processing_div_2 = document.createElement('div')
 
             td_processing_div_2.textContent = (response[i]['final_progressed_timer'] === null || response[i]['final_progressed_timer'] === "") ? "00:00:00" : response[i]['final_progressed_timer']
-            
+            if(status_search === 'Approved'){
+                td_processing_div_2.textContent = 'Done'
+            }
             var timeString = td_processing_div_2.textContent; // Example time string in "hh:mm:ss" format
             var match = timeString.match(/(\d+):(\d+):(\d+)/);
 
@@ -470,6 +478,7 @@ $(document).ready(function(){
             td_status_div_input.type = "hidden";
             td_status_div_input.name = "hpercode";
             td_status_div_input.value = response[i]['hpercode'];
+            global_hpercode_all.push(td_status_div_input)
 
             td_status_div.appendChild(td_status_div_i)
             td_status_div.appendChild(td_status_div_input)
@@ -594,12 +603,14 @@ $(document).ready(function(){
 
     //incoming-search-btn
     $('#incoming-search-btn').on('click' , function(event){
-        // console.log(processing_time_running)
+        // console.log(global_timer_continue)
+        // console.log(dom_table_list)
         // processing_time_running = true;
         // console.log(processing_time_running)
         // clearTimeout(incoming_time)
         // clearTimeout(idleTimer);
         processing_time_running = true;
+        
         $('#incoming-clear-search-btn').removeClass('opacity-30 pointer-events-none')
  
         let data = {
@@ -612,7 +623,7 @@ $(document).ready(function(){
             agency : $('#incoming-agency-select').val(),
             status : $('#incoming-status-select').val()
         }
-        console.log(data)
+        // console.log(data)
         if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === "" && data.status === 'Pending'){
             $('#modal-title-incoming').text('Warning')
             $('#modal-icon').addClass('fa-triangle-exclamation')
@@ -621,16 +632,43 @@ $(document).ready(function(){
             $('#ok-modal-btn-incoming').text('Ok')
 
             $('#myModal-incoming').modal('show');
-
+            
         }else{
+            data['stopwatch_arr'] = []
+            data['hpercode_arr'] = []
+            if(global_timer_continue.length > 0){
+
+                data['stopwatch_arr'] = []
+                for(let i = 0; i < global_timer_continue.length; i++){
+                    global_hpercode_arr.push(global_hpercode_all[global_timer_continue[i]].value)
+                    data['stopwatch_arr'].push(dom_table_list[global_timer_continue[i]].textContent)
+                }
+                data['hpercode_arr'] = global_hpercode_arr
+
+                for (let i = 0; i < global_timer_continue.length; i++) {
+                    clearInterval(intervalIDs['interval_' + global_timer_continue[i]]);
+                    delete intervalIDs['interval_' + global_timer_continue[i]];
+                }
+
+                for(let i = 0; i < global_timer_continue.length; i++){
+                    try_arr[i]['func'](i , dom_table_list[global_timer_continue[i]].textContent , global_hpercode_arr[i]);
+                }
+                
+
+            }
+            
+            console.log(data.stopwatch_arr.length)
+
+            status_search = data.status
             $.ajax({
                 url: './php/incoming_search.php',
-                method: "POST",
+                method: "POST", 
                 data:data,
                 success: function(response){
                     search_clicked = true
                     dom_table_list = []
                     status_table_list = []
+                    global_hpercode_all = []
                     populateTbody(response)
 
                     response = JSON.parse(response);    
@@ -649,8 +687,30 @@ $(document).ready(function(){
         // console.log(processing_time_running)
         // clearTimeout(incoming_time)
         // clearTimeout(idleTimer);
-        const data = {
+        search_clicked = false;
+        status_search = ""  
+        let data = {
             get_all : true
+        }
+
+        global_hpercode_arr = []
+
+        data['stopwatch_arr'] = []
+        for(let i = 0; i < global_timer_continue.length; i++){
+            global_hpercode_arr.push(global_hpercode_all[i].value)
+            data['stopwatch_arr'].push(dom_table_list[i].textContent)
+        }
+        data['hpercode_arr'] = global_hpercode_arr
+
+        for (let i = 0; i < global_timer_continue.length; i++) {
+            clearInterval(intervalIDs['interval_' + i]);
+            delete intervalIDs['interval_' + i];
+        }
+
+        console.log(global_timer_continue)
+
+        for(let i = 0; i < global_timer_continue.length; i++){
+            try_arr[global_timer_continue[i]]['func'](global_timer_continue[i] , data['stopwatch_arr'][i] , global_hpercode_arr[i]);
         }
 
         $.ajax({
@@ -661,6 +721,9 @@ $(document).ready(function(){
                 // console.log(response)
                 dom_table_list = []
                 populateTbody(response)
+
+                response = JSON.parse(response);    
+                console.log(response)
 
                 $('#incoming-referral-no-search').val("")
                 $('#incoming-last-name-search').val("")
@@ -734,7 +797,6 @@ $(document).ready(function(){
         }
     })
 
-    let intervalIDs = {};
 
     function parseTimeToMilliseconds(timeString) {
         const [hours, minutes, seconds] = timeString.split(":");
@@ -777,7 +839,7 @@ $(document).ready(function(){
             // console.log("approved click bool: " + approved_clicked_bool)
             let data;
             if(timeVar === "0"){
-                // console.log('pisti')
+                console.log('pisti')
                 console.log(dom_table_list)
                 const currentTime = new Date().getTime();
 
@@ -789,36 +851,43 @@ $(document).ready(function(){
                 try_arr[index].time += 1;    
                 // console.log(formatTime(elapsedTime))
 
-                console.log(hpercode_with_timer_running)
+                // console.log(hpercode_with_timer_running)
+
+
+                if(search_clicked === false){
+                    console.log('here')
+                }
+
+                dom_table_list[index].textContent = formatTime(elapsedTime)  
 
                 // stopwatchDisplay[index].textContent = formatTime(elapsedTime)   
                 //for initial load or whenever refreshed
-                if(search_clicked === false){
-                    // console.log("came from refresh, no value on table list")
-                    dom_table_list[index].textContent = formatTime(elapsedTime)  
-                }
-                if(hpercode_with_timer_running.length >= 1 && table_list.length >= 1 && search_clicked === true){
-                    // console.log(table_list)
-                    // console.log(hpercode_with_timer_running)
+                // if(search_clicked === false){
+                //     // console.log("came from refresh, no value on table list")
+                //     dom_table_list[index].textContent = formatTime(elapsedTime)  
+                // }
+                // if(hpercode_with_timer_running.length >= 1 && table_list.length >= 1 && search_clicked === true){
+                //     // console.log(table_list)
+                //     // console.log(hpercode_with_timer_running)
 
-                    let processing_in_table = false;
-                    for(let i = 0; i < table_list.length; i++){
-                        for(let j = 0; j < hpercode_with_timer_running.length; j++){
-                            // console.log(table_list[i].hpercode , hpercode_with_timer_running[j].hpercode)
-                            if(table_list[i].hpercode === hpercode_with_timer_running[j].hpercode){
-                                processing_in_table = true;
-                            }
-                        }
-                    }
-                    if(processing_in_table === true){
-                        dom_table_list[index].textContent = formatTime(elapsedTime) 
-                        dom_table_list[index].style.color = "red"
-                    }else{
-                        for(let i = 0; i < dom_table_list.length; i++){
-                            dom_table_list[i].textContent = "00:00:00"
-                        }
-                    }
-                }
+                //     let processing_in_table = false;
+                //     for(let i = 0; i < table_list.length; i++){
+                //         for(let j = 0; j < hpercode_with_timer_running.length; j++){
+                //             // console.log(table_list[i].hpercode , hpercode_with_timer_running[j].hpercode)
+                //             if(table_list[i].hpercode === hpercode_with_timer_running[j].hpercode){
+                //                 processing_in_table = true;
+                //             }
+                //         }
+                //     }
+                //     if(processing_in_table === true){
+                //         dom_table_list[index].textContent = formatTime(elapsedTime) 
+                //         dom_table_list[index].style.color = "red"
+                //     }else{
+                //         for(let i = 0; i < dom_table_list.length; i++){
+                //             dom_table_list[i].textContent = "00:00:00"
+                //         }
+                //     }
+                // }
 
                 // else{
                 //     stopwatchDisplay[index].textContent = "00:00:00"
@@ -827,7 +896,11 @@ $(document).ready(function(){
                 
 
                 //120000 = 2 mins
-                if(elapsedTime >= 5000 && search_clicked === false){
+                // if(elapsedTime >= 5000 && search_clicked === false){
+                //     dom_table_list[index].style.color = "red"
+                // }
+
+                if(elapsedTime >= 5000){
                     dom_table_list[index].style.color = "red"
                 }
 
@@ -843,7 +916,7 @@ $(document).ready(function(){
 
                 // console.log(secs_add)
             }else{
-                // console.log('ysaew')
+                console.log('ysaew')
                 let index_inside_table_list = 0
 
                 try_arr[index].time += 1;
@@ -878,30 +951,47 @@ $(document).ready(function(){
                 // console.log(index)
 
                 //for initial load or whenever refreshed
-                if(search_clicked === false){
-                    // console.log("came from refresh, no value on table list")
-                    dom_table_list[index].textContent = formatTime(startTime)  
-                }
+                // if(search_clicked === false){
+                //     // console.log("came from refresh, no value on table list")
+                //     dom_table_list[index].textContent = formatTime(startTime)  
+                // }
                 
-                else if(hpercode_with_timer_running.length >= 1 && table_list.length >= 1 && search_clicked === true){
-                    console.log(index)
-                    // console.log(hpercode_with_timer_running)
+                // else if(hpercode_with_timer_running.length >= 1 && table_list.length >= 1 && search_clicked === true){
+                //     console.log(index)
+                //     // console.log(hpercode_with_timer_running)
 
-                    let processing_in_table = false;
-                    for(let i = 0; i < table_list.length; i++){
-                        for(let j = 0; j < hpercode_with_timer_running.length; j++){
-                            // console.log(table_list[i].hpercode , hpercode_with_timer_running[j].hpercode)
-                            if(table_list[i].hpercode === hpercode_with_timer_running[j].hpercode){
-                                processing_in_table = true;
-                            }
-                        }
-                    }
-                    if(processing_in_table === true){
-                        dom_table_list[index].textContent = formatTime(startTime) 
-                        dom_table_list[index].style.color = "red"
-                    }else{
+                //     let processing_in_table = false;
+                //     for(let i = 0; i < table_list.length; i++){
+                //         for(let j = 0; j < hpercode_with_timer_running.length; j++){
+                //             // console.log(table_list[i].hpercode , hpercode_with_timer_running[j].hpercode)
+                //             if(table_list[i].hpercode === hpercode_with_timer_running[j].hpercode){
+                //                 processing_in_table = true;
+                //             }
+                //         }
+                //     }
+                //     if(processing_in_table === true){
+                //         dom_table_list[index].textContent = formatTime(startTime) 
+                //         dom_table_list[index].style.color = "red"
+                //     }else{
+                //         for(let i = 0; i < dom_table_list.length; i++){
+                //             dom_table_list[i].textContent = "00:00:00"
+                //         }
+                //     }
+                // }
+
+                // dom_table_list[index].textContent = formatTime(startTime)  
+
+
+                console.log(status_search)
+                if(search_clicked === false){
+                    dom_table_list[index].textContent = formatTime(startTime)  
+                }else{
+                    // console.log(dom_table_list[index].textContent)
+                    // console.log(index)
+                    if(status_search === 'Approved'){
                         for(let i = 0; i < dom_table_list.length; i++){
-                            dom_table_list[i].textContent = "00:00:00"
+                            // dom_table_list[i].textContent = 'Done'
+                            dom_table_list[i].style.color = "black"
                         }
                     }
                 }
@@ -913,8 +1003,12 @@ $(document).ready(function(){
                 
 
                 //120000 = 2 mins
-                if(startTime >= 5000 && search_clicked === false){
-                    // console.log(index)
+                // if(startTime >= 5000 && search_clicked === false){
+                //     // console.log(index)
+                //     dom_table_list[index].style.color = "red"
+                // }
+
+                if(startTime >= 5000){
                     dom_table_list[index].style.color = "red"
                 }
 
@@ -938,7 +1032,7 @@ $(document).ready(function(){
                success: function(response){             
                     response = JSON.parse(response);  
                     // console.log(response)
-                    
+                     
                     // console.log(hpercode_with_timer_running)
                     // for(let i = 0; i< document.querySelectorAll('.pat-status-incoming').length; i++){
                     //     // console.log(document.querySelectorAll('.pat-status-incoming')[i].textContent)
@@ -958,7 +1052,7 @@ $(document).ready(function(){
                             }
                         }
                     }
-                    console.log(index_array)
+                    console.log(status_table_list[0].textContent)
                     for(let i = 0; i < index_array.length; i++){
                         status_table_list[index_array[i]].textContent = "On-Process"
                     }

@@ -2,17 +2,7 @@
     session_start();
     include("../database/connection2.php");
 
-    $status = $_POST['status'];
     $hpercode = $_POST['hpercode'];
-
-    // $sql = "UPDATE incoming_referrals SET status = :status WHERE hpercode = :hpercode";
-
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->bindParam(':status', $status, PDO::PARAM_STR);
-    // $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
-    
-    // $stmt->execute();
-    // echo $hpercode;
     $sql = "SELECT * FROM incoming_referrals WHERE hpercode='". $hpercode ."' ";
 
     $stmt = $pdo->prepare($sql);

@@ -6,10 +6,10 @@
     $pat_clicked_code = $_POST['pat_clicked_code'];
     $elapsedTime = $_POST['elapsedTime'];
     $table_index = $_POST['table_index'];
+
     $approved_bool = $_POST['approved_bool'];
     $approved_hpercode = $_POST['approved_clicked_hpercode'];
 
-    // echo $table_index; 
     $already = false;
     $index = 0;
 

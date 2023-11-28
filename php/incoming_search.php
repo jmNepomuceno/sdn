@@ -4,14 +4,29 @@
     //SELECT * FROM incoming_referrals WHERE status='Pending' AND referred_by='Limay Medical Center'
     
     $get_all = $_POST['get_all'];
-    // echo $get_all;
-
     
     if($get_all === 'true'){
         $sql = "SELECT * FROM incoming_referrals WHERE refer_to = '" . $_SESSION["hospital_name"] . "' AND (status='Pending' OR status='On-Process')";
         // echo 'true';
     }
     if($get_all === 'false'){
+        if(isset($_POST['stopwatch_arr']) && isset($_POST['hpercode_arr'])){
+
+        $stopwatchArr = $_POST['stopwatch_arr'];
+        $hpercode_arr = $_POST['hpercode_arr'];
+
+        if(count($stopwatchArr) > 0){
+            for($i = 0; $i < count($stopwatchArr); $i++){
+                $sql = "UPDATE incoming_referrals SET response_time='". $stopwatchArr[$i] ."' WHERE hpercode='". $hpercode_arr[$i] ."' ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+            }
+            // $sql = "UPDATE incoming_referrals SET logout_date=null, progress_timer=null, refer_to_code=null";
+            // $stmt = $pdo->prepare($sql);
+            // $stmt->execute();
+        }
+    }
+
         $ref_no = $_POST['ref_no'];
         $last_name = $_POST['last_name'];
         $first_name = $_POST['first_name'];
@@ -87,7 +102,7 @@
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  
 
-    // echo count($data);3
+    // echo count($data);
 
     $jsonString = json_encode($data);
     echo $jsonString;

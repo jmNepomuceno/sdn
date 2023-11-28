@@ -8,7 +8,7 @@
             // echo "here";
             for($i = 0; $i < count($_SESSION["process_timer"]); $i++){
                 $sql = "UPDATE incoming_referrals SET progress_timer = '". $_SESSION["process_timer"][$i]['elapsedTime'] ."' , refer_to_code='". $_SESSION['hospital_code'] ."'  
-                , logout_date='". $_POST['date'] ."' WHERE hpercode='". $_SESSION["process_timer"][$i]['pat_clicked_code'] ."'";
+                , logout_date='". $_POST['date'] ."' WHERE hpercode='". $_SESSION["process_timer"][$i]['global_single_hpercode'] ."'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
             }
@@ -20,7 +20,7 @@
     }
     
     if($what === 'continue'){
-        $sql = "SELECT * FROM incoming_referrals WHERE progress_timer!=''";
+        $sql = "SELECT hpercode,status,progress_timer FROM incoming_referrals WHERE progress_timer!=''";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
