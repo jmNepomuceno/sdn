@@ -30,8 +30,5 @@
             echo $notif_value;
         }
     }
-    
-
-    
-    
 ?>
+

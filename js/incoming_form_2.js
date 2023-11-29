@@ -31,17 +31,72 @@ $(document).ready(function(){
 
     let intervalIDs = {};
     let length_curr_table = document.querySelectorAll('.hpercode').length;
+    let inactivityTimer;
 
     // ---------------------------------------------------------------------------------------------------------
+
+    let userIsActive = true;
+    function handleUserActivity() {
+        userIsActive = true;
+        // Additional code to handle user activity if needed
+        // console.log('active')
+    }
+
+    function handleUserInactivity() {
+        console.log('inactive')
+        userIsActive = false;
+        // Additional code to handle user inactivity if needed
+        $.ajax({
+            url: 'php/fetch_interval.php',
+            method: "POST",
+            data : {
+                from_where : 'incoming'
+            },
+            success: function(response) {
+                global_stopwatch_all = []
+                global_hpercode_all = []
+                populateTbody(response)
+
+                const pencil_elements = document.querySelectorAll('.pencil-btn');
+                pencil_elements.forEach(function(element, index) {
+                    element.addEventListener('click', function() {
+                        console.log('den')
+                        ajax_method(index)
+                    });
+                });
+            }
+        });
+    }
+
+    // Attach event listeners
+    document.addEventListener('mousemove', handleUserActivity);
+
+    // Set up a timer to check user inactivity periodically
+    const inactivityInterval = 10000; // Execute every 5 seconds (adjust as needed)
+
+    function startInactivityTimer() {
+        inactivityTimer = setInterval(() => {
+            if (!userIsActive) {
+                handleUserInactivity();
+            }
+            userIsActive = false; // Reset userIsActive after each check
+        }, inactivityInterval);
+    }
+
+    function resetInactivityTimer() {
+        clearInterval(inactivityTimer);
+        startInactivityTimer();
+    }
+
+    // Start the inactivity timer when the page loads
+    startInactivityTimer();
 
     //start - open modal 
     const ajax_method = (index, event) => {
         global_single_hpercode = document.querySelectorAll('.hpercode')[index].value
-
         const data = {
             hpercode: document.querySelectorAll('.hpercode')[index].value
         }
-
         $.ajax({
             url: './php/process_pending.php',
             method: "POST",
@@ -57,6 +112,7 @@ $(document).ready(function(){
     const pencil_elements = document.querySelectorAll('.pencil-btn');
     pencil_elements.forEach(function(element, index) {
         element.addEventListener('click', function() {
+            console.log('den')
             ajax_method(index)
         });
     });
@@ -119,11 +175,11 @@ $(document).ready(function(){
 
     // populate the body
     const populateTbody = (response) =>{
-        console.log('tbody')
+        // console.log('tbody')
         response = JSON.parse(response);
         let index = 0;
         let previous = 0;
-        console.log(response)
+        // console.log(response)
 
         // need to update the laman of all global variables on every populate of tbody.
         // update the global_hpercode_all based on the current laman of the table
@@ -217,16 +273,22 @@ $(document).ready(function(){
             td_processing_div.className = 'flex flex-row justify-around items-center'
             td_processing_div.textContent = "Processing: "
             const td_processing_div_2 = document.createElement('div')
-            
+
             if (data_arr[response[i]['hpercode']].status === 'On-Process') {
                 // if it shows the patient who has currently processing, we are going to delete first the timer, then run again the timer 
                 // upon sorting, whenever it shows or disappears, we are going to delete and re run the timer, to show the current timer
-                console.log('kyla')
-                clearInterval(intervalIDs['interval_' + response[i]['hpercode']]);
-                delete intervalIDs['interval_' + response[i]['hpercode']];
+                // console.log('kyla')
+                // clearInterval(intervalIDs['interval_' + response[i]['hpercode']]);
+                // delete intervalIDs['interval_' + response[i]['hpercode']];
 
-                // continue
-                data_arr[global_single_hpercode]['func'](response[i]['hpercode'] , data_arr[response[i]['hpercode']].time) // calling the run_timer function
+                // // continue
+                // data_arr[global_single_hpercode]['func'](response[i]['hpercode'] , data_arr[response[i]['hpercode']].time) // calling the run_timer function
+            }
+            else if (data_arr[response[i]['hpercode']].status === 'Approved'){
+                td_processing_div_2.textContent = response[i]['final_progressed_timer']
+            }
+            else{
+                td_processing_div_2.textContent = (data_arr[response[i]['hpercode']].time) ? data_arr[response[i]['hpercode']].time : "00:00:00"
             }
             
             // need to update the laman of all global variables on every populate of tbody.
@@ -308,7 +370,6 @@ $(document).ready(function(){
     }
 
     // MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
-
     $('#pending-start-btn').on('click' , function(event){
         $.ajax({
             url: './php/fetch_onProcess.php',
@@ -344,6 +405,7 @@ $(document).ready(function(){
         }
 
         global_pat_status[index_pat_status].textContent = "On-Process"
+        data_arr[global_single_hpercode].status = "On-Process"
 
     })
 
@@ -363,7 +425,6 @@ $(document).ready(function(){
     $('#close-pending-modal').on('click' , function(event){
         $('#pendingModal').addClass('hidden')
     })
-
 
     // modal showing upon clicking the approval
     $('#yes-modal-btn-incoming').on('click' , function(event){
@@ -392,15 +453,16 @@ $(document).ready(function(){
                 method: "POST",
                 data : data,
                 success: function(response){     
-                    // response = JSON.parse(response);    
-                    console.log(response)        
-
-                    // $('#pendingModal').addClass('hidden')
+                    $('#pendingModal').addClass('hidden')
                     // location.reload();
+                    global_stopwatch_all = []
+                    global_hpercode_all = []
+                    populateTbody(response)
                 }
              })
         }
     })
+
 
     // END MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
 
@@ -437,24 +499,29 @@ $(document).ready(function(){
 
         intervalIDs[uniqueIdentifier] = setInterval(() => {
             if(current_time === "0"){
+                console.log('initial')
                 const currentTime = new Date().getTime();
                 elapsedTime = currentTime - startTime;
 
                 // find the current index of the clicked hpercode based on the current data in the table
-                let index_hpercode = 0;
+                let index_hpercode;
                 for(let i = 0; i < length_curr_table; i++){
                     if(global_single_hpercode === global_hpercode_all[i].value){
                         index_hpercode = i;
                     }
                 }
 
-                // printing the formatTime
-                global_stopwatch_all[index_hpercode].textContent = formatTime(elapsedTime)
+                if(index_hpercode !== undefined){
+                    // printing the formatTime
+                    global_stopwatch_all[index_hpercode].textContent = formatTime(elapsedTime)
 
-                // changing the color of the text based on the 'matagal ma process'
-                if(elapsedTime >= 5000){
-                    global_stopwatch_all[index_hpercode].style.color = "red"
+                    // changing the color of the text based on the 'matagal ma process'
+                    if(elapsedTime >= 5000){
+                        global_stopwatch_all[index_hpercode].style.color = "red"
+                    }
                 }
+
+                data_arr[global_single_hpercode].time = formatTime(elapsedTime)
 
                 data = {
                     // timer_running : true,
@@ -466,10 +533,9 @@ $(document).ready(function(){
                     // secs_add : secs_add
                 }
 
-                data_arr[global_single_hpercode].time = formatTime(elapsedTime)
                 // console.log(data_arr)
             }else{
-                
+                // console.log('refreshed')
                 startTime += 1000
 
                 // find the current index of the clicked hpercode based on the current data in the table
@@ -483,11 +549,14 @@ $(document).ready(function(){
                 
                 // condition mo dapat pag wala value si index_hpercode, wala dapat mangyayare or di dapat mag r run yung number 486
                 // printing the formatTime
-                global_stopwatch_all[index_hpercode].textContent = formatTime(startTime)
+                if(index_hpercode !== undefined){
+                    // may laman
+                    global_stopwatch_all[index_hpercode].textContent = formatTime(startTime)
 
-                // changing the color of the text based on the 'matagal ma process'
-                if(startTime >= 5000){
-                    global_stopwatch_all[index_hpercode].style.color = "red"
+                    // changing the color of the text based on the 'matagal ma process'
+                    if(startTime >= 5000){
+                        global_stopwatch_all[index_hpercode].style.color = "red"
+                    }
                 }
 
                 data_arr[global_single_hpercode].time = formatTime(startTime)
@@ -502,10 +571,9 @@ $(document).ready(function(){
                     // secs_add : secs_add
                 }   
 
-                console.log(data_arr)
+                // console.log(data_arr)
 
             }
-            
             
             // console.log(data)
             $.ajax({
@@ -556,7 +624,7 @@ $(document).ready(function(){
                     success: function(response){               
                         response = JSON.parse(response);
                         after_reload = response
-                        console.log(after_reload)
+                        // console.log(after_reload)
 
                         for(let i = 0; i < response.length; i++){
                             global_single_hpercode = after_reload[i].global_single_hpercode
@@ -590,7 +658,7 @@ $(document).ready(function(){
     // SEARCHING FUNCTIONALITIES
     $('#incoming-search-btn').on('click' , function(event){        
         $('#incoming-clear-search-btn').removeClass('opacity-30 pointer-events-none')
- 
+        console.log(data_arr)
         let data = {
             get_all : false,
             ref_no : $('#incoming-referral-no-search').val(),
@@ -601,18 +669,8 @@ $(document).ready(function(){
             agency : $('#incoming-agency-select').val(),
             status : $('#incoming-status-select').val()
         }
-        // console.log(data)
-        if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === "" && data.status === 'Pending'){
-            $('#modal-title-incoming').text('Warning')
-            $('#modal-icon').addClass('fa-triangle-exclamation')
-            $('#modal-icon').removeClass('fa-circle-check')
-            $('#modal-body-incoming').text('Fill at least one bar.')
-            $('#ok-modal-btn-incoming').text('Ok')
 
-            $('#myModal-incoming').modal('show');
-            
-        }else{
-            console.log(data)
+        // console.log(data)
             $.ajax({
                 url: './php/incoming_search.php',
                 method: "POST", 
@@ -620,12 +678,59 @@ $(document).ready(function(){
                 success: function(response){
                     global_stopwatch_all = []
                     global_hpercode_all = []
+
+                    clearInterval(inactivityTimer);
+
                     populateTbody(response)
                 }
             })
-        }
+
+        // // console.log(data)
+        // if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === "" && data.status === "default" ){
+        //     $('#modal-title-incoming').text('Warning')
+        //     $('#modal-icon').addClass('fa-triangle-exclamation')
+        //     $('#modal-icon').removeClass('fa-circle-check')
+        //     $('#modal-body-incoming').text('Fill at least one bar.')
+        //     $('#ok-modal-btn-incoming').text('Ok')
+
+        //     $('#myModal-incoming').modal('show');
+            
+        // }else{
+            
+        // }
         
         
+    })
+
+    $('#incoming-clear-search-btn').on('click' , function(event){
+        $.ajax({
+            url: './php/fetch_interval.php',
+            method: "POST",
+            data:{
+                from_where : 'incoming'
+            },
+            success: function(response){
+                global_stopwatch_all = []
+                global_hpercode_all = []
+                populateTbody(response)
+    
+                response = JSON.parse(response);    
+                console.log(response)
+
+                startInactivityTimer()
+
+                $('#incoming-referral-no-search').val("")
+                $('#incoming-last-name-search').val("")
+                $('#incoming-first-name-search').val("")
+                $('#incoming-middle-name-search').val("")
+                $('#incoming-type-select').val("")
+                $('#incoming-agency-select').val("")
+                $('#incoming-status-select').val('Pending')
+
+                $('#incoming-clear-search-btn').addClass('opacity-30 pointer-events-none')
+
+            }
+        })
     })
 
     // MA DRUP PRESCRIPTION

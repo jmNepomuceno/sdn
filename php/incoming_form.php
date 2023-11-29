@@ -144,6 +144,7 @@
             <div class="w-[9%] h-[100%] flex flex-col  justify-center items-left">
                 <label class="ml-1 font-bold ">Status</label>
                 <select id='incoming-status-select' class="w-full border-2 border-[#bfbfbf] rounded-md">
+                    <option value="default">Select</option>
                     <option value="Pending">Pending</option>
                     <option value="All"> All</option>
                     <option value="On-Process"> On-Process</option>
@@ -293,32 +294,25 @@
                    <label class="text-gray-500 font-bold ml-[1%] text-glow text-3xl">Pending</label>
                 </div>
 
-                <div class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px]   mt-[1.5%] rounded-sm flex flex-col ">
+                <div class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col">
                     <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-col justify-center items-start">
                         <label class="text-black ml-[1%]">Patient Forwarding Form</label>
-                        
                     </div>
                         
-                 
                     <div class="flex flex-col justify-center items-start w-full  h-[45%] mt-[35px] ">
-                    <label class="ml-[2%] font-semibold">Action</label>
-                    <select class="border border-slate-800 w-[95%] ml-[2%] rounded-sm">
-                        <option>Select</option>
-                        <option>Emergency Room</option>
-                        <option>OB-GYNE</option>
-                        <option>Out-Patient Department</option>
-                        
-                       
-                    </select>
-                    <div class="flex flex-row justify-end items-center w-full">
-                        <button id="pending-start-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-4 rounded-sm text-black"> Start </button>
-                        <button class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Forward </button>
-                        <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Approved </button>
-                    </div>
-                    
-
-                </div>
-                    
+                        <label class="ml-[2%] font-semibold">Action</label>
+                        <select class="border border-slate-800 w-[95%] ml-[2%] rounded-sm">
+                            <option>Select</option>
+                            <option>Emergency Room</option>
+                            <option>OB-GYNE</option>
+                            <option>Out-Patient Department</option>
+                        </select>
+                        <div class="flex flex-row justify-end items-center w-full">
+                            <button id="pending-start-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-4 rounded-sm text-black"> Start </button>
+                            <button class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Forward </button>
+                            <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Approved </button>
+                        </div>
+                    </div> 
                 </div>
 
 

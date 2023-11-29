@@ -46,43 +46,59 @@
         $sql = "SELECT * FROM incoming_referrals WHERE ";
 
         $conditions = array();
+        $others = false;
 
         if (!empty($ref_no)) {
             $conditions[] = "reference_num LIKE '%". $ref_no ."%'";
+            $others = true;
         }
 
         if (!empty($last_name)) {
             $conditions[] = "patlast LIKE '%". $last_name ."%' ";
+            $others = true;
         }
 
         if (!empty($first_name)) {
             $conditions[] = "patfirst LIKE '%". $first_name ."%' ";
+            $others = true;
         }
 
         if (!empty($middle_name)) {
             $conditions[] = "patmiddle LIKE '%". $middle_name ."%' ";
+            $others = true;
         }
 
         if (!empty($case_type)) {
             $conditions[] = "type = '" . $case_type . "'"; 
+            $others = true;
         }
 
         if (!empty($agency)) {
             $conditions[] = "referred_by = '" . $agency . "'";
+            $others = true;
+        } 
+
+        if(!empty($status)){
+            $others = false;
         }
 
-        if (!empty($status)) {
+        if ($others === false) {
             if($status === 'All'){
                 $conditions[] = "(status='Pending' OR status='On-Process' OR status='Deferred' OR status='Approved' OR status='Cancelled'
                 OR status='Arrived' OR status='Checked' OR status='Admitted' OR status='Discharged' OR status='For Follow Up' OR status='Referred Back')";
             }
-            // else if($status === 'Pending'){
-            //     $conditions[] = "status='Pending' OR status='On-Process'";
-            // }
+            else if($status === 'default'){
+                $conditions[] = "status='Pending' OR status='On-Process'";
+            }
             else{
                 // $conditions[] = "(status='Pending' OR status='On-Process')";
                 $conditions[] = "status = '" . $status . "'";
             }
+        }
+
+        if($others === true){
+            $conditions[] = "(status='Pending' OR status='On-Process' OR status='Deferred' OR status='Approved' OR status='Cancelled'
+                OR status='Arrived' OR status='Checked' OR status='Admitted' OR status='Discharged' OR status='For Follow Up' OR status='Referred Back')";
         }
 
         if (count($conditions) > 0) {
