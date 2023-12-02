@@ -180,9 +180,9 @@ const loadContent = (url) => {
 }
 
 // loadContent('php/default_view.php')
-// loadContent('php/patient_register_form.php')
+loadContent('php/patient_register_form.php')
 // loadContent('php/opd_referral_form.php?type="ER"&code=BGHMC-0001')
-loadContent('php/incoming_form.php')
+// loadContent('php/incoming_form.php')
 // loadContent('php/default_view.php')
 
 
@@ -299,14 +299,9 @@ $(document).ready(function(){
     })
 })
 
-
-
-
 $(document).ready(function(){
     $('#patient-reg-form-sub-side-bar').on('click' , function(event){
-        // console.log('here')
         event.preventDefault();
-        // document.querySelector('#default-div').classList.add('hidden')
         loadContent('php/patient_register_form.php')
         current_page = "patient_register_page"
         $('#current-page-input').val(current_page)
@@ -317,11 +312,6 @@ $(document).ready(function(){
 $(document).ready(function(){
     $('#pcr-request-id').on('click' , function(event){
         event.preventDefault();
-        // document.querySelector('#default-div').classList.add('hidden')
-        // loadContent('php/opd_referral_form.php')
     })
     
 })
-
-// document.querySelector('#asdf-div').style.color = 'red'
-// console.log(document.querySelector('#asdf-div'))

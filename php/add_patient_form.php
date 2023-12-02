@@ -116,10 +116,6 @@
 
     // $stmt->execute();
 
-    
-    
-
-
     $sql = "INSERT INTO hperson (hpercode, hpatcode, patlast, patfirst, patmiddle, patsuffix, patbdate, pat_age, patsex, patcstat, natcode, pat_occupation, pat_passport_no, relcode, hospital_code, phicnum,
             pat_bldg, pat_street_block, pat_region, pat_province, pat_municipality, pat_barangay, pat_email, pat_homephone_no, pat_mobile_no,
             pat_curr_bldg , pat_curr_street, pat_curr_region, pat_curr_province , pat_curr_municipality, pat_curr_barangay, pat_email_ca, pat_curr_homephone_no, pat_curr_mobile_no, 

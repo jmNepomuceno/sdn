@@ -1,8 +1,10 @@
 <?php
     session_start();
     include("../database/connection2.php");
+    date_default_timezone_set('Asia/Manila');
 
     $timer = $_POST['timer'];
+    $currentDateTime = date('Y-m-d H:i:s');
 
     // update the status of the patient in the database and set the final progressed time.
     $sql = "UPDATE incoming_referrals SET status='Approved' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
@@ -12,6 +14,11 @@
     $sql_b = "UPDATE incoming_referrals SET final_progressed_timer='". $_POST['timer']."' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt_b = $pdo->prepare($sql_b);
     $stmt_b->execute();
+
+    // update the approved_details and set the time of approval on the database
+    $sql = "UPDATE incoming_referrals SET approval_details='". $_POST['approve_details']."', approved_time='". $currentDateTime ."' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
     $index = 0;
     $index_to_remove = 0;

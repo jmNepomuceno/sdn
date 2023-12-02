@@ -529,45 +529,69 @@ $(document).ready(function(){
         $('#add-patform-btn-id').removeClass('pointer-events-none opacity-20')
         $('#er-patform-btn-id').removeClass('bg-[#526c7a]')
         $('#er-patform-btn-id').addClass('bg-mainColor')
+        $('#er-patform-btn-id').removeClass('hover:bg-mainColor')
+
         $('#add-patform-btn-id').text('Refer')
         $('#tertiary-case').val('ER')
 
-        $('#ob-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#opd-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#pcr-patform-btn-id').addClass('pointer-events-none opacity-20')
+        $('#ob-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#opd-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#pcr-patform-btn-id').addClass('bg-[#526c7a]')
+
+        $('#ob-patform-btn-id').removeClass('bg-mainColor')
+        $('#opd-patform-btn-id').removeClass('bg-mainColor')
+        $('#pcr-patform-btn-id').removeClass('bg-mainColor')
     })
     $('#ob-patform-btn-id').on('click' , function(event){
         $('#add-patform-btn-id').removeClass('pointer-events-none opacity-20')
-        $('#eb-patform-btn-id').removeClass('bg-[#526c7a]')
-        $('#eb-patform-btn-id').addClass('bg-mainColor')
+        $('#ob-patform-btn-id').removeClass('bg-[#526c7a]')
+        $('#ob-patform-btn-id').addClass('bg-mainColor')
+        $('#ob-patform-btn-id').removeClass('hover:bg-mainColor')
+
         $('#add-patform-btn-id').text('Refer')
         $('#tertiary-case').val('OB')
 
-        $('#er-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#opd-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#pcr-patform-btn-id').addClass('pointer-events-none opacity-20')
+        $('#er-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#opd-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#pcr-patform-btn-id').addClass('bg-[#526c7a]')
+
+        $('#er-patform-btn-id').removeClass('bg-mainColor')
+        $('#opd-patform-btn-id').removeClass('bg-mainColor')
+        $('#pcr-patform-btn-id').removeClass('bg-mainColor')
     })
     $('#opd-patform-btn-id').on('click' , function(event){
         $('#add-patform-btn-id').removeClass('pointer-events-none opacity-20')
         $('#opd-patform-btn-id').removeClass('bg-[#526c7a]')
         $('#opd-patform-btn-id').addClass('bg-mainColor')
+        $('#opd-patform-btn-id').removeClass('hover:bg-mainColor')
+
         $('#add-patform-btn-id').text('Refer')
         $('#tertiary-case').val('OPD')
 
-        $('#er-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#ob-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#pcr-patform-btn-id').addClass('pointer-events-none opacity-20')
+        $('#ob-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#er-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#pcr-patform-btn-id').addClass('bg-[#526c7a]')
+
+        $('#ob-patform-btn-id').removeClass('bg-mainColor')
+        $('#er-patform-btn-id').removeClass('bg-mainColor')
+        $('#pcr-patform-btn-id').removeClass('bg-mainColor')
     })
     $('#pcr-patform-btn-id').on('click' , function(event){
         $('#add-patform-btn-id').removeClass('pointer-events-none opacity-20')
         $('#pcr-patform-btn-id').removeClass('bg-[#526c7a]')
         $('#pcr-patform-btn-id').addClass('bg-mainColor')
+        $('#pcr-patform-btn-id').removeClass('hover:bg-mainColor')
+
         $('#add-patform-btn-id').text('Refer')
         $('#tertiary-case').val('PCR')
 
-        $('#er-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#opd-patform-btn-id').addClass('pointer-events-none opacity-20')
-        $('#ob-patform-btn-id').addClass('pointer-events-none opacity-20')
+        $('#ob-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#opd-patform-btn-id').addClass('bg-[#526c7a]')
+        $('#er-patform-btn-id').addClass('bg-[#526c7a]')
+
+        $('#ob-patform-btn-id').removeClass('bg-mainColor')
+        $('#opd-patform-btn-id').removeClass('bg-mainColor')
+        $('#er-patform-btn-id').removeClass('bg-mainColor')
     })
 
 })

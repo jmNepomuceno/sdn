@@ -286,20 +286,26 @@
                         <button class="bg-sky-600  w-[45%] justify-center text-white rounded-sm text-center">Print</button>
                         <button id="close-pending-modal" class="bg-sky-600  w-[45%] justify-center text-white rounded-sm text-center">Close</button>
                     </div>
-                </div>
+                </div> 
+                <!-- update the form -->
                 <div class=" w-full h-[100px] mt-[1.5%] rounded-sm bg-white flex flex-col items-start justify-start">
-                    <div class=" w-[100%] h-[40%] bg-gray-600 rounded-sm -mt-[0.1%] text-white font-semibold text-md flex flex-row justify-start items-center">
+                    <div id="status-bg-div" class=" w-[100%] h-[40%] bg-gray-600 rounded-sm -mt-[0.1%] text-white font-semibold text-md flex flex-row justify-start items-center">
                         <label class="ml-[1%]">Status</label>
                     </div>
-                   <label class="text-gray-500 font-bold ml-[1%] text-glow text-3xl">Pending</label>
+                   <label class="text-gray-500 font-bold ml-[1%] text-glow text-3xl" id="pat-status-form">Pending</label>
                 </div>
 
-                <div class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col">
-                    <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-col justify-center items-start">
+                <div id="temp-forward-form" class="w-[100%] h-[18%] bg-blue-400 rounded-sm mt-2 text-black font-bold text-md flex flex-row justify-between items-center">
+                    <label class="text-black ml-[1%]">Patient Forwarding Form</label>
+                    <button id="forward-continue-btn" class="bg-[#065cc6] font-semibold w-[10%] mr-2 rounded-sm text-black"> Continue </button>
+                </div>
+
+                <div id="pat-forward-form" class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-row justify-start items-center">
                         <label class="text-black ml-[1%]">Patient Forwarding Form</label>
                     </div>
                         
-                    <div class="flex flex-col justify-center items-start w-full  h-[45%] mt-[35px] ">
+                    <div class="flex flex-col justify-center items-start w-full  h-[45%] mt-[35px]">
                         <label class="ml-[2%] font-semibold">Action</label>
                         <select class="border border-slate-800 w-[95%] ml-[2%] rounded-sm">
                             <option>Select</option>
@@ -307,14 +313,137 @@
                             <option>OB-GYNE</option>
                             <option>Out-Patient Department</option>
                         </select>
-                        <div class="flex flex-row justify-end items-center w-full">
-                            <button id="pending-start-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-4 rounded-sm text-black"> Start </button>
-                            <button class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Forward </button>
-                            <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mt-4 mr-6 rounded-sm text-black"> Approved </button>
+                    </div> 
+
+                    <div class="flex flex-row justify-end items-center w-full">
+                        <button id="main-forward-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Forward </button>
+                        <button id="forward-cancel-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Cancel </button>
+                    </div>
+                </div>
+
+                <div id="pending-start-div" class="bg-white w-full h-[50px] max-h-[50px] min-h-[50px] mt-[1.5%] rounded-sm flex flex-row justify-start items-center">
+                    <button id="pending-start-btn" class="bg-green-400 font-semibold w-[12%] h-[80%] ml-2 rounded-sm text-black"> Start </button>
+                </div>
+
+                <!-- 2 approval form , shows when the status is On-Process -->
+                <div id='approval-form' class="bg-white w-full h-[500px] max-h-[500px] min-h-[500px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[7%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Approval Form</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-evenly items-start w-full h-[85%]">
+                        <label class="ml-[2%] font-semibold">Case Category</label>
+                        <select id="approve-classification-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
+                            <option value="">Select</option>
+                            <option value="Primary">Primary</option>
+                            <option value="Secondary">Secondary</option>
+                            <option value="Tertiary">Tertiary</option>
+                        </select>
+
+                        <label class="ml-[2%] font-semibold">Emergency Room Administrator Action</label>
+                        <textarea id="eraa" class="border-2 border-[#bfbfbf] w-[95%] h-[30%] ml-4 resize-none outline-none"></textarea>
+
+                        <div class="w-[95%] h-[40%] ml-4 font-bold flex flex-col justify-start items-left">
+                            <label class="pre-emp-text cursor-pointer w-max">+ May transfer patient once stable</label>
+                            <label class="pre-emp-text cursor-pointer w-max">+ Please attach imaging and laboratory results to the referral letter.</label>
+                            <label class="pre-emp-text cursor-pointer w-max">+ Hook to oxygen support and maintain saturation at >95%.</label>
+                            <label class="pre-emp-text cursor-pointer w-max">+ Start venoclysis with appropriate intravenous fluids.</label>
+                            <label class="pre-emp-text cursor-pointer w-max">+ Insert nasogastric tube(NGT).</label>
+                            <label class="pre-emp-text cursor-pointer w-max">+ Insert indwelling foley catheter(IFC).</label>
+                            <label class="pre-emp-text cursor-pointer w-max">+ Thank you for your referral.</label>
+                        </div>
+
+                        <label class="ml-[2%] font-semibold">Action</label>
+                        <select id="approved-action-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
+                            <option value="">Pending</option>
+                            <option value="Approve">Approve</option>
+                            <option value="Defer">Defer</option>
+                        </select>
+                    </div> 
+
+                    <div class="flex flex-row justify-end items-center w-full mt-2">
+                        <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black opacity-30 pointer-events-none"> Approve </button>
+                        <!-- <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-6 rounded-sm text-black"> Approved </button> -->
+                    </div>
+                </div>
+
+                <!-- 3 arrival form, shows when the status is Approved -->
+                <div id="arrival-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Arrival Form</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-evenly items-start w-full h-[80%] mt-1">
+                        <label class="font-bold text-xl ml-4">Arrival Note</label>
+                        <textarea id="arrival-text-area" class="border-2 border-[#bfbfbf] w-[95%] h-[55%] ml-4 resize-none outline-none"></textarea>
+                        <button id="arrival-submit" class="bg-green-400 font-semibold w-[12%] h-[30px] ml-4 rounded-sm text-black"> Submit </button>     
+                    </div> 
+                </div>
+                <!-- 3 approval details  -->
+                <div id="approval-details" class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Approval Details</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-center items-start w-full h-[80%] mt-1">
+                        <div class="w-full h-[50%] flex flex-col justify-center items-start">
+                            <label class="font-bold text-xl ml-4">Emergency Room Administrator Action</label>
+                            <p class="ml-4">asdfasdfasdfasdfasd</p>
+                        </div>
+                        <div class="w-full h-[50%] flex flex-col justify-center items-start">
+                            <label class="font-bold text-xl ml-4">Case Category</label>
+                            <label class="ml-4">asdfasdfasdfasdfasd</label>
                         </div>
                     </div> 
                 </div>
+                <!-- 3 cancel form  -->
+                <div id="cancel-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[18%] bg-[#ff4d4d] rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Cancellation Form</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-evenly items-start w-full h-[80%] mt-1">
+                        <label class="font-bold text-xl ml-4">Cancellation Reasons</label>
+                        <textarea id="cancellation-textarea" class="border-2 border-[#bfbfbf] w-[95%] h-[55%] ml-4 resize-none outline-none"></textarea>
+                        <button id="cancel-submit" class="bg-[#ff4d4d] font-semibold w-[12%] h-[30px] ml-4 rounded-sm text-black"> Cancel </button>     
+                    </div> 
+                </div>
+                
 
+                <!-- 4 check up, shows when the status is arrived  -->
+                <div id='checkup-form' class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[15%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Check-up Form</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-evenly items-start w-full h-[85%]">
+                        <label class="ml-[2%] font-semibold">Check-up Note</label>
+                        <textarea id="checkup-textarea" class="border-2 border-[#bfbfbf] w-[95%] h-[50%] ml-4 resize-none outline-none"></textarea>
+
+                        <label class="ml-[2%] font-semibold">Action</label>
+                        <select id="checkup-classification-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
+                            <option value="">Select</option>
+                            <option value="Primary">Check</option>
+                            <option value="Secondary">ewan</option>
+                            <option value="Tertiary">ewan</option>
+                        </select>
+                    </div> 
+
+                    <div class="flex flex-row justify-end items-center w-full mb-2">
+                        <button id="check-submit-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Submit </button>
+                        <!-- <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-6 rounded-sm text-black"> Approved </button> -->
+                    </div>
+                </div>
+                <!-- 4 arrival details  -->
+                <div id="arrival-details" class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Arrival Note</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-center items-start w-full h-[80%] mt-1">
+                        <p>The dog is barking so loud that the other dog from the block also started barking.</p>
+                    </div> 
+                </div>
 
                 <div class="bg-white w-full  mt-[1.5%] rounded-sm  flex flex-col">
                     <div class="bg-blue-400 rounded-sm text-black font-bold text-md p-2">
@@ -323,8 +452,8 @@
                 
                     <div class= "mt-2 p-2 flex flex-col">
                         <ul class="list-none flex flex-col space-y-2">
-                            <li><label class="font-bold">Referring Agency:</label><span class="break-words"></span></li>
-                            <li><label class="font-bold">Reason for Referral:</label><span class="break-words"></span></li><br>
+                            <li><label class="font-bold">Referring Agency:</label><span id="refer-agency" class="break-words"></span></li>
+                            <li><label class="font-bold">Reason for Referral:</label><span id="refer-reason" class="break-words"></span></li><br>
                 
                             <li><label class="font-bold">Name:</label><span id="pending-name"  class="break-words">This is where you put the data</span></li>
                             <li><label class="font-bold">Birthday:</label><span id="pending-bday" class="break-words">This is where you put the data</span></li>

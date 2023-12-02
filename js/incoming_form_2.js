@@ -43,7 +43,7 @@ $(document).ready(function(){
     }
 
     function handleUserInactivity() {
-        console.log('inactive')
+        // console.log('inactive')
         userIsActive = false;
         // Additional code to handle user inactivity if needed
         $.ajax({
@@ -58,7 +58,7 @@ $(document).ready(function(){
                 populateTbody(response)
 
                 const pencil_elements = document.querySelectorAll('.pencil-btn');
-                pencil_elements.forEach(function(element, index) {
+                    pencil_elements.forEach(function(element, index) {
                     element.addEventListener('click', function() {
                         console.log('den')
                         ajax_method(index)
@@ -72,7 +72,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 10000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -103,6 +103,7 @@ $(document).ready(function(){
             data:data,
             success: function(response){
                 response = JSON.parse(response); 
+                console.log(response)
                 pendingFunction(response)
             }
         })
@@ -120,7 +121,87 @@ $(document).ready(function(){
     //end - open modal 
 
     const pendingFunction = (response) =>{
+        $('#pat-status-form').text(response[0].status)
+
+        if(response[0].status === 'Pending'){
+            $('#pat-status-form').addClass('text-gray-500')
+            $('#pat-status-form').removeClass('text-cyan-500')
+            $('#pat-status-form').removeClass('text-green-500')
+
+
+            $('#status-bg-div').addClass('bg-gray-600')
+            $('#status-bg-div').removeClass('bg-cyan-500')
+            $('#status-bg-div').removeClass('bg-green-500')
+
+
+            $('#approval-form').addClass('hidden')
+            $('#arrival-form').addClass('hidden')
+            $('#approval-details').addClass('hidden')
+            $('#cancel-form').addClass('hidden')
+
+            $('#pending-start-div').removeClass('hidden')
+
+        }
+
+        if(response[0].status === 'On-Process'){
+            $('#pat-status-form').removeClass('text-gray-500')
+            $('#pat-status-form').addClass('text-green-500')
+            $('#pat-status-form').addClass('text-cyan-500')
+
+            $('#status-bg-div').removeClass('bg-gray-600')
+            $('#status-bg-div').addClass('bg-green-500')
+            $('#status-bg-div').addClass('bg-cyan-500')
+
+            $('#approval-form').removeClass('hidden')
+
+            $('#arrival-form').addClass('hidden')
+            $('#approval-details').addClass('hidden')
+            $('#cancel-form').addClass('hidden')
+            $('#pending-start-div').addClass('hidden')
+
+        }
+
+        if(response[0].status === 'Approved'){
+            $('#temp-forward-form').addClass('hidden')
+
+            $('#pat-status-form').removeClass('text-gray-500')
+            $('#pat-status-form').addClass('text-green-500')
+
+            $('#status-bg-div').removeClass('bg-gray-600')
+            $('#status-bg-div').addClass('bg-green-500')
+
+            
+            $('#approval-form').addClass('hidden')
+            $('#pending-start-div').addClass('hidden')
+
+            $('#arrival-form').removeClass('hidden')
+            $('#approval-details').removeClass('hidden')
+            $('#cancel-form').removeClass('hidden')
+        }
+
+        if(response[0].status === 'Arrived'){
+            $('#temp-forward-form').addClass('hidden')
+
+            $('#pat-status-form').removeClass('text-gray-500')
+            $('#pat-status-form').addClass('text-green-500')
+
+            $('#status-bg-div').removeClass('bg-gray-600')
+            $('#status-bg-div').addClass('bg-green-500')
+
+            // $('#approval-form').addClass('hidden')
+            $('#pending-start-div').addClass('hidden')
+            $('#arrival-form').addClass('hidden')
+            $('#cancel-form').addClass('hidden')
+
+            $('#checkup-form').removeClass('hidden')
+            $('#arrival-details').removeClass('hidden')
+            $('#approval-details').removeClass('hidden')
+        }
+
+
         $('#pendingModal').removeClass('hidden')
+        $('#refer-agency').text(" " + response[0].referred_by)
+        $('#refer-reason').text(" " + response[0].reason_referral)
         $('#pending-type-lbl').text(response[0].type)
         $('#pending-name').text(" " + response[0].patlast + ", " + response[0].patfirst + " " + response[0].patmiddle)
         $('#pending-bday').text(" " + response[1].patbdate)
@@ -249,7 +330,7 @@ $(document).ready(function(){
             td_time_div_label_1.className = `text-md`
 
             const td_time_div_label_2 = document.createElement('label')
-            td_time_div_label_2.textContent = " Processed: " + response[i]['final_progressed_timer']
+            td_time_div_label_2.textContent = (response[i]['approved_time']) ?  " Processed: " + response[i]['approved_time'] : " Processed: 00:00:00"
             td_time_div_label_2.className = `text-md`
 
             if(response[i]['final_progressed_timer'] !== null){
@@ -284,7 +365,7 @@ $(document).ready(function(){
                 // // continue
                 // data_arr[global_single_hpercode]['func'](response[i]['hpercode'] , data_arr[response[i]['hpercode']].time) // calling the run_timer function
             }
-            else if (data_arr[response[i]['hpercode']].status === 'Approved'){
+            else if (data_arr[response[i]['hpercode']].status === 'Approved' || data_arr[response[i]['hpercode']].status === 'Arrived'){
                 td_processing_div_2.textContent = response[i]['final_progressed_timer']
             }
             else{
@@ -371,6 +452,9 @@ $(document).ready(function(){
 
     // MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
     $('#pending-start-btn').on('click' , function(event){
+        $('#approval-form').removeClass('hidden')
+        $('#pat-status-form').text('On-Process')
+
         $.ajax({
             url: './php/fetch_onProcess.php',
             method: "POST",
@@ -404,6 +488,7 @@ $(document).ready(function(){
             }
         }
 
+        console.log("roflmao: " + index_pat_status)
         global_pat_status[index_pat_status].textContent = "On-Process"
         data_arr[global_single_hpercode].status = "On-Process"
 
@@ -443,10 +528,13 @@ $(document).ready(function(){
 
             const data = {
                 global_single_hpercode : global_single_hpercode,
-                timer : data_arr[global_single_hpercode].time
+                timer : data_arr[global_single_hpercode].time,
+                approve_details : $('#eraa').val(),
+                case_category : $('#approve-classification-select').val(),
+                action : $('#approved-action-select').val()
             }
 
-            console.log(data);
+            console.log(data_arr);
 
             $.ajax({
                 url: './php/approved_pending.php',
@@ -454,7 +542,71 @@ $(document).ready(function(){
                 data : data,
                 success: function(response){     
                     $('#pendingModal').addClass('hidden')
-                    // location.reload();
+                    global_stopwatch_all = []
+                    global_hpercode_all = []
+                    populateTbody(response)
+                }
+             })
+        }
+
+        else if(modal_filter === 'arrival_confirmation'){
+            const data = {
+                global_single_hpercode : global_single_hpercode,
+                arrival_details : $('#arrival-text-area').val(),
+            }
+
+            // updating the status of that patient from the data_arr and in the database
+            data_arr[global_single_hpercode].status = "Arrived"
+
+            $.ajax({
+                url: './php/approved_to_arrival.php',
+                method: "POST",
+                data : data,
+                success: function(response){
+                    $('#pendingModal').addClass('hidden')
+                    global_stopwatch_all = []
+                    global_hpercode_all = []
+                    populateTbody(response)
+                }
+             })
+        }
+        else if(modal_filter === 'cancellation_confirmation'){
+            const data = {
+                global_single_hpercode : global_single_hpercode,
+                cancel_details : $('#cancellation-textarea').val(),
+            }
+
+            // updating the status of that patient from the data_arr and in the database
+            data_arr[global_single_hpercode].status = "Cancelled"
+
+            $.ajax({
+                url: './php/approved_to_cancellation.php',
+                method: "POST",
+                data : data,
+                success: function(response){
+                    $('#pendingModal').addClass('hidden')
+                    global_stopwatch_all = []
+                    global_hpercode_all = []
+                    populateTbody(response)
+                }
+             })
+        }
+        else if(modal_filter === 'checked_confirmation'){
+            const data = {
+                global_single_hpercode : global_single_hpercode,
+                checkup_classification_select : $('#checkup-classification-select').val(),
+                checkup_textarea : $('#checkup-textarea').val(),
+            }
+
+            // updating the status of that patient from the data_arr and in the database
+            data_arr[global_single_hpercode].status = "Checked"
+
+            $.ajax({
+                url: './php/arrived_to_checked.php',
+                method: "POST",
+                data : data,
+                success: function(response){
+                    $('#pendingModal').addClass('hidden')
                     global_stopwatch_all = []
                     global_hpercode_all = []
                     populateTbody(response)
@@ -463,6 +615,80 @@ $(document).ready(function(){
         }
     })
 
+    // incase of forwarding the patient
+    $('#forward-continue-btn').on('click' , function(event){
+        $('#temp-forward-form').addClass('hidden')
+        $('#pat-forward-form').removeClass('hidden')
+    })
+
+    $('#forward-cancel-btn').on('click' , function(event){
+        $('#temp-forward-form').removeClass('hidden')
+        $('#pat-forward-form').addClass('hidden')
+    })
+
+    $('.pre-emp-text').on('click' , function(event){
+        var originalString = event.target.textContent;
+        // Using substring
+        var stringWithoutPlus = originalString.substring(2);
+
+        // Or using slice
+        // var stringWithoutPlus = originalString.slice(2);
+        $('#eraa').val($('#eraa').val() + " " + stringWithoutPlus  + " ")
+    })
+
+    $('#approved-action-select').change(function(){
+        let selectedValue = $(this).val();
+        console.log($('#eraa').val())
+        console.log($('#approve-classification-select').val())
+        // Check if a value is selected
+        if (selectedValue != "") {
+            // alert("Selected value: " + selectedValue);
+            $('#pending-approved-btn').removeClass('opacity-30 pointer-events-none')
+        } else {
+            $('#pending-start-btn').addClass('opacity-50 pointer-events-none')
+        }
+    })
+
+    $('#arrival-submit').on('click' , function(){
+        // console.log($('#arrival-text-area').val())
+
+        $('#modal-title-incoming').text('Warning')
+        $('#modal-icon').addClass('fa-triangle-exclamation')
+        $('#modal-icon').removeClass('fa-circle-check')
+        $('#modal-body-incoming').text('Arrival Confirmation')
+        $('#yes-modal-btn-incoming').removeClass('hidden')
+        $('#ok-modal-btn-incoming').text('No')
+
+        modal_filter = 'arrival_confirmation'
+
+        $('#myModal-incoming').modal('show');
+    })
+
+    $('#cancel-submit').on('click' , function(event){
+        $('#modal-title-incoming').text('Warning')
+        $('#modal-icon').addClass('fa-triangle-exclamation')
+        $('#modal-icon').removeClass('fa-circle-check')
+        $('#modal-body-incoming').text('Cancellation Confirmation')
+        $('#yes-modal-btn-incoming').removeClass('hidden')
+        $('#ok-modal-btn-incoming').text('No')
+
+        modal_filter = 'cancellation_confirmation'
+
+        $('#myModal-incoming').modal('show');
+    })
+
+    $('#check-submit-btn').on('click' , function(event){
+        $('#modal-title-incoming').text('Warning')
+        $('#modal-icon').addClass('fa-triangle-exclamation')
+        $('#modal-icon').removeClass('fa-circle-check')
+        $('#modal-body-incoming').text('Checked Confirmation')
+        $('#yes-modal-btn-incoming').removeClass('hidden')
+        $('#ok-modal-btn-incoming').text('No')
+
+        modal_filter = 'checked_confirmation'
+
+        $('#myModal-incoming').modal('show');
+    })
 
     // END MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
 
@@ -682,6 +908,14 @@ $(document).ready(function(){
                     clearInterval(inactivityTimer);
 
                     populateTbody(response)
+
+                    const pencil_elements = document.querySelectorAll('.pencil-btn');
+                    pencil_elements.forEach(function(element, index) {
+                    element.addEventListener('click', function() {
+                        console.log('den')
+                        ajax_method(index)
+                    });
+                    });
                 }
             })
 
@@ -728,6 +962,14 @@ $(document).ready(function(){
                 $('#incoming-status-select').val('Pending')
 
                 $('#incoming-clear-search-btn').addClass('opacity-30 pointer-events-none')
+
+                const pencil_elements = document.querySelectorAll('.pencil-btn');
+                    pencil_elements.forEach(function(element, index) {
+                    element.addEventListener('click', function() {
+                        console.log('den')
+                        ajax_method(index)
+                    });
+                    });
 
             }
         })
