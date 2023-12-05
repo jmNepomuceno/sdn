@@ -62,6 +62,13 @@ $(document).ready(function(){
                 main_div.style.filter = "blur(0)"
                 modal_div.style.zIndex = '0'
                 main_div.style.zIndex = '10'
+
+                $('#otp-input-1').val("")
+                $('#otp-input-2').val("")
+                $('#otp-input-3').val("")
+                $('#otp-input-4').val("")
+                $('#otp-input-5').val("")
+                $('#otp-input-6').val("")
             }
         })
 

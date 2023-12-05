@@ -1,22 +1,7 @@
 <?php 
     include('database/connection2.php');
     session_start();
-    // $_SESSION['hospital_code'];
-    // include('php/csrf/session.php');
-    // sort($municipality);
-    // echo '<br>';
-    // echo $_SESSION['_csrf_token'];
 
-    // if (!empty($_SESSION)) {
-    //     // Iterate through all the session variables and their values
-    //     foreach ($_SESSION as $key => $value) {
-    //         echo "Session variable: $key = $value<br>";
-    //     }
-    // } else {
-    //     echo "The session is empty.";
-    // }
-
-    // echo $province['Aurora']['province_code'];
     $tm_fields = array("Last Name","First Name","Middle Name", "Birthday" ,"Mobile No." ,"Username" ,"Password" ,"Confirm Password");
     $tm_input_names = array("last_name","first_name","middle_name", "birthday" ,"mobile_no" ,"username" ,"password" ,"confirm_password");
     $tm_id = array("tms-last-name","tms-first-name","tms-middle-name", "tms-birthday" ,"tms-mobile-no" ,"tms-username" ,"tms-password" ,"tms-confirm-password");
@@ -95,6 +80,28 @@
 
                     $_SESSION['post_value_reload'] = 'false';
 
+                    // Get the current date and time
+                    $timezone = new DateTimeZone('Asia/Manila'); // Replace 'Your/Timezone' with your actual time zone
+                    $currentDateTime = new DateTime("",$timezone);
+
+                    // Format date components
+                    $year = $currentDateTime->format('Y');
+                    $month = $currentDateTime->format('m');
+                    $day = $currentDateTime->format('d');
+
+                    $hours = $currentDateTime->format('H');
+                    $minutes = $currentDateTime->format('i');
+                    $seconds = $currentDateTime->format('s');
+
+                    $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
+
+                    $_SESSION['login_time'] = $final_date;
+
+                    $sql = "UPDATE incoming_referrals SET login_time = '". $final_date ."' , login_user='". $sdn_username ."' ";
+
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute();
+
                     header('Location: ./main.php');
                 }else{
                     echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -116,10 +123,8 @@
             }
 
         }
-        
-
         //verification for admin user logged in
-        if($sdn_username == "admin" && $sdn_password == "admin"){
+        else if($sdn_username == "admin" && $sdn_password == "admin"){
             $_SESSION['user_name'] = "Bataan General Hospital and Medical Center";
             $_SESSION['hospital_code'] = '1437';
             $_SESSION['hospital_name'] = "Bataan General Hospital and Medical Center";
@@ -161,6 +166,21 @@
 
             header('Location: ./main.php');
         } 
+
+        else if($sdn_username != 'admin' || $sdn_password != 'admin'){
+            echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script type="text/javascript">
+                        var jQuery = $.noConflict(true);
+                        jQuery(document).ready(function() {
+                            jQuery("#modal-title").text("Warning")
+                            jQuery("#modal-icon").addClass("fa-triangle-exclamation")
+                            jQuery("#modal-icon").removeClass("fa-circle-check")
+                            jQuery("#modal-body").text("Invalid username and password!")
+                            jQuery("#ok-modal-btn").text("Close")
+                            jQuery("#myModal").modal("show");
+                        });
+                    </script>';
+        }
     }
 ?>
 
@@ -519,7 +539,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-director" > <span class="text-red-600"></span> Hospital Director </label>   
                                 </div>
-                                <input type="text" id="sdn-hospital-director" name="hospital_director" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z]/i.test(event.key)">
+                                <input type="text" id="sdn-hospital-director" name="hospital_director" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
@@ -533,7 +553,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-point-person" > <span class="text-red-600"></span> Point Person </label>   
                                 </div>
-                                <input type="text" id="sdn-point-person" name="point_person" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z]/i.test(event.key)">
+                                <input type="text" id="sdn-point-person" name="point_person" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
@@ -696,22 +716,12 @@
                     <div class="w-[48px] sm:w-[90px] h-full rounded-lg bg-white flex flex-col justify-center items-center text-6xl">
                         <input type="number" id="otp-input-6" class="w-full h-full rounded-lg text-center outline-none" placeholder="-">
                     </div>
-
-
-                    <!-- <div class="sdn-choose-modal-div w-11/12 sm:w-2/4 h-2/5 border-2 border-titleDivColor rounded-3xl flex flex-row justify-start items-center bg-mainColor cursor-pointer">
-                        <img src="./assets/main_imgs/add-user.png" alt="logo-img" class="w-6 h-2/5 ml-5">
-                        <h1 class="text-white text-xl ml-2">Service Delivery Network</h1>
-                        <input type="number" class="w-full">
-                    </div>
-                    <div class="tms-choose-modal-div w-11/12 sm:w-2/4 h-2/5 border-2 border-titleDivColor rounded-3xl flex flex-row justify-start items-center bg-mainColor cursor-pointer">
-                        <img src="./assets/main_imgs/add-user.png" alt="logo-img" class="w-6 h-2/5 ml-9">
-                        <h1 class="text-white text-xl ml-2">Telemedicine Service</h1>
-                    </div> -->
                 </div>
 
-                <div class="w-full h-13 flex flex-row justify-start items-center text-base">
-                        <button id="resend-otp-btn" class="ml-10 text-blue-500 underline">Resend OTP</button>
-                    </div>
+                <div class="w-full h-28 flex flex-row justify-between items-center text-base">
+                    <button id="resend-otp-btn" class="ml-10 text-blue-500 underline opacity-50 pointer-events-none">Resend OTP</button>
+                    <label id="resend-otp-timer" class="mr-10 text-xl">00:00</label>
+                </div>
 
                 <div class="w-full h-9 flex flex-row justify-center items-center items-center mb-1">
                     <button id="otp-verify-btn" class="otp-verify-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded">Verify</button>
@@ -801,68 +811,12 @@
                 </div>
             </div>
         </div>
-            <!-- <header class="header-div w-full h-28 border flex flex-row justify-between items-center">
-                <img src="./assets/login_imgs/main_bg.png" alt="logo-img" class="border border-black w-22 h-full ml-10">
-                <div class="nav-div flex flex-row justify-between items-center w-2/4 border mr-10 p-5 text-white">
-                    <a><label for="">Home</label></a>
-                    <a><label for="">Services</label></a>
-                    <a><label for="">About</label></a>
-                </div>
-            </header>
-
-
-            <div class="login-div w-2/5 h-2/4 border border- flex flex-col justify-start items-center mb-10">
-
-                <label for="" class="text-2xl text-white">LOGIN</label>
-
-                <div class="sdn-tdm-div w-full h-3/4 flex flex-row justify-around items-center border">
-                    <div class="h-300 w-80 border rounded-3xl"></div>
-                    <div class="h-300 w-80 border rounded-3xl"></div>
-                </div>
-
-
-                
-            </div> -->
- 
-            <!-- <div class="login-div border border-loginBorder w-5/6 sm:w-2/5 h-2/4 rounded-lg">
-
-                <form action="" class="form-div w-full h-full rounded-lg flex flex-col justify-start items-center">
-
-                    <img src="./assets/login_imgs/main_bg.png" alt="logo-img" class="border border-black -mt-32">
-
-                    <div class="username-div w-3/4 h-20 border mt-5">
-                        username
-                    </div>
-
-                    <div class="password-div w-3/4 h-20 border mt-5">
-                        pw
-                    </div>
-
-                    <div class="remember-pw w-3/4 h-12 border mt-5 border flex flex-row justify-around items-center">
-                        <div class="flex flex-row border w-56 h-10 justify-center items-center">
-                            <input type="checkbox" class="w-5 h-5">
-                            <label for="" class="">Remember Password</label>
-                        </div>
-                        <h1 class="text-black">Forgot Password?</h1>
-                    </div>
-
-                </form>
-            </div> -->
-        </div>
+            
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     
-    
-    <!-- checking the username if already exists -->
-    <!-- <script type="text/javascript">
-        $(document).ready(function(){
-            $('input[name="username"]').keyup(function(){
-                var searchText = $(this).val();
-                console.log(searchText)
-                
-            })
-        })
-    </script> -->
+
     <script src="./js/styling.js?v=<?php echo time(); ?>"></script>
     <script src="./js/sdn_reg.js?v=<?php echo time(); ?>"></script>
     <script src="./js/sdn_autho.js?v=<?php echo time(); ?>"></script>
@@ -870,6 +824,5 @@
     <script src="./js/resend_otp.js?v=<?php echo time(); ?>"></script>
     <script src="./js/verify_otp.js?v=<?php echo time(); ?>"></script>
     <script src="./js/location.js?v=<?php echo time(); ?>"></script>
-    <!-- <script src="./js/sdn_login.js?v=<?php echo time(); ?>"></script> -->
 </body>
 </html>

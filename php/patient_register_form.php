@@ -159,7 +159,7 @@
                                         <div class="w-full flex flex-row justify-start items-center p-1">
                                             <label class="text-base" for="hperson-age"> Age </label>
                                         </div>
-                                        <input id="hperson-age" tabindex="-1" disabled="disabled" type="number" name="hperson-age" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none" autocomplete="off" placeholder="0">
+                                        <input id="hperson-age" tabindex="-1" disabled="disabled" type="number" name="hperson-age" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none" autocomplete="off">
                                     </div>
 
                                 </div>
@@ -239,7 +239,7 @@
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base ml-3" for="hperson-hospital-no"> Hospital No. </label>
                                     </div>
-                                    <input id="hperson-hospital-no" type="number" name="hperson-hospital-no" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off" placeholder="Hospital Number">
+                                    <input id="hperson-hospital-no" type="number" name="hperson-hospital-no" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none" autocomplete="off" value=<?php echo $_SESSION['hospital_code'] ?>>
                                 </div>
                                 
                                 <div class="w-[50%] h-full flex-col justify-around items-center">
@@ -713,8 +713,6 @@
     
     
     <script src="./js/patient_register_form.js?v=<?php echo time(); ?>"></script>
-    <script src="./js/search_name.js?v=<?php echo time(); ?>"></script>
-    <!-- <script src="./js/incoming_form.js?v=<?php echo time(); ?>"></script> -->
-    
+    <script src="./js/search_name.js?v=<?php echo time(); ?>"></script>    
 </body>
 </html>

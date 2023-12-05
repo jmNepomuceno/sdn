@@ -20,7 +20,7 @@
     }
     
     if($what === 'continue'){
-        $sql = "SELECT hpercode,status,progress_timer FROM incoming_referrals WHERE progress_timer!=''";
+        $sql = "SELECT hpercode,status,progress_timer,logout_date FROM incoming_referrals WHERE progress_timer!=''";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

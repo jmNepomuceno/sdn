@@ -1,7 +1,8 @@
 const locations = (variant, where) =>{
     let query = ""
     let selected_code
-    console.log('where', where)
+
+    // console.log('where', where)
     // can do two parameters instead of creating another js and php file for 3 selected fields with regions etc.
     if(variant === 'region'){
 
@@ -34,7 +35,7 @@ const locations = (variant, where) =>{
         query = "province_code"
 
     }else if(variant === 'city'){
-        console.log(where)
+        // console.log(where)
         if(where == "sdn-city"){
             selected_code = document.getElementById('sdn-city-select').value
         }else if(where == "pa-city"){
@@ -85,7 +86,7 @@ const locations = (variant, where) =>{
             }
 
         }else if(variant === 'city'){
-            console.log(data)
+            // console.log(data)
             // splice the last 4 character of the data to get the zip code
             const zip_code = data.slice(-4);
             // console.log(zip_code)

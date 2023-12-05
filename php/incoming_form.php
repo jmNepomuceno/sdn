@@ -18,7 +18,7 @@
         $timer_running = true;
     }
 
-    $sql = "SELECT * FROM incoming_referrals WHERE progress_timer!=''";
+    $sql = "SELECT * FROM incoming_referrals WHERE progress_timer!=null";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -52,4 +52,30 @@
     $jsonString = json_encode($data);
     echo $jsonString;
 
+
+    // update also the status of the patient on the hperson table
+    $sql = "SELECT type FROM incoming_referrals WHERE hpercode='". $_POST['global_single_hpercode'] ."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $sql = "UPDATE hperson SET status='Approved', type='". $data['type'] ."' WHERE hpercode='". $_POST['global_single_hpercode']."' ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    // // Sanitize input
+    // $globalSingleHpercode = $_POST['global_single_hpercode'];
+    // $hospitalName = $_SESSION["hospital_name"];
+
+    // // Update query using prepared statement
+    // $sql = "UPDATE hperson SET status='Approved', type=:type WHERE hpercode=:hpercode AND refer_to = :hospital_name";
+    // $stmt = $pdo->prepare($sql);
+
+    // // Bind parameters
+    // $stmt->bindParam(':type', $jsonString['type']);
+    // $stmt->bindParam(':hpercode', $globalSingleHpercode);
+    // $stmt->bindParam(':hospital_name', $hospitalName);
+
+    // // Execute the statement
+    // $stmt->execute();
 ?>

@@ -3,7 +3,6 @@
 // })
 
 $(document).ready(function(){
-    // console.log($('#current-page-input').val())
     
     $('#check-if-registered-btn').on('click' , function(event){
         // console.log("asdf")

@@ -108,7 +108,7 @@ $(document).ready(function(){
     }
 
     if($('#current-page-input').val() !== "incoming_page"){
-        // console.log('asdf')
+        console.log($('#current-page-input').val())
         processing_time_running = true
     }
 

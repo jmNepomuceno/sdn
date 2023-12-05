@@ -69,7 +69,6 @@ $("#tms-mobile-no").on("input",function(){
     } 
 })
 
-
 // handle password and confirm password matching
 $("#tms-confirm-password").keyup(function(){
     // console.log($('#tms-confirm-password').val() , "," , tm_register_password_btn.value
@@ -175,7 +174,7 @@ sdn_autho_last_name.addEventListener('input', function(e){
 })
 
 $("#sdn-landline-no").on("input", function(){
-    console.log(sdn_hospital_landline_no.value)
+    // console.log(sdn_hospital_landline_no.value)
     // Remove any non-numeric characters
     let value = sdn_hospital_landline_no.value.replace(/[^0-9]/g, '');
     // Add dashes at specific positions
@@ -207,10 +206,14 @@ $("#sdn-email-address").on("input", function(){
 
     // Check if the input contains the required pattern
     if (!emailValue.match(validRegex)) {
+        // console.log('asdf')
+
         sdn_email_adress.classList.remove('border-cyan-500')
         sdn_email_adress.classList.add('border-red-600')
-        // emailInput.focus(); // Return focus to the input field
+        emailInput.focus(); // Return focus to the input field
     }else{
+        // console.log('here')
+
         sdn_email_adress.classList.remove('border-red-600')
         sdn_email_adress.classList.add('border-cyan-500')
     }
@@ -222,113 +225,7 @@ $("#sdn-hospital-mobile-no").on("input", () => mobileNumValue(sdn_hospital_mobil
 $("#sdn-hospital-director-mobile-no").on("input", () => mobileNumValue(sdn_hospital_director_mobile_no))
 $("#sdn-point-person-mobile-no").on("input", () => mobileNumValue(sdn_point_person_mobile_no))
 
-//handle the one input only for OTP number
-$("#otp-input-1").on("input",function(){
-    var maxLength = 1;
-    var inputValue = document.querySelector('#otp-input-1').value
-    document.querySelector('#otp-input-2').focus()
 
-    if (inputValue.length > maxLength) {
-        document.querySelector('#otp-input-1').value = inputValue.slice(0, maxLength);
-
-    } 
-})
-
-
-$("#otp-input-2").on("input",function(){
-    var maxLength = 1;
-    var inputValue = document.querySelector('#otp-input-2').value
-    document.querySelector('#otp-input-3').focus()
-
-    console.log(event.keyCode, event.charCode) 
-
-    if (inputValue.length > maxLength) {
-        document.querySelector('#otp-input-2').value = inputValue.slice(0, maxLength);
-    } 
-})
-
-$("#otp-input-2").on("keydown",function(){
-    if( event.keyCode == 8 || event.charCode == 46 ){
-        document.querySelector('#otp-input-1').value = ""
-        document.querySelector('#otp-input-1').focus()
-
-    }
-})
-
-$("#otp-input-3").on("input",function(){
-    var maxLength = 1;
-    var inputValue = document.querySelector('#otp-input-3').value
-    document.querySelector('#otp-input-4').focus()
-
-    if (inputValue.length > maxLength) {
-        document.querySelector('#otp-input-3').value = inputValue.slice(0, maxLength);
-    } 
-})
-
-$("#otp-input-3").on("keydown",function(){
-    if( event.keyCode == 8 || event.charCode == 46 ){
-        document.querySelector('#otp-input-2').value = ""
-        document.querySelector('#otp-input-2').focus()
-
-    }
-})
-
-$("#otp-input-4").on("input",function(){
-    var maxLength = 1;
-    var inputValue = document.querySelector('#otp-input-4').value
-    document.querySelector('#otp-input-5').focus()
-
-    if (inputValue.length > maxLength) {
-        document.querySelector('#otp-input-4').value = inputValue.slice(0, maxLength);
-    } 
-})
-
-$("#otp-input-4").on("keydown",function(){
-    if( event.keyCode == 8 || event.charCode == 46 ){
-        document.querySelector('#otp-input-3').value = ""
-        document.querySelector('#otp-input-3').focus()
-
-    }
-})
-
-$("#otp-input-5").on("input",function(){
-    var maxLength = 1;
-    var inputValue = document.querySelector('#otp-input-5').value
-    document.querySelector('#otp-input-6').focus()
-
-    if (inputValue.length > maxLength) {
-        document.querySelector('#otp-input-5').value = inputValue.slice(0, maxLength);
-    } 
-})
-
-$("#otp-input-5").on("keydown",function(){
-    if( event.keyCode == 8 || event.charCode == 46 ){
-        document.querySelector('#otp-input-4').value = ""
-        document.querySelector('#otp-input-4').focus()
-
-    }
-})
-
-$("#otp-input-6").on("input",function(){
-    var maxLength = 1;
-    var inputValue = document.querySelector('#otp-input-6').value
-    if (inputValue.length > maxLength) {
-        document.querySelector('#otp-input-6').value = inputValue.slice(0, maxLength);
-    } 
-})
-
-
-$("#otp-input-6").on("keydown",function(){
-    if( (event.keyCode == 8 || event.charCode == 46) && document.querySelector('#otp-input-6').value == "" ){
-        document.querySelector('#otp-input-5').value = ""
-        document.querySelector('#otp-input-5').focus()
-    }
-
-    if( (event.keyCode == 8 || event.charCode == 46) && document.querySelector('#otp-input-6').value != "" ){
-        document.querySelector('#otp-input-6').value = ""
-        document.querySelector('#otp-input-6').focus()
-    }
-})
 
 sdn_div.addEventListener('mouseover', function(){
     ask_account_sdn_h3.style.display = "flex"
@@ -350,7 +247,101 @@ sdn_div.addEventListener('mouseout', function(){
 
 
 
+//handle the one input only for OTP number
+$("#otp-input-1").on("input",function(){
+    var maxLength = 1;
+    var inputValue = document.querySelector('#otp-input-1').value
+    document.querySelector('#otp-input-2').focus()
 
+    if (inputValue.length > maxLength) {
+        document.querySelector('#otp-input-1').value = inputValue.slice(0, maxLength);
+
+    } 
+})
+
+$("#otp-input-2").on("input",function(){
+    var maxLength = 1;
+    var inputValue = document.querySelector('#otp-input-2').value
+    document.querySelector('#otp-input-3').focus()
+
+    console.log(event.keyCode, event.charCode) 
+
+    if (inputValue.length > maxLength) {
+        document.querySelector('#otp-input-2').value = inputValue.slice(0, maxLength);
+    } 
+})
+
+$("#otp-input-2").on("keydown",function(){
+    if( event.keyCode == 8 || event.charCode == 46 ){
+        document.querySelector('#otp-input-2').value = ""
+    }
+})
+
+$("#otp-input-3").on("input",function(){
+    var maxLength = 1;
+    var inputValue = document.querySelector('#otp-input-3').value
+    document.querySelector('#otp-input-4').focus()
+
+    if (inputValue.length > maxLength) {
+        document.querySelector('#otp-input-3').value = inputValue.slice(0, maxLength);
+    } 
+})
+
+$("#otp-input-3").on("keydown",function(){
+    if( event.keyCode == 8 || event.charCode == 46 ){
+        document.querySelector('#otp-input-3').value = ""
+    }
+})
+
+$("#otp-input-4").on("input",function(){
+    var maxLength = 1;
+    var inputValue = document.querySelector('#otp-input-4').value
+    document.querySelector('#otp-input-5').focus()
+
+    if (inputValue.length > maxLength) {
+        document.querySelector('#otp-input-4').value = inputValue.slice(0, maxLength);
+    } 
+})
+
+$("#otp-input-4").on("keydown",function(){
+    if( event.keyCode == 8 || event.charCode == 46 ){
+        document.querySelector('#otp-input-4').value = ""
+    }
+})
+
+$("#otp-input-5").on("input",function(){
+    var maxLength = 1;
+    var inputValue = document.querySelector('#otp-input-5').value
+    document.querySelector('#otp-input-6').focus()
+
+    if (inputValue.length > maxLength) {
+        document.querySelector('#otp-input-5').value = inputValue.slice(0, maxLength);
+    } 
+})
+
+$("#otp-input-5").on("keydown",function(){
+    if( event.keyCode == 8 || event.charCode == 46 ){
+        document.querySelector('#otp-input-5').value = ""
+    }
+})
+
+$("#otp-input-6").on("input",function(){
+    var maxLength = 1;
+    var inputValue = document.querySelector('#otp-input-6').value
+    if (inputValue.length > maxLength) {
+        document.querySelector('#otp-input-6').value = inputValue.slice(0, maxLength);
+    } 
+})
+
+$("#otp-input-6").on("keydown",function(){
+    if( (event.keyCode == 8 || event.charCode == 46) && document.querySelector('#otp-input-6').value == "" ){
+        document.querySelector('#otp-input-5').value = ""
+    }
+
+    if( (event.keyCode == 8 || event.charCode == 46) && document.querySelector('#otp-input-6').value != "" ){
+        document.querySelector('#otp-input-6').value = ""
+    }
+})
   
 
 tms_div.addEventListener('mouseover', function(){
