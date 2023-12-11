@@ -459,7 +459,7 @@ sdn_close_btn.addEventListener('click', () => {
 
 // telemedicine login user
 sdn_login_modal_btn.addEventListener('click', () =>{
-    console.log("here")
+    // console.log("here")
     sdn_login_modal_div.style.display = "flex"
     sdn_login_modal_div.style.zIndex = "10"
 

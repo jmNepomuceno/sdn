@@ -180,3 +180,13 @@ friday 5
 index arrangement ng session[process timer]
 0 VM5488:577 {interval_0: 33, interval_1: 34} 'interval_1' 'string'
 
+add_referral_form
+pending modal sa different na mga pc upon referring
+restriction part sa mga input sa patient registration
+create a table for outgoing patients same with incoming patients
+
+
+    
+Referred:12/07/2023 - 19:09:48       Processing: 00:00:26
+Processed:12/07/2023 - 19:10:14      Approval/Deferral: 00:18:57
+Deferred:12/07/2023 - 19:29:11       Total: 00:19:23	

@@ -2,6 +2,7 @@
 
     session_start();
     include("../database/connection2.php");
+    date_default_timezone_set('Asia/Manila');
 
     // echo $_SESSION['hospital_code']; 
     // echo $_SESSION['hospital_name']; 
@@ -31,13 +32,35 @@
     $year = $dateTime->format("Y");
     $month = $dateTime->format("m");
     $day = $dateTime->format("d");
-    $hours = $dateTime->format("H") + 8;
+    $hours = $dateTime->format("H");
     $minutes = $dateTime->format("i");
     $seconds = $dateTime->format("s");
 
+    // FOR NAMING OF THE REFERENCE NUMBER DEPENDS ON WHAT HOSPITAL, BGH WILL REFER TO
+    $sql_temp = "SELECT hospital_municipality_code FROM sdn_hospital WHERE hospital_name='". $_POST['refer_to'] ."' ";
+    $stmt_temp = $pdo->prepare($sql_temp);
+    $stmt_temp->execute();
+    $data_municipality_code = $stmt_temp->fetch(PDO::FETCH_ASSOC);
+
+    // reference now the municipality code to get the municipality name from city table
+    $sql_temp = "SELECT municipality_description FROM city WHERE municipality_code='". $data_municipality_code['hospital_municipality_code'] ."' ";
+    $stmt_temp = $pdo->prepare($sql_temp);
+    $stmt_temp->execute();
+    $data_municipality_desc = $stmt_temp->fetch(PDO::FETCH_ASSOC);
+
+    $inputString = $_POST['refer_to'];
+    $words = explode(' ', $inputString);
+    $firstLetters = array_map(function ($word) {
+        return ucfirst(substr($word, 0, 1));
+    }, $words);
+    $abbreviation = implode('', $firstLetters);
 
     // sql variable
-    $reference_num = 'R3-BTN-BGHMC-' . $year . '-' . $month . '-' . $day;
+   // R3-BTN-LIMAY-FCSH-2023-12-06
+   if($data_municipality_desc['municipality_description'] === "CITY OF BALANGA (Capital)"){
+        $data_municipality_desc['municipality_description'] = "BALANGA";
+   }
+    $reference_num = 'R3-BTN-'. $data_municipality_desc['municipality_description'] . '-' . $abbreviation . '-' . $year . '-' . $month . '-' . $day;
     $patlast = $data['patlast'];
     $patfirst = $data['patfirst'];
     $patmiddle = $data['patmiddle'];
@@ -134,12 +157,12 @@
     if ($stmt->execute()) {
         // Statement executed successfully
         // You can fetch data or perform further actions here
-        echo "success";
+        // echo "success";
     } else {
         // Statement did not execute properly
         // You can handle the error or display an error message
         $errorInfo = $stmt->errorInfo();
-        echo "Error: " . $errorInfo[2];
+        // echo "Error: " . $errorInfo[2];
     }
     
 ?>

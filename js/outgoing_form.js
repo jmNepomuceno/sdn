@@ -73,7 +73,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 52000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -273,7 +273,6 @@ $(document).ready(function(){
                     time : null,
                     status : "",
                     time_logout: null,
-                    func : run_timer
                 }
             }
          }
@@ -368,34 +367,12 @@ $(document).ready(function(){
 
 
             const td_processing = document.createElement('td')
-            // td_processing.textContent = "Processing: " // from 1 to 4
 
             const td_processing_div = document.createElement('div')
             td_processing_div.className = 'flex flex-row justify-around items-center'
-            td_processing_div.textContent = "Processing: "
+            
             const td_processing_div_2 = document.createElement('div')
 
-            // console.log(data_arr)
-
-            if (data_arr[response[i]['hpercode']].status === 'On-Process') {
-                // if it shows the patient who has currently processing, we are going to delete first the timer, then run again the timer 
-                // upon sorting, whenever it shows or disappears, we are going to delete and re run the timer, to show the current timer
-                // console.log('kyla')
-                // clearInterval(intervalIDs['interval_' + response[i]['hpercode']]);
-                // delete intervalIDs['interval_' + response[i]['hpercode']];
-
-                // // continue
-                // data_arr[global_single_hpercode]['func'](response[i]['hpercode'] , data_arr[response[i]['hpercode']].time) // calling the run_timer function
-            }
-            else if (data_arr[response[i]['hpercode']].status === 'Approved' || data_arr[response[i]['hpercode']].status === 'Arrived'){
-                td_processing_div_2.textContent = response[i]['final_progressed_timer']
-            }
-            else{
-                td_processing_div_2.textContent = (data_arr[response[i]['hpercode']].time) ? data_arr[response[i]['hpercode']].time : "00:00:00"
-            }
-            
-            // need to update the laman of all global variables on every populate of tbody.
-            // update the global_hpercode_all based on the current laman of the table
             global_stopwatch_all.push(td_processing_div_2)
 
             var timeString = td_processing_div_2.textContent; // Example time string in "hh:mm:ss" format
@@ -713,233 +690,7 @@ $(document).ready(function(){
     })
 
     // END MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
-
-    function parseTimeToMilliseconds(timeString) {
-        const [hours, minutes, seconds] = timeString.split(":");
-        // console.log(hours, minutes, seconds)
-        const totalMilliseconds = ((parseInt(hours, 10) * 60 + parseInt(minutes, 10)) * 60 + parseInt(seconds, 10)) * 1000;
-        return totalMilliseconds;
-        //5000
-    }
-
-    const run_timer = (global_single_hpercode, current_time) =>{
-        let startTime = 0; 
-        let elapsedTime = 0;
-
-        function formatTime(milliseconds) {
-            const date = new Date(milliseconds);
-            return date.toISOString().substr(11, 8);
-        }
-
-        if(current_time !== "0"){ // if it is from after the reload
-            startTime =  parseTimeToMilliseconds(current_time);
-        }else{ // for a new patient processing process :D 
-            startTime = new Date().getTime() - elapsedTime;
-        }
-
-      
-        // const uniqueIdentifier = `interval_${index}`;
-
-        const uniqueIdentifier = `interval_${global_single_hpercode}`;
-        let data;
-
-        // console.log(data_arr)
-
-        intervalIDs[uniqueIdentifier] = setInterval(() => {
-            if(current_time === "0"){
-                // console.log('initial')
-                const currentTime = new Date().getTime();
-                elapsedTime = currentTime - startTime;
-
-                // find the current index of the clicked hpercode based on the current data in the table
-                let index_hpercode;
-                for(let i = 0; i < length_curr_table; i++){
-                    if(global_single_hpercode === global_hpercode_all[i].value){
-                        index_hpercode = i;
-                    }
-                }
-
-                if(index_hpercode !== undefined){
-                    // printing the formatTime
-                    global_stopwatch_all[index_hpercode].textContent = formatTime(elapsedTime)
-
-                    // changing the color of the text based on the 'matagal ma process'
-                    if(elapsedTime >= 5000){
-                        global_stopwatch_all[index_hpercode].style.color = "red"
-                    }
-                }
-
-                data_arr[global_single_hpercode].time = formatTime(elapsedTime)
-
-                data = {
-                    // timer_running : true,
-                    global_single_hpercode : global_single_hpercode,
-                    elapsedTime : formatTime(elapsedTime),
-                    table_index : index_hpercode,
-                    // approved_bool : approved_clicked_bool,
-                    // approved_clicked_hpercode : approved_clicked_hpercode, 
-                    // secs_add : secs_add
-                }
-
-                // console.log(data_arr)
-            }else{
-                // console.log('refreshed')
-                startTime += 1000
-
-                // find the current index of the clicked hpercode based on the current data in the table
-                let index_hpercode;
-                for(let i = 0; i < length_curr_table; i++){
-                    // console.log(global_hpercode_all[i].value , global_single_hpercode)
-                    if(global_single_hpercode === global_hpercode_all[i].value){
-                        index_hpercode = i;
-                    }
-                }
-                
-                // condition mo dapat pag wala value si index_hpercode, wala dapat mangyayare or di dapat mag r run yung number 486
-                // printing the formatTime
-                if(index_hpercode !== undefined){
-                    // may laman
-                    global_stopwatch_all[index_hpercode].textContent = formatTime(startTime)
-
-                    // changing the color of the text based on the 'matagal ma process'
-                    if(startTime >= 5000){
-                        global_stopwatch_all[index_hpercode].style.color = "red"
-                    }
-                }
-
-                data_arr[global_single_hpercode].time = formatTime(startTime)
-
-                data = {
-                    // timer_running : true,
-                    global_single_hpercode : global_single_hpercode,
-                    elapsedTime : formatTime(startTime),
-                    table_index : index_hpercode,
-                    // approved_bool : approved_clicked_bool,
-                    // approved_clicked_hpercode : approved_clicked_hpercode, 
-                    // secs_add : secs_add
-                }   
-
-                // console.log(data_arr)
-
-            }
-            
-            // console.log(data)
-            $.ajax({
-                url: './php/process_timer_2.php',
-                method: "POST",
-                data:data,
-                success: function(response){
-                    // console.log(response)
-                    response = JSON.parse(response);    
-                    // console.log(response)            
-                }
-            })
-        }, 1000)
-    }
-
-
-    // initialize the structure of the table_arr based on the data that have been fetched from the database // fetch the status ?
-    $.ajax({
-        url: './php/fetch_status.php',
-        method: "POST",
-        success: function(response){
-            response = JSON.parse(response);  
-
-            for(let i = 0; i < response.length; i++){
-                try {
-                    // Your code that may cause an error
-                    data_arr[response[i].hpercode] = { time: response[i].response_time, status:response[i].status, time_logout: response[i].progress_timer,  func: run_timer };
-                } catch (error) {
-                    console.error("Error:", error);
-                
-                    // You can also add more specific handling based on the type of error
-                    if (error instanceof TypeError) {
-                        // Handle TypeError
-                        console.error("This is a TypeError. Check the type and value of global_hpercode_all[i].value");
-                    } else {
-                        // Handle other types of errors
-                        console.error("An unexpected error occurred. Check the console for details.");
-                    }
-                }
-            }
-
-            // check if the length of session process_timer is > 1, this is for whenever the there is a timer running and the user refresh the page
-            let after_reload = []
-            if($('#timer-running-input').val() === '1' && $('#post-value-reload-input').val() !== '1'){ // if global_process_timer_running === 1
-                $.ajax({
-                    url: './php/fetch_onProcess.php',
-                    method: "POST",
-                    success: function(response){               
-                        response = JSON.parse(response);
-                        after_reload = response
-                        // console.log(after_reload)
-
-                        for(let i = 0; i < response.length; i++){
-                            global_single_hpercode = after_reload[i].global_single_hpercode
-                            data_arr[after_reload[i].global_single_hpercode]['func'](global_single_hpercode, after_reload[i].elapsedTime)    
-                        }
-                    }
-                })
-            }
-
-            // after reload, the exisiting processing timer are still running after logout and logging in.
-            if($('#post-value-reload-input').val() === 'true' && $('#timer-running-input').val() !== '1' ){
-                // console.log("after logout")
-                console.log($('#post-value-reload-input').val())
-                $.ajax({
-                    url: './php/save_process_time.php',
-                    method: "POST",
-                    data : {what: 'continue'},
-                    success: function(response){
-                        response = JSON.parse(response);  
-                        // console.log(response)
-
-                        // Function to format time as HH:MM:SS
-                        function millisecondsToHMS(milliseconds) {
-                            // Calculate total seconds
-                            let totalSeconds = Math.floor(milliseconds / 1000);
-                            
-                            // Calculate hours, minutes, and remaining seconds
-                            let hours = Math.floor(totalSeconds / 3600);
-                            let minutes = Math.floor((totalSeconds % 3600) / 60);
-                            let remainingSeconds = totalSeconds % 60;
-                            
-                            // Format the result as HH:MM:SS
-                            let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-                            
-                            return formattedTime;
-                        }
-                        
-                        // Get the current time
-                        let currentTime = new Date();
-                        
-                        // Given formatted time string
-                        let formattedTimeString = response[0].logout_date;
-                        
-                        // Parse the formatted time string
-                        let formattedTime = new Date(formattedTimeString);
-                        
-                        // Calculate the time difference
-                        let timeDifference = currentTime - formattedTime;
-                        // console.log(currentTime , formattedTime)
-
-                        // console.log(timeDifference) // milliseconds
-
-                        let final_time = millisecondsToHMS(timeDifference  + parseTimeToMilliseconds(response[0].progress_timer));
-
-                        // console.log(final_time);  // Output: "00:11:50"
-                    
-
-                        for(let i = 0; i <response.length; i++){
-                            data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
-                        }
-                    }
-                })
-            }
-        }
-    })
-
-
+ 
     // SEARCHING FUNCTIONALITIES
     $('#incoming-search-btn').on('click' , function(event){        
         $('#incoming-clear-search-btn').removeClass('opacity-30 pointer-events-none')
@@ -957,7 +708,7 @@ $(document).ready(function(){
 
         // console.log(data)
             $.ajax({
-                url: './php/incoming_search.php',
+                url: './php/outgoing_search.php',
                 method: "POST", 
                 data:data,
                 success: function(response){
@@ -976,23 +727,7 @@ $(document).ready(function(){
                     });
                     });
                 }
-            })
-
-        // // console.log(data)
-        // if(data.ref_no === "" && data.last_name === "" && data.first_name === "" && data.middle_name === "" && data.case_type === "" && data.agency === "" && data.status === "default" ){
-        //     $('#modal-title-incoming').text('Warning')
-        //     $('#modal-icon').addClass('fa-triangle-exclamation')
-        //     $('#modal-icon').removeClass('fa-circle-check')
-        //     $('#modal-body-incoming').text('Fill at least one bar.')
-        //     $('#ok-modal-btn-incoming').text('Ok')
-
-        //     $('#myModal-incoming').modal('show');
-            
-        // }else{
-            
-        // }
-        
-        
+            })   
     })
 
     $('#incoming-clear-search-btn').on('click' , function(event){

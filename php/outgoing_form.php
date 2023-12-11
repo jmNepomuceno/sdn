@@ -129,7 +129,7 @@
                             // SQL query to fetch data from your table
                             // echo  "here";
                             try{
-                                $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND referred_by='Bataan General Hospital and Medical Center' ORDER BY date_time ASC";
+                                $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND referred_by='". $_SESSION['hospital_name'] ."' ORDER BY date_time ASC";
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->execute();
                                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -177,13 +177,7 @@
                                                 <label class="text-md"> Processed: </label>
                                             </td>
                                             <td>
-                                                <div class="flex flex-row justify-around items-center">
-                                                    Processing: 
-                                                    <div> 
-                                                        <div class="stopwatch">00:00:00</div>
-                                                        
-                                                    </div>
-                                                </div>
+                                                
                                             </td>
                                             
                                             <td class=" font-bold text-center bg-gray-500">
@@ -235,37 +229,7 @@
                     </div>
                    <label class="text-gray-500 font-bold ml-[1%] text-glow text-3xl" id="pat-status-form">Pending</label>
                 </div>
-
-                <div id="temp-forward-form" class="w-[100%] h-[18%] bg-blue-400 rounded-sm mt-2 text-black font-bold text-md flex flex-row justify-between items-center">
-                    <label class="text-black ml-[1%]">Patient Forwarding Form</label>
-                    <button id="forward-continue-btn" class="bg-[#065cc6] font-semibold w-[10%] mr-2 rounded-sm text-black"> Continue </button>
-                </div>
-
-                <div id="pat-forward-form" class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col hidden">
-                    <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-row justify-start items-center">
-                        <label class="text-black ml-[1%]">Patient Forwarding Form</label>
-                    </div>
-                        
-                    <div class="flex flex-col justify-center items-start w-full  h-[45%] mt-[35px]">
-                        <label class="ml-[2%] font-semibold">Action</label>
-                        <select class="border border-slate-800 w-[95%] ml-[2%] rounded-sm">
-                            <option>Select</option>
-                            <option>Emergency Room</option>
-                            <option>OB-GYNE</option>
-                            <option>Out-Patient Department</option>
-                        </select>
-                    </div> 
-
-                    <div class="flex flex-row justify-end items-center w-full">
-                        <button id="main-forward-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Forward </button>
-                        <button id="forward-cancel-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Cancel </button>
-                    </div>
-                </div>
-
-                <div id="pending-start-div" class="bg-white w-full h-[50px] max-h-[50px] min-h-[50px] mt-[1.5%] rounded-sm flex flex-row justify-start items-center">
-                    <button id="pending-start-btn" class="bg-green-400 font-semibold w-[12%] h-[80%] ml-2 rounded-sm text-black"> Start </button>
-                </div>
-
+                            
                 <!-- 2 approval form , shows when the status is On-Process -->
                 <div id='approval-form' class="bg-white w-full h-[500px] max-h-[500px] min-h-[500px] mt-[1.5%] rounded-sm flex flex-col hidden">
                     <div class=" w-[100%] h-[7%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-row justify-start items-center">
@@ -309,7 +273,7 @@
                 </div>
 
                 <!-- 3 arrival form, shows when the status is Approved -->
-                <div id="arrival-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                <!-- <div id="arrival-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
                     <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
                         <label class="text-black ml-[1%]">Arrival Form</label>
                     </div>
@@ -319,7 +283,9 @@
                         <textarea id="arrival-text-area" class="border-2 border-[#bfbfbf] w-[95%] h-[55%] ml-4 resize-none outline-none"></textarea>
                         <button id="arrival-submit" class="bg-green-400 font-semibold w-[12%] h-[30px] ml-4 rounded-sm text-black"> Submit </button>     
                     </div> 
-                </div>
+                </div> -->  
+
+
                 <!-- 3 approval details  -->
                 <div id="approval-details" class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col hidden">
                     <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
@@ -338,7 +304,7 @@
                     </div> 
                 </div>
                 <!-- 3 cancel form  -->
-                <div id="cancel-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                <div id="cancel-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col">
                     <div class=" w-[100%] h-[18%] bg-[#ff4d4d] rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
                         <label class="text-black ml-[1%]">Cancellation Form</label>
                     </div>
@@ -478,7 +444,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/javascript"  charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
-    <!-- <script src="./js/outgoing_form.js?v=<?php echo time(); ?>"></script> -->
+    <script src="./js/outgoing_form.js?v=<?php echo time(); ?>"></script>
 
 </body>
 </html>

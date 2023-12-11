@@ -61,13 +61,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> -->
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -208,6 +209,8 @@
                                         $type_color = 'bg-green-500';
                                     }else if($row['type'] == 'ER'){
                                         $type_color = 'bg-sky-700';
+                                    }else if($row['type'] == 'PCR'){
+                                        $type_color = 'bg-red-600';
                                     }
 
                                     
@@ -221,7 +224,7 @@
                                         }  
                                     }
                                     echo '<tr class="h-[61px]">
-                                            <td> ' . $row['reference_num'] . ' - '.$index.' </td>
+                                            <td class="text-sm"> ' . $row['reference_num'] . ' - '.$index.' </td>
                                             <td>' . $row['patlast'] , ", " , $row['patfirst'] , " " , $row['patmiddle']  . '</td>
                                             <td class="h-full font-bold text-center ' . $type_color . ' ">' . $row['type'] . '</td>
                                             <td>
@@ -232,8 +235,8 @@
                                                 </div>
                                             </td>
                                             <td> 
-                                                <label class="text-md"> Referred: ' . $row['date_time'] . ' </label>
-                                                <label class="text-md"> Processed: </label>
+                                                <label class="text-sm"> Referred: ' . $row['date_time'] . ' </label>
+                                                <label class="text-sm"> Processed: 00:00:00</label>
                                             </td>
                                             <td>
                                                 <div class="flex flex-row justify-around items-center">
@@ -362,7 +365,7 @@
                     </div> 
 
                     <div class="flex flex-row justify-end items-center w-full mt-2">
-                        <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black opacity-30 pointer-events-none"> Approve </button>
+                        <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Approve </button>
                         <!-- <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-6 rounded-sm text-black"> Approved </button> -->
                     </div>
                 </div>
@@ -382,7 +385,7 @@
                 <!-- 3 approval details  -->
                 <div id="approval-details" class="bg-white w-full h-[180px] max-h-[180px] min-h-[180px] mt-[1.5%] rounded-sm flex flex-col hidden">
                     <div class=" w-[100%] h-[18%] bg-blue-400 rounded-sm -mt-[0.1s%] text-black font-bold text-md flex flex-row justify-start items-center">
-                        <label class="text-black ml-[1%]">Approval Details</label>
+                        <label class="text-black ml-[1%]" id="approval-details-id">Approval Details</label>
                     </div>
                         
                     <div class="flex flex-col justify-center items-start w-full h-[80%] mt-1">
@@ -443,6 +446,53 @@
                     <div class="flex flex-col justify-center items-start w-full h-[80%] mt-1">
                         <p>The dog is barking so loud that the other dog from the block also started barking.</p>
                     </div> 
+                </div>
+
+                <!-- 5 follow-up/refer back form, shows when the status is Check -->
+                <div id="followup-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[15%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Follow-Up / Refer Back Form</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-evenly items-start w-full h-[85%]">
+                        <label class="ml-[2%] font-semibold">Follow-Up / Refer Back Note</label>
+                        <textarea id="follow-textarea" class="border-2 border-[#bfbfbf] w-[95%] h-[50%] ml-4 resize-none outline-none"></textarea>
+
+                        <label class="ml-[2%] font-semibold">Action</label>
+                        <select id="follow-classification-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
+                            <option value="">Select</option>
+                            <option value="Follow-Up">Follow-Up</option>
+                            <option value="Refer Back">Refer Back</option>
+                        </select>
+                    </div> 
+
+                    <div class="flex flex-row justify-end items-center w-full mb-2">
+                        <button id="follow-submit-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Submit </button>
+                        <!-- <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-6 rounded-sm text-black"> Approved </button> -->
+                    </div>
+                </div>
+
+                <!-- 6 discharged form, shows when the status is admitted -->
+                <div id="discharged-form" class="bg-white w-full h-[300px] max-h-[300px] min-h-[300px] mt-[1.5%] rounded-sm flex flex-col hidden">
+                    <div class=" w-[100%] h-[15%] bg-blue-400 rounded-sm -mt-[0.1%] text-black font-bold text-md flex flex-row justify-start items-center">
+                        <label class="text-black ml-[1%]">Discharged Form</label>
+                    </div>
+                        
+                    <div class="flex flex-col justify-evenly items-start w-full h-[85%]">
+                        <label class="ml-[2%] font-semibold">Discharged Note</label>
+                        <textarea id="discharged-textarea" class="border-2 border-[#bfbfbf] w-[95%] h-[50%] ml-4 resize-none outline-none"></textarea>
+
+                        <label class="ml-[2%] font-semibold">Action</label>
+                        <select id="discharged-classification-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
+                            <option value="">Select</option>
+                            <option value="Discharged">Discharged</option>
+                        </select>
+                    </div> 
+
+                    <div class="flex flex-row justify-end items-center w-full mb-2">
+                        <button id="follow-submit-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Submit </button>
+                        <!-- <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-6 rounded-sm text-black"> Approved </button> -->
+                    </div>
                 </div>
 
                 <div class="bg-white w-full  mt-[1.5%] rounded-sm  flex flex-col">
@@ -528,12 +578,9 @@
         </div>
     </div>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/javascript"  charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
@@ -543,7 +590,6 @@
     // $(document).ready(function () {
     //     $('#myDataTable').DataTable();
     // });
-
         var jsonData = <?php echo $jsonData; ?>;
         var logout_data = <?php echo $logout_data; ?>;
         var login_data = "<?php echo $_SESSION['login_time']; ?>";

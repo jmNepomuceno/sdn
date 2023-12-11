@@ -82,12 +82,14 @@ $(document).ready(function(){
                 }
             }
 
+            // console.log(data)
+
             $.ajax({
                 url: './php/add_referral_form.php',
                 method: "POST",
                 data:data,
                 success: function(response){
-                    
+                    // response = JSON.parse(response); 
                     console.log(response)
                     // if(response === "success" && $('#hospital_code').val() == '1437'){
                     //     $('#notif-circle').removeClass('hidden')

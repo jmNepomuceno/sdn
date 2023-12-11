@@ -73,7 +73,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 150000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -140,6 +140,8 @@ $(document).ready(function(){
             $('#arrival-form').addClass('hidden')
             $('#approval-details').addClass('hidden')
             $('#cancel-form').addClass('hidden')
+            $('#checked-form').addClass('hidden')
+            $('#discharged-form').addClass('hidden')
 
             $('#pending-start-div').removeClass('hidden')
 
@@ -155,11 +157,14 @@ $(document).ready(function(){
             $('#status-bg-div').addClass('bg-cyan-500')
 
             $('#approval-form').removeClass('hidden')
+            
 
             $('#arrival-form').addClass('hidden')
             $('#approval-details').addClass('hidden')
             $('#cancel-form').addClass('hidden')
             $('#pending-start-div').addClass('hidden')
+            $('#followup-form').addClass('hidden')
+            $('#discharged-form').addClass('hidden')
 
         }
 
@@ -175,10 +180,36 @@ $(document).ready(function(){
             
             $('#approval-form').addClass('hidden')
             $('#pending-start-div').addClass('hidden')
+            $('#followup-form').addClass('hidden')
+            $('#discharged-form').addClass('hidden')
 
             $('#arrival-form').removeClass('hidden')
             $('#approval-details').removeClass('hidden')
             $('#cancel-form').removeClass('hidden')
+
+            $('#approval-details-id').text('Approval Details')
+        }
+
+        if(response[0].status === 'Deferred'){
+            $('#temp-forward-form').addClass('hidden')
+    
+            $('#pat-status-form').removeClass('text-gray-500')
+            $('#pat-status-form').addClass('text-green-500')
+
+            $('#status-bg-div').removeClass('bg-gray-600')
+            $('#status-bg-div').addClass('bg-green-500')
+
+            
+            $('#approval-form').addClass('hidden')
+            $('#pending-start-div').addClass('hidden')
+            $('#followup-form').addClass('hidden')
+            $('#discharged-form').addClass('hidden')
+            $('#arrival-form').addClass('hidden')
+            $('#cancel-form').addClass('hidden')
+
+            $('#approval-details').removeClass('hidden')
+
+            $('#approval-details-id').text('Deferral Details')
         }
 
         if(response[0].status === 'Arrived'){
@@ -194,10 +225,50 @@ $(document).ready(function(){
             $('#pending-start-div').addClass('hidden')
             $('#arrival-form').addClass('hidden')
             $('#cancel-form').addClass('hidden')
+            $('#followup-form').addClass('hidden')
 
             $('#checkup-form').removeClass('hidden')
             $('#arrival-details').removeClass('hidden')
             $('#approval-details').removeClass('hidden')
+        }
+
+        if(response[0].status === 'Checked'){
+            $('#temp-forward-form').addClass('hidden')
+
+            $('#pat-status-form').removeClass('text-gray-500')
+            $('#pat-status-form').addClass('text-green-500')
+
+            $('#status-bg-div').removeClass('bg-gray-600')
+            $('#status-bg-div').addClass('bg-green-500')
+
+            // $('#approval-form').addClass('hidden')
+            $('#pending-start-div').addClass('hidden')
+            $('#arrival-form').addClass('hidden')
+            $('#cancel-form').addClass('hidden')
+            $('#checkup-form').addClass('hidden')
+            $('#discharged-form').addClass('hidden')
+
+            $('#followup-form').removeClass('hidden')
+        }
+
+        if(response[0].status === 'Checked'){
+            $('#temp-forward-form').addClass('hidden')
+
+            $('#pat-status-form').removeClass('text-gray-500')
+            $('#pat-status-form').addClass('text-green-500')
+
+            $('#status-bg-div').removeClass('bg-gray-600')
+            $('#status-bg-div').addClass('bg-green-500')
+
+            // $('#approval-form').addClass('hidden')
+            $('#pending-start-div').addClass('hidden')
+            $('#arrival-form').addClass('hidden')
+            $('#cancel-form').addClass('hidden')
+            $('#checkup-form').addClass('hidden')
+            $('#followup-form').addClass('hidden')
+
+            $('#discharged-form').removeClass('hidden')
+
         }
 
 
@@ -263,6 +334,13 @@ $(document).ready(function(){
         let index = 0;
         let previous = 0;
 
+        // stop the sound notif if the response.length is 0
+        // if(Object.entries(response).length === 0){
+        //     let audio = document.getElementById("notif-sound")
+        //     audio.pause;
+        //     audio.currentTime = 0;
+        // }
+
          // get first the last value of the response , which is the new value upon fetching the data from the database.
          if(Object.entries(response).length > 1){
             let keysArray = Object.keys(response);
@@ -311,6 +389,8 @@ $(document).ready(function(){
                 type_color = 'bg-green-500';
             }else if(response[i]['type'] == 'ER'){
                 type_color = 'bg-sky-700';
+            }else if(response[i]['type'] == 'PCR'){
+                type_color = 'bg-red-600';
             }
 
             const tr = document.createElement('tr')
@@ -318,7 +398,7 @@ $(document).ready(function(){
 
             const td_name = document.createElement('td')
             td_name.textContent = response[i]['reference_num'] + " - " + index
-
+            td_name.className = 'text-sm'
             const td_reference_num = document.createElement('td')
             td_reference_num.textContent = response[i]['patlast'] + ", " + response[i]['patfirst'] + " " + response[i]['patmiddle']
 
@@ -347,11 +427,15 @@ $(document).ready(function(){
 
             const td_time_div_label_1 = document.createElement('label')
             td_time_div_label_1.textContent = " Referred: " + response[i]['date_time']
-            td_time_div_label_1.className = `text-md`
+            td_time_div_label_1.className = `text-sm`
 
             const td_time_div_label_2 = document.createElement('label')
             td_time_div_label_2.textContent = (response[i]['approved_time']) ?  " Processed: " + response[i]['approved_time'] : " Processed: 00:00:00"
-            td_time_div_label_2.className = `text-md`
+            td_time_div_label_2.className = `text-sm`
+
+            const td_time_div_label_3 = document.createElement('label')
+            td_time_div_label_3.textContent = " Deferred: " + "00:00:00"
+            td_time_div_label_3.className = `text-sm`
 
             if(response[i]['final_progressed_timer'] !== null){
                 // Input time duration in "hh:mm:ss" format
@@ -361,7 +445,7 @@ $(document).ready(function(){
                 let [hours, minutes, seconds] = timeString.split(':').map(Number);
 
                 // Calculate the total duration in milliseconds
-                let totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+                let totalMilliseconds = (hours * 60 * 60 + minutes * 60 + seconds) * 1000;  
 
                 // console.log(totalMilliseconds); // Output: 99000
             }
@@ -377,6 +461,7 @@ $(document).ready(function(){
 
             // console.log(data_arr)
 
+
             if (data_arr[response[i]['hpercode']].status === 'On-Process') {
                 // if it shows the patient who has currently processing, we are going to delete first the timer, then run again the timer 
                 // upon sorting, whenever it shows or disappears, we are going to delete and re run the timer, to show the current timer
@@ -388,6 +473,9 @@ $(document).ready(function(){
                 // data_arr[global_single_hpercode]['func'](response[i]['hpercode'] , data_arr[response[i]['hpercode']].time) // calling the run_timer function
             }
             else if (data_arr[response[i]['hpercode']].status === 'Approved' || data_arr[response[i]['hpercode']].status === 'Arrived'){
+                td_processing_div_2.textContent = response[i]['final_progressed_timer']
+            }
+            else if (data_arr[response[i]['hpercode']].status === 'Deferred'){
                 td_processing_div_2.textContent = response[i]['final_progressed_timer']
             }
             else{
@@ -442,6 +530,10 @@ $(document).ready(function(){
 
             td_time.appendChild(td_time_div_label_1)
             td_time.appendChild(td_time_div_label_2)
+            if (data_arr[response[i]['hpercode']].status === 'Deferred'){
+                console.log('asdf')
+                td_time.appendChild(td_time_div_label_3)
+            }
 
             td_referr_div.appendChild(td_referr_label_1)
             td_referr_div.appendChild(td_referr_label_2)
@@ -515,16 +607,21 @@ $(document).ready(function(){
         data_arr[global_single_hpercode].status = "On-Process"
 
     })
-
+    
     $('#pending-approved-btn').on('click' , function(event){
         $('#modal-title-incoming').text('Warning')
         $('#modal-icon').addClass('fa-triangle-exclamation')
         $('#modal-icon').removeClass('fa-circle-check')
-        $('#modal-body-incoming').text('Approval Confirmation')
-        $('#yes-modal-btn-incoming').removeClass('hidden')
-        $('#ok-modal-btn-incoming').text('No')
+
+        if($('#approved-action-select').val() === 'Approve'){
+            $('#modal-body-incoming').text('Approval Confirmation')
+        }else{
+            $('#modal-body-incoming').text('Deferral Confirmation')
+        }
 
         modal_filter = 'approval_confirmation'
+        $('#yes-modal-btn-incoming').removeClass('hidden')
+        $('#ok-modal-btn-incoming').text('No')
 
         $('#myModal-incoming').modal('show');
     })
@@ -535,18 +632,25 @@ $(document).ready(function(){
 
     // modal showing upon clicking the approval
     $('#yes-modal-btn-incoming').on('click' , function(event){
-        // clear the timer
+        // clear the timer  
         if(modal_filter === 'approval_confirmation'){
+            console.log(intervalIDs)
+            // console.log(global_single_hpercode)
             if (intervalIDs.hasOwnProperty(`interval_${global_single_hpercode}`)) {
-                console.log('here')
+                // console.log('here')
 
                 clearInterval(intervalIDs['interval_' + global_single_hpercode]);
                 delete intervalIDs['interval_' + global_single_hpercode];
                 // document.querySelectorAll('.pat-status-incoming')[pencil_index_clicked_temp].textContent = "Approved"
             }
-            
+            // console.log(intervalIDs)
             // updating the status of that patient from the data_arr and in the database
-            data_arr[global_single_hpercode].status = "Approved"
+            if($('#approved-action-select').val() === 'Approve'){
+                data_arr[global_single_hpercode].status = "Approved"
+            }else{
+                data_arr[global_single_hpercode].status = "Deferred"
+            }
+
 
             const data = {
                 global_single_hpercode : global_single_hpercode,
@@ -592,6 +696,7 @@ $(document).ready(function(){
                 }
              })
         }
+
         else if(modal_filter === 'cancellation_confirmation'){
             const data = {
                 global_single_hpercode : global_single_hpercode,
@@ -725,7 +830,6 @@ $(document).ready(function(){
     const run_timer = (global_single_hpercode, current_time) =>{
         let startTime = 0; 
         let elapsedTime = 0;
-
         function formatTime(milliseconds) {
             const date = new Date(milliseconds);
             return date.toISOString().substr(11, 8);
@@ -740,12 +844,12 @@ $(document).ready(function(){
       
         // const uniqueIdentifier = `interval_${index}`;
 
-        const uniqueIdentifier = `interval_${global_single_hpercode}`;
+        
+        let uniqueIdentifier = `interval_${global_single_hpercode}`;
         let data;
-
         // console.log(data_arr)
-
         intervalIDs[uniqueIdentifier] = setInterval(() => {
+            console.log('here')
             if(current_time === "0"){
                 // console.log('initial')
                 const currentTime = new Date().getTime();
@@ -830,7 +934,7 @@ $(document).ready(function(){
                 data:data,
                 success: function(response){
                     // console.log(response)
-                    response = JSON.parse(response);    
+                    // response = JSON.parse(response);    
                     // console.log(response)            
                 }
             })
@@ -844,7 +948,6 @@ $(document).ready(function(){
         method: "POST",
         success: function(response){
             response = JSON.parse(response);  
-
             for(let i = 0; i < response.length; i++){
                 try {
                     // Your code that may cause an error
@@ -872,11 +975,13 @@ $(document).ready(function(){
                     success: function(response){               
                         response = JSON.parse(response);
                         after_reload = response
-                        // console.log(after_reload)
+                        console.log(after_reload)
 
                         for(let i = 0; i < response.length; i++){
-                            global_single_hpercode = after_reload[i].global_single_hpercode
-                            data_arr[after_reload[i].global_single_hpercode]['func'](global_single_hpercode, after_reload[i].elapsedTime)    
+                            if(data_arr[after_reload[i].global_single_hpercode].status === 'Pending' || data_arr[after_reload[i].global_single_hpercode].status === 'On-Process'){
+                                global_single_hpercode = after_reload[i].global_single_hpercode
+                                data_arr[after_reload[i].global_single_hpercode]['func'](global_single_hpercode, after_reload[i].elapsedTime)    
+                            }
                         }
                     }
                 })
