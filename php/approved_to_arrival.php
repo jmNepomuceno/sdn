@@ -6,8 +6,14 @@
     $currentDateTime = date('Y-m-d H:i:s');
 
     // update the approved_details and set the time of approval on the database
-    $sql = "UPDATE incoming_referrals SET status='Arrived', arrival_details='". $_POST['arrival_details']."', arrival_time='". $currentDateTime ."' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $arrival_details = filter_input(INPUT_POST, 'arrival_details');
+    $global_single_hpercode = filter_input(INPUT_POST, 'global_single_hpercode');
+
+    $sql = "UPDATE incoming_referrals SET status='Arrived', arrival_details=:arrival_details, arrival_time=:timer WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':arrival_details', $arrival_details, PDO::PARAM_STR); // currentDateTime
+    $stmt->bindParam(':timer', $currentDateTime, PDO::PARAM_STR);
+    $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
     $stmt->execute();
 
     // get all the pending or on-process status on the database to populate the data table after the approval

@@ -778,22 +778,23 @@ $(document).ready(function(){
 
             const data = {
                 hpercode : global_hpercode,
-                timer : stopwatchDisplay[index].textContent
+                timer : stopwatchDisplay[index].textContent,
+                pat_class : $('#approve-classification-select').val()
             }
 
             console.log(data);
 
-            $.ajax({
-                url: './php/approved_pending.php',
-                method: "POST",
-                data : data,
-                success: function(response){     
-                    response = JSON.parse(response);    
-                    console.log(response)         
-                    $('#pendingModal').addClass('hidden')
-                    location.reload();
-                }
-             })
+            // $.ajax({
+            //     url: './php/approved_pending.php',
+            //     method: "POST",
+            //     data : data,
+            //     success: function(response){     
+            //         response = JSON.parse(response);    
+            //         console.log(response)         
+            //         $('#pendingModal').addClass('hidden')
+            //         location.reload();
+            //     }
+            //  })
         }
     })
 

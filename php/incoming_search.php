@@ -83,7 +83,7 @@
         }
 
         if ($others === false) {
-            if($status === 'All'){
+            if($status === 'All' || $status === 'default'){
                 $conditions[] = "(status='Pending' OR status='On-Process' OR status='Deferred' OR status='Approved' OR status='Cancelled'
                 OR status='Arrived' OR status='Checked' OR status='Admitted' OR status='Discharged' OR status='For Follow Up' OR status='Referred Back')";
             }
@@ -114,6 +114,8 @@
         // echo 'false';
     }
 
+    // echo $sql . ' , ' . $status;
+    
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  

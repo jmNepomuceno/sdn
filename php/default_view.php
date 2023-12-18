@@ -1,3 +1,8 @@
+<?php 
+    session_start();
+    include('../database/connection2.php');
+    
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +11,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="../output.css">
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    
 
 </head>
 <body>

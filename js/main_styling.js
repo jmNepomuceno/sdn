@@ -1,4 +1,17 @@
 $(document).ready(function(){
+    // $.ajax({
+    //     url: '../php/fetch_onProcess.php',
+    //     method: 'POST',
+    //     success: function(response) {
+    //         // $('#dynamic-content').html(response);
+    //         response = JSON.parse(response);    
+    //         loadContent('php/incoming_form.php')
+    //     },
+    //     error: function() {
+    //         console.error('Error loading content');
+    //     }
+    // });
+
     let current_page = ""
 
     const playAudio = () =>{
@@ -56,6 +69,8 @@ $(document).ready(function(){
         $('#yes-modal-btn-main').removeClass('hidden')
 
         $('#myModal-main').modal('show');
+
+
     })
 
     $('#yes-modal-btn-main').on('click' , function(event){
@@ -83,7 +98,7 @@ $(document).ready(function(){
             method: "POST",
             success: function(response) {
                 // response = JSON.parse(response);  
-                console.log(response)
+                console.log(response , " here")
                 window.location.href = "./index.php" 
             }
         });
@@ -157,9 +172,9 @@ const loadContent = (url) => {
 }
 
 // loadContent('php/default_view.php')
-// loadContent('php/patient_register_form.php')
+loadContent('php/patient_register_form.php')
 // loadContent('php/opd_referral_form.php?type="ER"&code=BGHMC-0001')
-loadContent('php/incoming_form.php')
+// loadContent('php/incoming_form.php')
 // loadContent('php/default_view.php')
 
 
@@ -208,6 +223,17 @@ $(document).ready(function(){
 
     //document.getElementById("notif-sound").pause();
     // document.getElementById("notif-sound").currentTime = 0;
+    })
+
+    $('#dashboard-incoming-btn').on('click' , function(event){
+        event.preventDefault();
+        window.location.href = "../php/dashboard_incoming.php";
+    })
+
+    $('#dashboard-outgoing-btn').on('click' , function(event){
+        event.preventDefault();
+        console.log('here')
+        window.location.href = "../php/dashboard_outgoing.php";
     })
 
     // NOTIFICATION FUNCTIONS

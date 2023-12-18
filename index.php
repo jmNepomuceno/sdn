@@ -61,9 +61,9 @@
                     $stmt = $pdo->prepare('SELECT * FROM sdn_hospital WHERE hospital_code = ?');
                     $stmt->execute([$data_child[0]['hospital_code']]);
                     $data_parent = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
                     
                     // echo '<pre>'; print_r($data_parent); echo '</pre>';
+
                     $_SESSION['hospital_code'] = $data_parent[0]['hospital_code'];
                     $_SESSION['hospital_name'] = $data_parent[0]['hospital_name'];
                     $_SESSION['hospital_email'] = $data_parent[0]['hospital_email'];
@@ -71,7 +71,7 @@
                     $_SESSION['hospital_mobile'] = $data_parent[0]['hospital_mobile'];
                     $_SESSION['hospital_name'] = $data_parent[0]['hospital_name'];
 
-                    $_SESSION['user_name'] = $data_parent[0]['hospital_name'];
+                    $_SESSION['user_name'] = $data_child[0]['username'];
                     $_SESSION['user_password'] = $data_child[0]['password'];
                     $_SESSION['first_name'] = $data_child[0]['user_firstname'];
                     $_SESSION['last_name'] = $data_child[0]['user_lastname'];
@@ -98,9 +98,15 @@
                     $_SESSION['login_time'] = $final_date;
 
                     $sql = "UPDATE incoming_referrals SET login_time = '". $final_date ."' , login_user='". $sdn_username ."' ";
-
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute();
+
+                    $sql = "UPDATE sdn_users SET user_lastLoggedIn='online' , user_isActive='1' WHERE username=:username AND password=:password";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindParam(':username', $data_child[0]['username'], PDO::PARAM_STR);
+                    $stmt->bindParam(':password', $data_child[0]['password'], PDO::PARAM_STR);
+                    $stmt->execute();
+
 
                     header('Location: ./main.php');
                 }else{
@@ -159,9 +165,14 @@
 
             $_SESSION['login_time'] = $final_date;
 
-            $sql = "UPDATE incoming_referrals SET login_time = '". $final_date ."' , login_user='". $sdn_username ."' ";
-
+            $sql = "UPDATE incoming_referrals SET login_time = :final_date, login_user = :sdn_username";
             $stmt = $pdo->prepare($sql);
+
+            // Bind parameters
+            $stmt->bindParam(':final_date', $final_date, PDO::PARAM_STR);
+            $stmt->bindParam(':sdn_username', $sdn_username, PDO::PARAM_STR);
+
+            // Execute the statement
             $stmt->execute();
 
             header('Location: ./main.php');

@@ -37,14 +37,17 @@
     $seconds = $dateTime->format("s");
 
     // FOR NAMING OF THE REFERENCE NUMBER DEPENDS ON WHAT HOSPITAL, BGH WILL REFER TO
-    $sql_temp = "SELECT hospital_municipality_code FROM sdn_hospital WHERE hospital_name='". $_POST['refer_to'] ."' ";
+    $referTo = filter_input(INPUT_POST, 'refer_to');
+    $sql_temp = "SELECT hospital_municipality_code FROM sdn_hospital WHERE hospital_name = :refer_to";
     $stmt_temp = $pdo->prepare($sql_temp);
+    $stmt_temp->bindParam(':refer_to', $referTo, PDO::PARAM_STR);
     $stmt_temp->execute();
     $data_municipality_code = $stmt_temp->fetch(PDO::FETCH_ASSOC);
 
     // reference now the municipality code to get the municipality name from city table
-    $sql_temp = "SELECT municipality_description FROM city WHERE municipality_code='". $data_municipality_code['hospital_municipality_code'] ."' ";
-    $stmt_temp = $pdo->prepare($sql_temp);
+    $sql_temp = "SELECT municipality_description FROM city WHERE municipality_code=:id ";
+    $stmt_temp = $pdo->prepare($sql_temp); 
+    $stmt_temp->bindParam(':id', $data_municipality_code['hospital_municipality_code'], PDO::PARAM_STR);
     $stmt_temp->execute();
     $data_municipality_desc = $stmt_temp->fetch(PDO::FETCH_ASSOC);
 

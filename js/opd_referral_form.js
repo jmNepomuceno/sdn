@@ -37,43 +37,63 @@ $(document).ready(function(){
                 type : $('#type-input').val(),
                 code : $('#code-input').val(),
 
-                // refer_to : $('#refer-to-select').val(),
-                // sensitive_case : $('input[name="sensitive"]:checked').val(),
-                // parent_guardian : $('#parent-guard-input').val(),
-                // phic_member : $('#phic-member-select').val(),
-                // transport : $('#transport-select').val(),
-                // referring_doc : $('#referring-doc-input').val(),
-
-                // complaint_history_input : $('#complaint-history-input').val(),
-                // reason_referral_input : $('#reason-referral-input').val(),
-                // diagnosis : $('#diagnosis').val(),
-
-
-                // bp_input : parseInt($('#bp-input').val()),
-                // hr_input : $('#hr-input').val(),
-                // rr_input : $('#rr-input').val(),
-                // temp_input : $('#temp-input').val(),
-                // weight_input : parseInt($('#weight-input').val()),
-                // pe_findings_input : $('#pe-findings-input').val(),
-
                 refer_to : $('#refer-to-select').val(),
-                sensitive_case : 'true',
-                parent_guardian : "N/A",
-                phic_member : 'true',
-                transport : "Ambulance",
-                referring_doc : "Juan",
+                sensitive_case : $('input[name="sensitive"]:checked').val(),
+                parent_guardian : $('#parent-guard-input').val(),
+                phic_member : $('#phic-member-select').val(),
+                transport : $('#transport-select').val(),
+                referring_doc : $('#referring-doc-input').val(),
 
-                complaint_history_input : "asdf",
-                reason_referral_input : "asdf",
-                diagnosis : "asdf",
+                complaint_history_input : $('#complaint-history-input').val(),
+                reason_referral_input : $('#reason-referral-input').val(),
+                diagnosis : $('#diagnosis').val(),
 
 
-                bp_input : 12,
-                hr_input : "12",
-                rr_input : "12",
-                temp_input : "12",
-                weight_input : parseInt(12),
-                pe_findings_input : "asdf",
+                bp_input : parseInt($('#bp-input').val()),
+                hr_input : $('#hr-input').val(),
+                rr_input : $('#rr-input').val(),
+                temp_input : $('#temp-input').val(),
+                weight_input : parseInt($('#weight-input').val()),
+                pe_findings_input : $('#pe-findings-input').val(),
+
+                // refer_to : $('#refer-to-select').val(),
+                // sensitive_case : 'true',
+                // parent_guardian : "N/A",
+                // phic_member : 'true',
+                // transport : "Ambulance",
+                // referring_doc : "Juan",
+
+                // complaint_history_input : "asdf",
+                // reason_referral_input : "asdf",
+                // diagnosis : "asdf",
+
+
+                // bp_input : 12,
+                // hr_input : "12",
+                // rr_input : "12",
+                // temp_input : "12",
+                // weight_input : parseInt(12),
+                // pe_findings_input : "asdf",
+
+
+                // refer_to : "Isaac Catalina Medical Center",
+                // sensitive_case : 'true',
+                // parent_guardian : "Potassium",
+                // phic_member : "true",
+                // transport : "Commute",
+                // referring_doc : "Potassium",
+
+                // complaint_history_input : "Potassium",
+                // reason_referral_input : "Potassium",
+                // diagnosis : "Potassium",
+
+
+                // bp_input : 12,
+                // hr_input : "12",
+                // rr_input : "12",
+                // temp_input : "12",
+                // weight_input : parseInt(12),
+                // pe_findings_input : "Potassium",
             }
 
             for (var key in data) {
@@ -82,7 +102,7 @@ $(document).ready(function(){
                 }
             }
 
-            // console.log(data)
+            console.log(data)
 
             $.ajax({
                 url: './php/add_referral_form.php',

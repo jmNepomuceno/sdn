@@ -497,11 +497,39 @@ sdn_registration_nav_btn.addEventListener('click', () =>{
     // sdn_sub_modal_div.className = "sdn-sub-modal-div flex flex-col justify-start items-center w-11/12 sm:w-2/5 h-5/6 bg-teleCreateAccColor"
 })
 
-// show OTP modal after clicking registration button
-// sdn_register_button.addEventListener('click' , () =>{
-//     console.log("here")
-// })
+let userIsActive = true;
+    function handleUserActivity() {
+        userIsActive = true;
+        console.log('asdf')
+        // Additional code to handle user activity if needed
+        // console.log('active')
+    }
 
-// $(document).ready(function(){
-//     $('#myModal').modal('show');
-// })
+    function handleUserInactivity() {
+        userIsActive = false;
+        console.log('fdsa')
+    }
+
+    // Attach event listeners
+    document.addEventListener('mousemove', handleUserActivity);
+
+    // Set up a timer to check user inactivity periodically
+    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
+
+    function startInactivityTimer() {
+        inactivityTimer = setInterval(() => {
+            if (!userIsActive) {
+                handleUserInactivity();
+            }
+            userIsActive = false; // Reset userIsActive after each check
+            
+        }, inactivityInterval);
+    }
+
+    function resetInactivityTimer() {
+        clearInterval(inactivityTimer);
+        startInactivityTimer();
+    }
+
+    // Start the inactivity timer when the page loads
+    startInactivityTimer();

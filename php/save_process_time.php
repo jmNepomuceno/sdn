@@ -1,6 +1,7 @@
 <?php
     session_start();
     include("../database/connection2.php");
+    date_default_timezone_set('Asia/Manila');
 
     $what = $_POST['what'];
     if($what === 'save'){
@@ -16,7 +17,19 @@
 
         // $jsonString = json_encode($_SESSION["process_timer"]);
         // echo $jsonString;
-        echo count($_SESSION["process_timer"]);
+
+        $currentDate = date("Y-m-d H:i:s"); // Current date and time
+
+        $sql = "UPDATE sdn_users SET user_lastLoggedIn=:curr_date, user_isActive='0' WHERE username=:username AND password=:password";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':username', $_SESSION['user_name'], PDO::PARAM_STR);
+        $stmt->bindParam(':password', $_SESSION['user_password'], PDO::PARAM_STR);
+        $stmt->bindParam(':curr_date', $currentDate, PDO::PARAM_STR);
+        $stmt->execute();
+        
+
+        echo $_SESSION['user_name'] . " " . $_SESSION['user_password'];
+
     }
     
     if($what === 'continue'){

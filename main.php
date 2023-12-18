@@ -1,16 +1,6 @@
 <?php
     session_start();
     include('database/connection2.php');
-    // echo $_SESSION["hospital_name"];
-
-    // $user = $_SESSION['user_name'];
-    // $user = $_SESSION['user_name'];
-    // while (true) {
-    //     // Your code to be executed periodically
-    //     echo "asdf";
-    //     // Add a delay (e.g., sleep for 5 seconds)
-    //     sleep(2); // Sleep for 5 seconds
-    // }
 ?>
 
 <!DOCTYPE html>
@@ -128,7 +118,7 @@
             </div>
             <div class="w-full h-[350px] flex flex-col justify-around items-center">
                 <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center">
-                    <h2 class="">Dashboard (Incoming)</h2>
+                    <h2 class="" >Dashboard (Incoming)</h2>
                 </div>
 
                 <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center">
@@ -164,11 +154,11 @@
                             <h2 id="admin-module-id" class="">Admin</h2>
                         </div>
                     <?php } ?>
-                    <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
+                    <div id="dashboard-incoming-btn" class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
                         <h2 class="">Dashboard (Incoming)</h2>
                     </div>
 
-                    <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
+                    <div id="dashboard-outgoing-btn" class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
                         <h2 class="">Dashboard (Outgoing)</h2>
                     </div>
 

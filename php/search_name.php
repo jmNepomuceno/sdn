@@ -12,19 +12,35 @@
 
     // echo $search_mname == "asdf";'
     $sql = "none";
+    $search_lname = filter_input(INPUT_POST, 'search_lname');
+    $search_fname = filter_input(INPUT_POST, 'search_fname');
+    $search_mname = filter_input(INPUT_POST, 'search_mname');
     if($search_fname == "" && $search_mname == ""  && $search_lname != ""){   
-        $sql = "SELECT * FROM hperson WHERE patlast LIKE '%$search_lname%' ";
+        // $sql = "SELECT * FROM hperson WHERE patlast LIKE '%$search_lname%' ";
+        $sql = "SELECT * FROM hperson WHERE patlast LIKE :search_lname";
+        $stmt = $pdo->prepare($sql);
+        $search_lname_param = "%$search_lname%";
+        $stmt->bindParam(':search_lname', $search_lname_param, PDO::PARAM_STR);
     }
     else if($search_lname == "" && $search_mname == ""  && $search_fname != ""){
-        $sql = "SELECT * FROM hperson WHERE patfirst LIKE '%$search_fname%' ";
+        // $sql = "SELECT * FROM hperson WHERE patfirst LIKE '%$search_fname%' ";
+        $sql = "SELECT * FROM hperson WHERE patfirst LIKE :search_fname";
+        $stmt = $pdo->prepare($sql);
+        $search_fname_param = "%$search_fname%";
+        $stmt->bindParam(':search_fname', $search_fname_param, PDO::PARAM_STR);
     }
     else if($search_fname == "" && $search_lname == "" && $search_mname != ""){
-        $sql = "SELECT * FROM hperson WHERE patmiddle LIKE '%$search_mname%' ";
+        // $sql = "SELECT * FROM hperson WHERE patmiddle LIKE '%$search_mname%' ";
+        $sql = "SELECT * FROM hperson WHERE patmiddle LIKE :search_mname";
+        $search_mname = "%$search_mname%";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':search_mname', $search_mname, PDO::PARAM_STR);
     }else{
         $sql = 'SELECT * FROM hperson WHERE patlast="'. $search_lname .'" && patfirst="'. $search_fname .'" && patmiddle="'. $search_mname .'"';
+        $stmt = $pdo->prepare($sql);
     }
 
-    //
+   
 
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
@@ -34,7 +50,6 @@
     //FETCH THE WHOLE ROW
     // $sql = 'SELECT hpatcode, patlast, patfirst, patmiddle, patbdate FROM hperson WHERE patlast="'. $search_lname .'" && patfirst="'. $search_fname .'" && patmiddle="'. $search_mname .'"';
     if($sql != "none"){
-        $stmt = $pdo->prepare($sql);
         $stmt->execute();
         // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // echo '<pre>'; print_r($data); echo '</pre>';
@@ -44,18 +59,21 @@
             // if the query is slow, remove the region/province/city/brgy code and directly save the name of the regions/province/city/brgy.
             // FROM REGION CODE TO REGION DESCRIPTION QUERY
             // permanent address
-            $sql_province = 'SELECT province_description FROM provinces WHERE province_code="'. $data["pat_province"] .'" ';
+            $sql_province = 'SELECT province_description FROM provinces WHERE province_code=:pat_province ';
             $stmt_province = $pdo->prepare($sql_province);
+            $stmt_province->bindParam(':pat_province', $data["pat_province"], PDO::PARAM_STR);
             $stmt_province->execute();
             $data_province = $stmt_province->fetchAll(PDO::FETCH_ASSOC);
             
-            $sql_city = 'SELECT municipality_description FROM city WHERE municipality_code="'. $data["pat_municipality"] .'" ';
+            $sql_city = 'SELECT municipality_description FROM city WHERE municipality_code=:pat_city ';
             $stmt_city = $pdo->prepare($sql_city);
+            $stmt_city->bindParam(':pat_city', $data["pat_municipality"], PDO::PARAM_STR);
             $stmt_city->execute();
             $data_city = $stmt_city->fetchAll(PDO::FETCH_ASSOC);
 
-            $sql_brgy = 'SELECT barangay_description FROM barangay WHERE barangay_code="'. $data["pat_barangay"] .'" ';
+            $sql_brgy = 'SELECT barangay_description FROM barangay WHERE barangay_code=:pat_brgy ';
             $stmt_brgy = $pdo->prepare($sql_brgy);
+            $stmt_brgy->bindParam(':pat_brgy', $data["pat_barangay"], PDO::PARAM_STR);
             $stmt_brgy->execute();
             $data_brgy = $stmt_brgy->fetchAll(PDO::FETCH_ASSOC);
 
@@ -64,18 +82,21 @@
             $data["pat_barangay"] = $data_brgy[0]['barangay_description'];
 
             // current address
-            $sql_province_ca = 'SELECT province_description FROM provinces WHERE province_code="'. $data["pat_curr_province"] .'" ';
+            $sql_province_ca = 'SELECT province_description FROM provinces WHERE province_code=:pat_curr_province ';
             $stmt_province_ca = $pdo->prepare($sql_province_ca);
+            $stmt_province_ca->bindParam(':pat_curr_province', $data["pat_curr_province"], PDO::PARAM_STR);
             $stmt_province_ca->execute();
             $data_province_ca = $stmt_province_ca->fetchAll(PDO::FETCH_ASSOC);
             
-            $sql_city_ca = 'SELECT municipality_description FROM city WHERE municipality_code="'. $data["pat_curr_municipality"] .'" ';
+            $sql_city_ca = 'SELECT municipality_description FROM city WHERE municipality_code=:pat_curr_city ';
             $stmt_city_ca = $pdo->prepare($sql_city_ca);
+            $stmt_city_ca->bindParam(':pat_curr_city', $data["pat_curr_municipality"], PDO::PARAM_STR);
             $stmt_city_ca->execute();
             $data_city_ca = $stmt_city_ca->fetchAll(PDO::FETCH_ASSOC);
 
-            $sql_brgy_ca = 'SELECT barangay_description FROM barangay WHERE barangay_code="'. $data["pat_curr_barangay"] .'" ';
+            $sql_brgy_ca = 'SELECT barangay_description FROM barangay WHERE barangay_code=:pat_curr_brgy ';
             $stmt_brgy_ca = $pdo->prepare($sql_brgy_ca);
+            $stmt_brgy_ca->bindParam(':pat_curr_brgy', $data["pat_curr_barangay"], PDO::PARAM_STR);
             $stmt_brgy_ca->execute();
             $data_brgy_ca = $stmt_brgy_ca->fetchAll(PDO::FETCH_ASSOC);
 
@@ -85,18 +106,21 @@
 
             // current workplace address
             if($data["pat_work_province"] != "N/A"){
-                $sql_province_cwa = 'SELECT province_description FROM provinces WHERE province_code="'. $data["pat_work_province"] .'" ';
+                $sql_province_cwa = 'SELECT province_description FROM provinces WHERE province_code=:pat_work_province ';
                 $stmt_province_cwa = $pdo->prepare($sql_province_cwa);
+                $stmt_province_cwa->bindParam(':pat_work_province', $data["pat_work_province"], PDO::PARAM_STR);
                 $stmt_province_cwa->execute();
                 $data_province_cwa = $stmt_province_cwa->fetchAll(PDO::FETCH_ASSOC);
                 
-                $sql_city_cwa = 'SELECT municipality_description FROM city WHERE municipality_code="'. $data["pat_work_municipality"] .'" ';
+                $sql_city_cwa = 'SELECT municipality_description FROM city WHERE municipality_code= :pat_work_city';
                 $stmt_city_cwa = $pdo->prepare($sql_city_cwa);
+                $stmt_city_cwa->bindParam(':pat_work_city', $data["pat_work_municipality"], PDO::PARAM_STR);
                 $stmt_city_cwa->execute();
                 $data_city_cwa = $stmt_city_cwa->fetchAll(PDO::FETCH_ASSOC);
 
-                $sql_brgy_cwa = 'SELECT barangay_description FROM barangay WHERE barangay_code="'. $data["pat_work_barangay"] .'" ';
+                $sql_brgy_cwa = 'SELECT barangay_description FROM barangay WHERE barangay_code=:pat_work_brgy ';
                 $stmt_brgy_cwa = $pdo->prepare($sql_brgy_cwa);
+                $stmt_brgy_cwa->bindParam(':pat_work_brgy', $data["pat_work_barangay"], PDO::PARAM_STR);
                 $stmt_brgy_cwa->execute();
                 $data_brgy_cwa = $stmt_brgy_cwa->fetchAll(PDO::FETCH_ASSOC);
 
@@ -105,7 +129,6 @@
                 $data["pat_work_barangay"] = $data_brgy_cwa[0]['barangay_description'];
             }
             
-
             // WALA PA SA OFW NA QUERY GL :))
 
             // PERSONAL INFORMATION

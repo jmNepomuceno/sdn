@@ -5,8 +5,9 @@
     $hospital_code = $_POST['hospital_code'];
     $verify = true;
     //FETCH THE WHOLE ROW
-    $sql = 'SELECT * FROM sdn_hospital WHERE hospital_OTP="'. $otp_number .'" ';
+    $sql = "SELECT * FROM sdn_hospital WHERE hospital_OTP=:otp_number ";
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':otp_number', $otp_number, PDO::PARAM_INT);
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // echo '<pre>'; print_r($data); echo '</pre>';
@@ -19,9 +20,7 @@
     if($user_OTP == $otp_number){
         //update the row with verified = TRUE
         $sql = "UPDATE sdn_hospital SET hospital_isVerified = :verify WHERE hospital_code=:hospital_code";
-
         $stmt = $pdo->prepare($sql);
-
         $stmt->bindParam(':hospital_code', $hospital_code, PDO::PARAM_INT);
         $stmt->bindParam(':verify', $verify, PDO::PARAM_BOOL);
 

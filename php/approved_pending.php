@@ -10,29 +10,44 @@
     // $sql = "UPDATE incoming_referrals SET status='Approved' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
-
+    $pat_class = $_POST['case_category'];
+    $global_single_hpercode = filter_input(INPUT_POST, 'global_single_hpercode');
     if($_POST['action'] === "Approve"){
-        $sql = "UPDATE incoming_referrals SET status='Approved' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+        $sql = "UPDATE incoming_referrals SET status='Approved', pat_class=:pat_class WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
+        $stmt->bindParam(':pat_class', $pat_class, PDO::PARAM_STR);
         $stmt->execute();
     }else{
-        $sql = "UPDATE incoming_referrals SET status='Deferred' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+        $sql = "UPDATE incoming_referrals SET status='Deferred', pat_class=:pat_class WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
+        $stmt->bindParam(':pat_class', $pat_class, PDO::PARAM_STR);
         $stmt->execute();
     }
 
-    $sql_b = "UPDATE incoming_referrals SET final_progressed_timer='". $_POST['timer']."' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $timer = filter_input(INPUT_POST, 'timer');
+    $sql_b = "UPDATE incoming_referrals SET final_progressed_timer=:timer WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt_b = $pdo->prepare($sql_b);
+    $stmt_b->bindParam(':timer', $timer, PDO::PARAM_STR);
+    $stmt_b->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
     $stmt_b->execute();
 
     // update the approved_details and set the time of approval on the database
+    $approve_details = filter_input(INPUT_POST, 'approve_details');
     if($_POST['action'] === "Approve"){
-        $sql = "UPDATE incoming_referrals SET approval_details='". $_POST['approve_details']."', approved_time='". $currentDateTime ."' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+        $sql = "UPDATE incoming_referrals SET approval_details=:approve_details, approved_time=:approved_time WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':approve_details', $approve_details, PDO::PARAM_STR); // currentDateTime
+        $stmt->bindParam(':approved_time', $currentDateTime, PDO::PARAM_STR);
+        $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
         $stmt->execute();
     }else{
-        $sql = "UPDATE incoming_referrals SET deferred_details='". $_POST['approve_details']."', deferred_time='". $currentDateTime ."' WHERE hpercode='". $_POST['global_single_hpercode']."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+        $sql = "UPDATE incoming_referrals SET deferred_details=:approve_details, deferred_time=:approved_time WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':approve_details', $approve_details, PDO::PARAM_STR); // currentDateTime
+        $stmt->bindParam(':approved_time', $currentDateTime, PDO::PARAM_STR);
+        $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -71,18 +86,21 @@
 
 
     // update also the status of the patient on the hperson table
-    $sql = "SELECT type FROM incoming_referrals WHERE hpercode='". $_POST['global_single_hpercode'] ."' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $sql = "SELECT type FROM incoming_referrals WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if($_POST['action'] === "Approve"){
-        $sql = "UPDATE hperson SET status='Approved', type='". $data['type'] ."' WHERE hpercode='". $_POST['global_single_hpercode']."' ";
+        $sql = "UPDATE hperson SET status='Approved', type='". $data['type'] ."' WHERE hpercode=:hpercode ";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
         $stmt->execute();
     }else{
-        $sql = "UPDATE hperson SET status='Deferred', type='". $data['type'] ."' WHERE hpercode='". $_POST['global_single_hpercode']."' ";
+        $sql = "UPDATE hperson SET status='Deferred', type='". $data['type'] ."' WHERE hpercode=:hpercode ";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
         $stmt->execute();
     }
 ?>

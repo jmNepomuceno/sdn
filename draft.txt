@@ -190,3 +190,18 @@ create a table for outgoing patients same with incoming patients
 Referred:12/07/2023 - 19:09:48       Processing: 00:00:26
 Processed:12/07/2023 - 19:10:14      Approval/Deferral: 00:18:57
 Deferred:12/07/2023 - 19:29:11       Total: 00:19:23	
+
+
+
+// Your array
+$myArray = array("apple", "banana", "orange", "grape");
+
+// Element to check
+$elementToCheck = "banana";
+
+// Check if the element is in the array
+if (in_array($elementToCheck, $myArray)) {
+    echo "$elementToCheck is in the array.";
+} else {
+    echo "$elementToCheck is not in the array.";
+}

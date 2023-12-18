@@ -73,7 +73,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 150000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -331,6 +331,7 @@ $(document).ready(function(){
     const populateTbody = (response) =>{
         // console.log('tbody')    
         response = JSON.parse(response);
+        // console.log(response)
         let index = 0;
         let previous = 0;
 
@@ -475,7 +476,7 @@ $(document).ready(function(){
             else if (data_arr[response[i]['hpercode']].status === 'Approved' || data_arr[response[i]['hpercode']].status === 'Arrived'){
                 td_processing_div_2.textContent = response[i]['final_progressed_timer']
             }
-            else if (data_arr[response[i]['hpercode']].status === 'Deferred'){
+            else if (data_arr[response[i]['hpercode']].status === 'Deferred' || data_arr[response[i]['hpercode']].status === 'Cancelled' || data_arr[response[i]['hpercode']].status === 'Checked'){
                 td_processing_div_2.textContent = response[i]['final_progressed_timer']
             }
             else{
@@ -766,7 +767,6 @@ $(document).ready(function(){
     $('#approved-action-select').change(function(){
         let selectedValue = $(this).val();
         // console.log($('#eraa').val())
-        console.log($('#approve-classification-select').val())
         // Check if a value is selected
         if (selectedValue != "") {
             // alert("Selected value: " + selectedValue);
@@ -1060,12 +1060,14 @@ $(document).ready(function(){
             status : $('#incoming-status-select').val()
         }
 
+
         // console.log(data)
             $.ajax({
                 url: './php/incoming_search.php',
                 method: "POST", 
                 data:data,
                 success: function(response){
+                    // console.log(response)
                     global_stopwatch_all = []
                     global_hpercode_all = []
 
