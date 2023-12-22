@@ -595,6 +595,37 @@ $(document).ready(function(){
     $('#myModal-main').modal('show');
   })
 
+  $('#yes-modal-btn-main').on('click' , function(event){
+    console.log('here')
+    document.querySelector('#nav-drop-account-div').classList.toggle('hidden');
+
+    let currentDate = new Date();
+
+    let year = currentDate.getFullYear();
+    let month = currentDate.getMonth() + 1; // Adding 1 to get the month in the human-readable format
+    let day = currentDate.getDate();
+
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes();
+    let seconds = currentDate.getSeconds();
+
+    let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
+
+    $.ajax({
+        url: '../php/save_process_time.php',
+        data : {  
+            what: 'save',
+            date : final_date
+        },
+        method: "POST",
+        success: function(response) {
+            // response = JSON.parse(response);  
+            console.log(response , " here")
+            window.location.href = "http://192.168.42.222:8035/index.php" 
+        }
+    });
+})
+
   $('#nav-account-div').on('click' , function(event){
     event.preventDefault();
     document.querySelector('#nav-drop-account-div').classList.toggle('hidden');

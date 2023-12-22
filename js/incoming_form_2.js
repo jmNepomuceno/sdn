@@ -31,10 +31,10 @@ $(document).ready(function(){
 
     let intervalIDs = {};
     let length_curr_table = document.querySelectorAll('.hpercode').length;
-    let inactivityTimer;
-
+    let add_minutes = 0;
     // ---------------------------------------------------------------------------------------------------------
 
+    let inactivityTimer;
     let userIsActive = true;
     function handleUserActivity() {
         userIsActive = true;
@@ -73,7 +73,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 10000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -451,7 +451,6 @@ $(document).ready(function(){
                 // console.log(totalMilliseconds); // Output: 99000
             }
 
-
             const td_processing = document.createElement('td')
             // td_processing.textContent = "Processing: " // from 1 to 4
 
@@ -497,10 +496,14 @@ $(document).ready(function(){
 
                 var totalMinutes = hours * 60 + minutes + seconds / 60;
                 // console.log(totalMinutes); // Output: 3.466666666666667
-                if(totalMinutes > 0.05){ // to be change
+                if(totalMinutes > 2.00){ // to be change
                     td_processing_div_2.style.color = 'red'
+                }else{
+                    td_processing_div_2.style.color = 'green'
                 }
             }
+
+            td_processing_div_2.style.color = (td_processing_div_2.textContent === "00:00:00") ? "black" : td_processing_div_2.style.color
 
             // td_processing_div_2.id = 'stopwatch'
             td_processing_div_2.className = 'stopwatch'
@@ -828,6 +831,7 @@ $(document).ready(function(){
     }
 
     const run_timer = (global_single_hpercode, current_time) =>{
+        // console.log(current_time)
         let startTime = 0; 
         let elapsedTime = 0;
         function formatTime(milliseconds) {
@@ -849,7 +853,7 @@ $(document).ready(function(){
         let data;
         // console.log(data_arr)
         intervalIDs[uniqueIdentifier] = setInterval(() => {
-            console.log('here')
+            // console.log('here')
             if(current_time === "0"){
                 // console.log('initial')
                 const currentTime = new Date().getTime();
@@ -868,8 +872,10 @@ $(document).ready(function(){
                     global_stopwatch_all[index_hpercode].textContent = formatTime(elapsedTime)
 
                     // changing the color of the text based on the 'matagal ma process'
-                    if(elapsedTime >= 5000){
+                    if(elapsedTime >= 15000){
                         global_stopwatch_all[index_hpercode].style.color = "red"
+                    }else{
+                        global_stopwatch_all[index_hpercode].style.color = 'green'
                     }
                 }
 
@@ -906,8 +912,10 @@ $(document).ready(function(){
                     global_stopwatch_all[index_hpercode].textContent = formatTime(startTime)
 
                     // changing the color of the text based on the 'matagal ma process'
-                    if(startTime >= 5000){
+                    if(startTime >= 15000){
                         global_stopwatch_all[index_hpercode].style.color = "red"
+                    }else{
+                        global_stopwatch_all[index_hpercode].style.color = 'green'
                     }
                 }
 
@@ -941,13 +949,14 @@ $(document).ready(function(){
         }, 1000)
     }
 
-
+    // console.log(data_arr)
     // initialize the structure of the table_arr based on the data that have been fetched from the database // fetch the status ?
     $.ajax({
         url: './php/fetch_status.php',
         method: "POST",
         success: function(response){
             response = JSON.parse(response);  
+            console.log(response)
             for(let i = 0; i < response.length; i++){
                 try {
                     // Your code that may cause an error
@@ -963,12 +972,14 @@ $(document).ready(function(){
                         // Handle other types of errors
                         console.error("An unexpected error occurred. Check the console for details.");
                     }
-                }
+                }   
             }
 
             // check if the length of session process_timer is > 1, this is for whenever the there is a timer running and the user refresh the page
             let after_reload = []
+            // console.log($('#timer-running-input').val(), $('#post-value-reload-input').val())
             if($('#timer-running-input').val() === '1' && $('#post-value-reload-input').val() !== '1'){ // if global_process_timer_running === 1
+                // console.log("refresh")
                 $.ajax({
                     url: './php/fetch_onProcess.php',
                     method: "POST",
@@ -989,7 +1000,7 @@ $(document).ready(function(){
 
             // after reload, the exisiting processing timer are still running after logout and logging in.
             if($('#post-value-reload-input').val() === 'true' && $('#timer-running-input').val() !== '1' ){
-                // console.log("after logout")
+                console.log("after logout")
                 console.log($('#post-value-reload-input').val())
                 $.ajax({
                     url: './php/save_process_time.php',
@@ -997,7 +1008,7 @@ $(document).ready(function(){
                     data : {what: 'continue'},
                     success: function(response){
                         response = JSON.parse(response);  
-                        // console.log(response)
+                        console.log(response)
 
                         // Function to format time as HH:MM:SS
                         function millisecondsToHMS(milliseconds) {
@@ -1031,11 +1042,12 @@ $(document).ready(function(){
                         // console.log(timeDifference) // milliseconds
 
                         let final_time = millisecondsToHMS(timeDifference  + parseTimeToMilliseconds(response[0].progress_timer));
-
-                        // console.log(final_time);  // Output: "00:11:50"
+                        console.log(final_time);  // Output: "00:11:50"
                     
-
+                        console.log(data_arr)
+                        console.log(response)
                         for(let i = 0; i <response.length; i++){
+                            // data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
                             data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
                         }
                     }
@@ -1043,7 +1055,6 @@ $(document).ready(function(){
             }
         }
     })
-
 
     // SEARCHING FUNCTIONALITIES
     $('#incoming-search-btn').on('click' , function(event){        

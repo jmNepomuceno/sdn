@@ -26,9 +26,7 @@ for(let i = 0; i < add.length; i++){
 }
 
 for(let i = 0; i < totals_elements.length; i++){ 
-
   totals_array.push(totals_elements[i].textContent)
-
 }
 
 //FOr Primary
@@ -386,10 +384,11 @@ const data = {
 
   let temp_datasets = []
   for(let i = 0; i < document.querySelectorAll('.sumCell').length; i++){
-    // console.log(document.querySelectorAll('.sumCell')[i].textContent)
+    // console.log(document.querySelectorAll('.sumCell')[i])
     // temp_data3.push(document.querySelectorAll('.sumCell')[i].value)
     temp_datasets.push(document.querySelectorAll('.sumCell')[i].textContent)
   }
+  console.log(temp_data3)
   // rasi
   const data3 = {
     labels: temp_data3,
@@ -531,11 +530,11 @@ date.textContent = "As of " + formattedDate_word;
   button1.addEventListener('click',addRowBasedOnPreviousCells);
 
 
-// **************************************************************************
+// ************************************************************************** 
 //  ME ME ME ME ME ME ME
 $(document).ready(function(){
   $('#total-processed-refer').text($('#total-processed-refer-inp').val())
-
+  console.log($('#total-processed-refer-inp').val())
   const playAudio = () =>{
     let audio = document.getElementById("notif-sound")
     audio.muted = false;
@@ -553,6 +552,8 @@ $(document).ready(function(){
         }
     })
   }
+
+  
   function fetchMySQLData() {
     $.ajax({
         url: '../php/fetch_interval.php',
@@ -584,6 +585,7 @@ $(document).ready(function(){
 
   $('#logout-btn').on('click' , function(event){
     event.preventDefault(); // Prevent the default behavior (navigating to the link)
+    console.log('den')
 
     $('#modal-title-main').text('Warning')
     // $('#modal-body').text('Are you sure you want to logout?')
@@ -594,6 +596,37 @@ $(document).ready(function(){
 
     $('#myModal-main').modal('show');
   })
+
+  $('#yes-modal-btn-main').on('click' , function(event){
+    console.log('here')
+    document.querySelector('#nav-drop-account-div').classList.toggle('hidden');
+
+    let currentDate = new Date();
+
+    let year = currentDate.getFullYear();
+    let month = currentDate.getMonth() + 1; // Adding 1 to get the month in the human-readable format
+    let day = currentDate.getDate();
+
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes();
+    let seconds = currentDate.getSeconds();
+
+    let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
+
+    $.ajax({
+        url: '../php/save_process_time.php',
+        data : {  
+            what: 'save',
+            date : final_date
+        },
+        method: "POST",
+        success: function(response) {
+            // response = JSON.parse(response);  
+            console.log(response , " here")
+            window.location.href = "http://192.168.42.222:8035/index.php" 
+        }
+    });
+})
 
   $('#nav-account-div').on('click' , function(event){
     event.preventDefault();
@@ -620,41 +653,27 @@ $(document).ready(function(){
     window.location.href = "../main.php";
   })
 
-  $.ajax({
-    url: '../php/fetch_interval.php',
-    method: "POST",
-    data: { /* your data here */ },
-    success: function (data) {
-        // Log data to the server
-        var logData = {
-            action: 'fetch_interval',
-            requestData: { /* your request data here */ },
-            responseData: data,
-            timestamp: new Date()
-        };
+  // $.ajax({
+  //   url: '../php/fetch_interval.php',
+  //   method: "POST",
+  //   data: { /* your data here */ },
+  //   success: function (data) {
+  //       // Log data to the server
+  //       var logData = {
+  //           action: 'fetch_interval',
+  //           requestData: { /* your request data here */ },
+  //           responseData: data,
+  //           timestamp: new Date()
+  //       };
 
-        logDataToServer(logData);
+  //       logDataToServer(logData);
 
-        // Your existing success callback logic here
-        // ...
-    }
-  });
-
+  //       // Your existing success callback logic here
+  //       // ...
+  //   }
+  // });  
+  
   // Function to log data to the server
-  function logDataToServer(data) {
-    $.ajax({
-        url: '../php/log.php', // Adjust the URL to your log.php file
-        method: "POST",
-        contentType: "application/json;charset=UTF-8",
-        data: JSON.stringify({ data: data }),
-        success: function (response) {
-            console.log("Data logged successfully:", response);
-        },
-        error: function (xhr, status, error) {
-            console.error("Error logging data:", status, error);
-        }
-    });
-  }
 })
 
 

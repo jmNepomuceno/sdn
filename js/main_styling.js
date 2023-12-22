@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    // import userIsActive from "./fetch_interval";
+    // console.log(userIsActive)
     // $.ajax({
     //     url: '../php/fetch_onProcess.php',
     //     method: 'POST',
@@ -88,7 +90,7 @@ $(document).ready(function(){
         let seconds = currentDate.getSeconds();
 
         let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
-
+        // console.log('here')
         $.ajax({
             url: './php/save_process_time.php',
             data : {
@@ -175,7 +177,7 @@ const loadContent = (url) => {
 loadContent('php/patient_register_form.php')
 // loadContent('php/opd_referral_form.php?type="ER"&code=BGHMC-0001')
 // loadContent('php/incoming_form.php')
-// loadContent('php/default_view.php')
+// loadContent('php/default_view.php') 
 
 
 $(document).ready(function(){
@@ -236,6 +238,12 @@ $(document).ready(function(){
         window.location.href = "../php/dashboard_outgoing.php";
     })
 
+    $('#history-log-btn').on('click' , function(event){
+        event.preventDefault();
+        console.log('here')
+        window.location.href = "../php/history_log.php";
+    })
+
     // NOTIFICATION FUNCTIONS
     // let num_pending = 0;
 
@@ -255,11 +263,17 @@ $(document).ready(function(){
 
 
     $('#notif-div').on('click' , function(event){
+        console.log('here')
         if($('#notif-span').val() === 0){
             $('#notif-circle').addClass('hidden')
             document.getElementById("notif-sound").pause();
-            document.getElementById("notif-sound").currentTime = 0;5
+            document.getElementById("notif-sound").currentTime = 0;
+        }else{
+            loadContent('php/incoming_form.php')
+            current_page = "incoming_page"
+            $('#current-page-input').val(current_page)
         }
+
     })
 
     // mikas
