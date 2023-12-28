@@ -671,10 +671,12 @@ $(document).ready(function(){
                 method: "POST",
                 data : data,
                 success: function(response){
-                    $('#pendingModal').addClass('hidden')
-                    global_stopwatch_all = []
-                    global_hpercode_all = []
-                    populateTbody(response)
+                    response = JSON.parse(response);    
+                    console.log(response)
+                    // $('#pendingModal').addClass('hidden')
+                    // global_stopwatch_all = []
+                    // global_hpercode_all = []
+                    // populateTbody(response)
                 }
              })
         }

@@ -271,6 +271,7 @@ $(document).ready(function(){
                     created_at : created_at,
                 }
 
+             
                 for (var key in data) {
                     if (data.hasOwnProperty(key)) {
                         console.log(key + " -> " + data[key] + " -> " + typeof data[key]);

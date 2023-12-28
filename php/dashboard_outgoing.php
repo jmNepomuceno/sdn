@@ -9,7 +9,7 @@
     // Format the DateTime object to get the year, month, and day
     $formattedDate = $dateTime->format('Y-m-d') . '%';
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND dateTimeProcessed LIKE :proc_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
     // $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived' OR status='Approved') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
@@ -102,7 +102,7 @@
             </div>
 
             <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center">
-                <h2 class="">Statistics</h2>
+                <h2 class="">History Log</h2>
             </div>
 
             <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center">
@@ -138,8 +138,8 @@
                 <h2 class="">Dashboard (ER/OPD)</h2>
             </div>
 
-            <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
-                <h2 class="">Statistics</h2>
+            <div id="history-log-btn" class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
+                <h2 class="">History Log</h2>
             </div>
 
             <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
@@ -349,7 +349,7 @@
                             // Format the DateTime object to get the year, month, and day
                             $formattedDate = $dateTime->format('Y-m-d') . '%';
 
-                            $sql = "SELECT pat_class, type, referred_by, refer_to FROM incoming_referrals WHERE status='Approved' AND dateTimeProcessed LIKE :proc_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
+                            $sql = "SELECT pat_class, type, referred_by, refer_to FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
                             // $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
                             $stmt = $pdo->prepare($sql);
                             $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);

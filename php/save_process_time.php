@@ -26,6 +26,32 @@
         $stmt->bindParam(':password', $_SESSION['user_password'], PDO::PARAM_STR);
         $stmt->bindParam(':curr_date', $currentDate, PDO::PARAM_STR);
         $stmt->execute();
+
+        $act_type = 'user_login';
+        $pat_name = " ";
+        $hpercode = " ";
+        $action = 'offline';
+        $user_name = $_SESSION['user_name'];
+        $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(1, $hpercode, PDO::PARAM_STR);
+        $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
+        $stmt->bindParam(3, $currentDate, PDO::PARAM_STR);
+        $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
+        $stmt->bindParam(5, $action, PDO::PARAM_STR);
+        $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);
+        $stmt->bindParam(7, $user_name, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        // $sql = "UPDATE history_log SET date=:curr_date, user_isActive='0' WHERE username=:username AND password=:password";
+        // $stmt = $pdo->prepare($sql);
+        // $stmt->bindParam(':username', $_SESSION['user_name'], PDO::PARAM_STR);
+        // $stmt->bindParam(':password', $_SESSION['user_password'], PDO::PARAM_STR);
+        // $stmt->bindParam(':curr_date', $currentDate, PDO::PARAM_STR);
+        // $stmt->execute();
+
         
         echo $_SESSION['user_name'] . " " . $_SESSION['user_password'];
     }

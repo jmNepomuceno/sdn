@@ -9,6 +9,25 @@
     // echo 'console.log("PHP Variable Value: ' . isset($_SESSION["user_name"]) . '");';
     // echo '</script>';
 
+    // $act_type = 'reg_pat';
+    // // $user_name = $patlast + $patfirst + $patmiddle;
+    // $action = 'reg_pat';
+    // $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, user_name) VALUES (?,?,?,?,?,?)";
+    // $stmt = $pdo->prepare($sql);
+
+    // $user_name = "den den";
+    // $created_at = "today";
+    // $hpercode = "BGHMC-0033";
+
+
+    // $stmt->bindParam(1, $hpercode, PDO::PARAM_STR);
+    // $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
+    // $stmt->bindParam(3, $created_at, PDO::PARAM_STR);
+    // $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
+    // $stmt->bindParam(5, $action, PDO::PARAM_STR);
+    // $stmt->bindParam(6, $user_name, PDO::PARAM_STR);
+
+    // $stmt->execute();
 ?>
 
 <!DOCTYPE html>

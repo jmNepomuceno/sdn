@@ -95,6 +95,7 @@
                     $seconds = $currentDateTime->format('s');
 
                     $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
+                    $normal_date = $year . "-" . $month . "-" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
 
                     $_SESSION['login_time'] = $final_date;
 
@@ -108,6 +109,24 @@
                     $stmt->bindParam(':password', $data_child[0]['password'], PDO::PARAM_STR);
                     $stmt->execute();
 
+                    // for history log
+                    $act_type = 'user_login';
+                    $pat_name = " ";
+                    $hpercode = " ";
+                    $action = 'online';
+                    $user_name = $data_child[0]['username'];
+                    $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
+                    $stmt = $pdo->prepare($sql);
+
+                    $stmt->bindParam(1, $hpercode, PDO::PARAM_STR);
+                    $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
+                    $stmt->bindParam(3, $normal_date, PDO::PARAM_STR);
+                    $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
+                    $stmt->bindParam(5, $action, PDO::PARAM_STR);
+                    $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);
+                    $stmt->bindParam(7, $user_name, PDO::PARAM_STR);
+
+                    $stmt->execute();
 
                     header('Location: ./main.php');
                 }else{
@@ -163,7 +182,7 @@
             $seconds = $currentDateTime->format('s');
 
             $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
-
+            $temp_date = $year . "-" . $month . "-" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
             $_SESSION['login_time'] = $final_date;
 
             $sql = "UPDATE incoming_referrals SET login_time = :final_date, login_user = :sdn_username";
@@ -178,6 +197,25 @@
 
             $sql = "UPDATE sdn_users SET user_lastLoggedIn='online' , user_isActive='1' WHERE username='admin' AND password='admin'";
             $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+
+            // for history log
+            $act_type = 'user_login';
+            $pat_name = " ";
+            $hpercode = " ";
+            $action = 'online';
+            $user_name = 'admin';
+            $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindParam(1, $hpercode, PDO::PARAM_STR);
+            $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
+            $stmt->bindParam(3, $temp_date, PDO::PARAM_STR);
+            $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
+            $stmt->bindParam(5, $action, PDO::PARAM_STR);
+            $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);
+            $stmt->bindParam(7, $user_name, PDO::PARAM_STR);
+
             $stmt->execute();
 
             header('Location: ./main.php');

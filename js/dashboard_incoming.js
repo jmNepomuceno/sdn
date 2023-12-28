@@ -388,7 +388,7 @@ const data = {
     // temp_data3.push(document.querySelectorAll('.sumCell')[i].value)
     temp_datasets.push(document.querySelectorAll('.sumCell')[i].textContent)
   }
-  console.log(temp_data3)
+  // console.log(temp_data3)
   // rasi
   const data3 = {
     labels: temp_data3,
@@ -542,6 +542,12 @@ $(document).ready(function(){
         'Error playing audio: ' , error
     })
   }
+
+  $('#history-log-btn').on('click' , function(event){
+    event.preventDefault();
+    console.log('here')
+    window.location.href = "../php/history_log.php";
+  })
 
   const loadContent = (url) => {
     $.ajax({

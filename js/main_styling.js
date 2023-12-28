@@ -173,8 +173,8 @@ const loadContent = (url) => {
     })
 }
 
-// loadContent('php/default_view.php')
-loadContent('php/patient_register_form.php')
+loadContent('php/default_view.php')
+// loadContent('php/patient_register_form.php')
 // loadContent('php/opd_referral_form.php?type="ER"&code=BGHMC-0001')
 // loadContent('php/incoming_form.php')
 // loadContent('php/default_view.php') 

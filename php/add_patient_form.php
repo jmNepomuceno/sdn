@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include("../database/connection2.php");
 
     //PERSONAL INFORMATIONS // 16
@@ -185,9 +186,23 @@
     $stmt->bindParam(52, $pat_country_ofw, PDO::PARAM_INT);
     $stmt->bindParam(53, $pat_office_mobile_no_ofw, PDO::PARAM_STR);
     $stmt->bindParam(54, $pat_mobile_no_ofw, PDO::PARAM_STR);
-
     $stmt->bindParam(55, $created_at, PDO::PARAM_STR);
 
     $stmt->execute();
 
+    $act_type = 'pat_form';
+    $pat_name = $patlast . ', ' . $patfirst . ' ' . $patmiddle . ' . ';
+    $action = 'Register Patient: ';
+    $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(1, $hpercode, PDO::PARAM_STR);
+    $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
+    $stmt->bindParam(3, $created_at, PDO::PARAM_STR);
+    $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
+    $stmt->bindParam(5, $action, PDO::PARAM_STR);
+    $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);
+    $stmt->bindParam(7, $_SESSION['user_name'], PDO::PARAM_STR);
+
+    $stmt->execute();
 ?>

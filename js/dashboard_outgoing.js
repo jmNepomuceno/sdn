@@ -544,6 +544,12 @@ $(document).ready(function(){
     })
   }
 
+  $('#history-log-btn').on('click' , function(event){
+    event.preventDefault();
+    console.log('here')
+    window.location.href = "../php/history_log.php";
+  })
+
   const loadContent = (url) => {
     $.ajax({
         url:url,

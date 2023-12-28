@@ -21,6 +21,41 @@ $(document).ready(function(){
     })
   }
 
+  $('#history-select').change(function() {
+    var selectedValue = $(this).val();
+
+    if(selectedValue === 'login'){
+      selectedValue = 'user_login'
+    }else if(selectedValue === 'refer'){
+      selectedValue = 'pat_refer'
+    }else if(selectedValue === 'register'){
+      selectedValue = 'pat_form'
+    }else if(selectedValue === 'defer'){
+      selectedValue = 'pat_defer'
+    }else{
+      selectedValue = 'all'
+    }
+
+    $.ajax({
+      url: '../php/history_filter.php',
+      method: "POST",
+      data : {
+        option : selectedValue
+      },
+      success: function(response) {
+          let historyDiv = document.querySelector('.history-container')
+
+          if (historyDiv) {
+              while (historyDiv.firstChild) {
+                  historyDiv.removeChild(historyDiv.firstChild);
+              }
+          }
+
+          document.querySelector('.history-container').innerHTML = response
+      }
+    });
+  });
+
   const loadContent = (url) => {
     $.ajax({
         url:url,
