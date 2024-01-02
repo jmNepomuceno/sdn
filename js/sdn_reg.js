@@ -79,7 +79,6 @@ $(document).ready(function(){
                     // Set up the timer to update every second
                     const timerInterval = setInterval(updateTimer, 1000);
 
-                    
                 }
                 
             }

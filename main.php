@@ -5,8 +5,19 @@
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
     }else{
-        $user_name = $_SESSION['user_name'];
+        $user_name = $_SESSION['hospital_name'];
     }
+
+    $refer_to = 'Limay Medical Center';
+    
+    // echo $user_name;
+    // $sql = "SELECT username FROM sdn_users WHERE user_isActive=1 AND hospital_code=9312";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+    // $data_username = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // echo '<pre>'; print_r($data_username); echo '</pre>';
+    // echo $data_username[0]['username'];
 
 ?>
 

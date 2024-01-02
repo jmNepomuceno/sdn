@@ -76,6 +76,7 @@
     $mobile_no = $_SESSION['hospital_mobile'];
 
     $referred_time =  $year . '/' .  $month . '/' .  $day  . ' - ' .  $hours . ':' .  $minutes . ':' .  $seconds;
+    $temp_referred_time =  $year . '-' .  $month . '-' .  $day  . ' ' .  $hours . ':' .  $minutes . ':' .  $seconds;
     $status = 'Pending';
 
     /////////////////////////////////////////////////
@@ -169,15 +170,48 @@
     }
     
     // updating for history log
-    $act_type = 'pat_defer';
+    // incoming of the own hospital
+    $sql = "SELECT hospital_code FROM sdn_hospital WHERE hospital_name=:hospital_name";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':hospital_name', $refer_to, PDO::PARAM_STR);
+    $stmt->execute();
+    $data_hospital_code = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // check whos account is online on that hospital_code
+    $sql = "SELECT username FROM sdn_users WHERE user_isActive=1 AND hospital_code=:hospital_code";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':hospital_code', $data_hospital_code['hospital_code'], PDO::PARAM_STR);
+    $stmt->execute();
+    $data_username = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+    $act_type = 'pat_refer';
+    $action = 'Incoming Patient: ';
+    $pat_name = $patlast . ' ' . $patfirst . ' ' . $patmiddle;
+    $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(1, $code, PDO::PARAM_STR);
+    $stmt->bindParam(2, $data_hospital_code['hospital_code'], PDO::PARAM_INT);
+    $stmt->bindParam(3, $temp_referred_time, PDO::PARAM_STR);
+    $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
+    $stmt->bindParam(5, $action, PDO::PARAM_STR);
+    $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);
+    $stmt->bindParam(7, $data_username[0]['username'], PDO::PARAM_STR);
+
+    $stmt->execute();
+
+    // updating for history log
+    // outgoing of the referral hospital
+    $act_type = 'pat_refer';
     $action = 'Outgoing Patient: ';
     $pat_name = $patlast . ' ' . $patfirst . ' ' . $patmiddle;
     $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
     $stmt = $pdo->prepare($sql);
 
-    $stmt->bindParam(1, $global_single_hpercode, PDO::PARAM_STR);
+    $stmt->bindParam(1, $code, PDO::PARAM_STR);
     $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
-    $stmt->bindParam(3, $currentDateTime, PDO::PARAM_STR);
+    $stmt->bindParam(3, $temp_referred_time, PDO::PARAM_STR);
     $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
     $stmt->bindParam(5, $action, PDO::PARAM_STR);
     $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);

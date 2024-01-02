@@ -208,3 +208,5 @@ if (in_array($elementToCheck, $myArray)) {
 
 
 <!-- <input type="hidden" id="total-processed-refer-inp" value=<?php echo $data['COUNT(*)'] ?>> -->
+
+1. upon referring, di nag a update yung sa hperson na type and status ng patient

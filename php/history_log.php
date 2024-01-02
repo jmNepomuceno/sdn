@@ -9,7 +9,11 @@
     // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // echo '<pre>'; print_r($data); echo '</pre>';
 
-
+    if ($_SESSION['user_name'] === 'admin'){
+        $user_name = 'Bataan General Hospital and Medical Center';
+    }else{
+        $user_name = $_SESSION['hospital_name'];
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,10 +70,8 @@
                 </div>
                 <div id="" class="w-auto h-full whitespace-nowrap flex flex-col justify-center items-center cursor-pointer">
                     <!-- <h1 class="text-white text-lg hidden sm:block">John Marvin Nepomuceno</h1> -->
-                    <h1 class="text-white text-lg hidden sm:block"><?php echo $_SESSION['user_name'] ?> |   <?php echo $_SESSION['last_name'] ?>  <?php echo $_SESSION['first_name']  ?> <?php echo $_SESSION['middle_name']  ?>
-                        
-                    </h1>
-                    
+                    <h1 class="text-white text-lg hidden sm:block"><?php echo $user_name ?> |   <?php echo $_SESSION['last_name'] ?>  <?php echo $_SESSION['first_name']  ?> <?php echo $_SESSION['middle_name']  ?>
+                    </h1> 
                 </div>
                 <div class="w-[5%] h-full flex flex-col justify-center items-center sm:m-1">
                     <i class="fa-solid fa-caret-down text-white text-xs"></i>
@@ -96,7 +98,7 @@
             </div>
 
             <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center">
-                <h2 class="">Statistics</h2>
+                <h2 class="">History Log</h2>
             </div>
 
             <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center">
@@ -132,8 +134,8 @@
                 <h2 class="">Dashboard (ER/OPD)</h2>
             </div>
 
-            <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
-                <h2 class="">Statistics</h2>
+            <div id="history-log-btn" class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
+                <h2 class="">History Log</h2>
             </div>
 
             <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
@@ -167,8 +169,9 @@
                     <select id="history-select" type="text" class="ml-2 w-[90%] h-[90%] outline-none text-xl text-center cursor-pointer border-x-2 border-l-[#bfbfbf]">
                         <option value="">All Logs</option>
                         <option value="login">Login</option>
-                        <option value="refer">Refer</option>
                         <option value="register">Register</option>
+                        <option value="incoming">Incoming</option>
+                        <option value="outgoing">Outgoing</option>
                         <!-- <option value="">All Logs</option> -->
                     </select>
                 </div>
@@ -180,35 +183,8 @@
                 <h1 class="mr-[5%]">User name <i class="fa-solid fa-arrow-down-short-wide"></i></h1>
            </div> 
 
-            <!-- <div class="history-div w-full h-[8%] border-b-2 border-[#bfbfbf] flex flex-row justify-between items-center">
-
-                <div class="w-[20%] h-full flex flex-row justify-around items-center">
-                    <i class="fa-regular fa-calendar-days text-2xl "></i>
-                    <h3><span class="font-bold">December 21, 2023 </span> 3:00pm</h3>
-                </div>
-
-                <div class="w-[30%] h-full flex flex-row justify-around items-center">
-                    <h3 class="text-base">Last logged in: <span id="status-login">Online</span></h3>
-                </div>
-
-                <div class="w-[20%] h-full flex flex-row justify-evenly items-center">
-                    <h3>John Marvin Nepomuceno</h3>
-                    <i class="fa-solid fa-user text-2xl "></i>
-
-                </div>
-            </div> -->
-            <div class="history-container w-full h-full">
+            <div class="history-container w-full h-full overflow-auto">
                 <?php 
-                    // SELECT *
-                    // FROM Grades
-                    // JOIN Students ON Grades.student_id = Students.student_id
-                    // WHERE Grades.student_id = 123;
-                    // $sql = "";
-                    // if($_SESSION['user_name'] === 'admin'){
-                    //     $sql = "SELECT * FROM sdn_users JOIN history_log ON sdn_users.username = history_log.username WHERE sdn_users.username='" . $_SESSION["user_name"] . "' ORDER BY history_log.date DESC";
-                    // }else{
-                    //     $sql = "SELECT * FROM sdn_users JOIN history_log ON sdn_users.username = history_log.username WHERE sdn_users.username='" . $_SESSION["user_name"] . "' ORDER BY history_log.date DESC";
-                    // }
                     $sql = "SELECT * FROM sdn_users JOIN history_log ON sdn_users.username = history_log.username WHERE sdn_users.username='" . $_SESSION["user_name"] . "' ORDER BY history_log.date DESC";
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute();   
@@ -216,7 +192,7 @@
                     // echo '<pre>'; print_r($data); echo '</pre>';
 
                     $temp_1 = "";
-                    $temp_2 = "";
+                    $temp_2 = "";   
                     $temp_3 = "";
 
                     for($i = 0; $i < count($data); $i++){
@@ -234,7 +210,7 @@
                             $temp_2 = "Online Status: " . $data[$i]['action'];
                             $temp_3 = $name;
                         }
-                        else if($data[$i]['activity_type'] === 'pat_form'){
+                        else {
                             $name = $data[$i]['user_lastname'] . ', ' . $data[$i]['user_firstname'] . ' ' . $data[$i]['user_middlename'] . '. ';
                             $originalDate = $data[$i]['date'];
                             $currentDate = date('Y-m-d H:i:s');
@@ -247,19 +223,7 @@
                             $temp_2 = $data[$i]['action'] . ' ' . $data[$i]['pat_name'];
                             $temp_3 = $name;
                         }
-                        else if($data[$i]['activity_type'] === 'pat_refer'){
-                            $name = $data[$i]['user_lastname'] . ', ' . $data[$i]['user_firstname'] . ' ' . $data[$i]['user_middlename'] . '. ';
-                            $originalDate = $data[$i]['date'];
-                            $currentDate = date('Y-m-d H:i:s');
-                            $formattedDate = "";
-
-                            $dateTime = new DateTime($originalDate);
-                            $formattedDate = $dateTime->format('F j, Y g:ia');
-
-                            $temp_1 = $formattedDate;
-                            $temp_2 = $data[$i]['action'] . ' ' . $data[$i]['pat_name'];
-                            $temp_3 = $name;
-                        }
+                        
                         
 
                         echo '

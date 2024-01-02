@@ -45,7 +45,7 @@
             $currentDate = date('Y-m-d H:i:s');
             $formattedDate = "";
 
-            $dateTime = new DateTime($originalDate);
+            $dateTime = new DateTime($originalDate);    
             $formattedDate = $dateTime->format('F j, Y g:ia');
 
             $temp_1 = $formattedDate;

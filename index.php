@@ -183,6 +183,7 @@
 
             $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
             $temp_date = $year . "-" . $month . "-" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
+            
             $_SESSION['login_time'] = $final_date;
 
             $sql = "UPDATE incoming_referrals SET login_time = :final_date, login_user = :sdn_username";
@@ -329,21 +330,8 @@
                             <button type="button" class="sdn-login-btn btn btn-success bg-loginHereBtn hidden mt-3">Login Here</button>
                         </div>
                        
-                        <div class="tms-div w-80 h-28 flex flex-col justify-center hover:justify-start items-center rounded-3xl bg-mainColor hover:w-450 hover:h-48 hover:transition duration-700 ease-in-out cursor-pointer border-5 border-titleDivColor">
-                            <h3 class="ask-account-tms-h3 w-full h-10 hidden rounded-t-3xl flex flex-col justify-center items-center text-white text-sm">
-                                Already have an account?
-                            </h3>
-
-                            <div class="w-3/4 h-2/5 rounded-3xl flex flex-row justify-around items-center">
-                                <!-- <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" style="color:white"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></svg> -->
-                                <i class="tms-lock-icon fa-solid fa-lock text-white"></i>
-                                <div class="tms-text text-white text-xl">Telemedicine Service</div>
-                            </div>
-
-                            <button type="button" class="tms-login-btn btn btn-success bg-loginHereBtn hidden mt-3">Login Here</button>
-                        </div>
-
-                        <div class="create-acc-div w-80 h-28 flex flex-col justify-center hover:justify-start items-center rounded-3xl bg-mainColor hover:w-450 hover:h-48 hover:transition duration-700 ease-in-out cursor-pointer border-5 border-titleDivColor">
+                        
+                         <div class="create-acc-div w-80 h-28 flex flex-col justify-center hover:justify-start items-center rounded-3xl bg-mainColor hover:w-450 hover:h-48 hover:transition duration-700 ease-in-out cursor-pointer border-5 border-titleDivColor">
                             <h3 class="ask-account-cc-h3 w-full h-10 hidden rounded-t-3xl flex flex-col justify-center items-center text-white text-sm">
                                 No account yet?
                             </h3>
@@ -355,7 +343,8 @@
 
                             <button type="button" class="cc-login-btn btn btn-success bg-loginHereBtn hidden mt-3">Sign up</button>
                         </div>
-
+                        
+                        <!-- <div class="main-div-sdn-login w-[30%] h-[40%] border-2 border-black"></div> -->
                     </div>
 
                     <div class="hidden md:flex triangle-div w-0 h-0 border-t-415 border-t-transparent border-b-415 border-b-transparent border-l-415 border-l-white -mr-415"></div>
@@ -425,7 +414,7 @@
                             <?php } ?>
                             <h1 class="text-red-600 hidden" id="tms-match-h1"> Password do not match!</h1>
                             <div class="w-full flex flex-row justify-center items-center mt-3 mb-3">
-                                <button name="tm-register-btn" id="tm-register-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4">Register</button>
+                                <button name="tm-register-btn" id="tm-register-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4 ">Register</button>
                             </div>
                         </form>
                     </div>
@@ -509,21 +498,21 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-name" > <span class="text-red-600"></span> Hospital Name </label>   
                                 </div>
-                                <input type="text" id="sdn-hospital-name" name="hospital_name" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="text" id="sdn-hospital-name" name="hospital_name" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-code" > <span class="text-red-600"></span> Hospital Code </label>   
                                 </div>
-                                <input type="number" id="sdn-hospital-code" name="hospital_code" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="number" id="sdn-hospital-code" name="hospital_code" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-region-select" > <span class="text-red-600"></span> Adress: Region </label>   
                                 </div>
-                                <select id="sdn-region-select" required onchange="getLocations('region' , 'sdn-region')" name="region" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none" autocomplete="off">
+                                <select id="sdn-region-select" required onchange="getLocations('region' , 'sdn-region')" name="region" class="reg_inputs text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none" autocomplete="off">
                                     <option value="" class="">Choose a Region</option>
                                     <?php 
                                         $stmt = $pdo->query('SELECT region_code, region_description from region');
@@ -538,7 +527,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-province-select" > <span class="text-red-600"></span> Address: Province </label>   
                                 </div>
-                                <select id="sdn-province-select" required onchange="getLocations('province' , 'sdn-province')" name="province" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                <select id="sdn-province-select" required onchange="getLocations('province' , 'sdn-province')" name="province" class="reg_inputs text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
                                     <option value="" class="">Choose a Province</option>
                                 </select>
                             </div>
@@ -547,7 +536,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-city-select" > <span class="text-red-600"></span> Address: Municipality </label>   
                                 </div>
-                                <select id="sdn-city-select" required onchange="getLocations('city', 'sdn-city')" name="municipality" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                <select id="sdn-city-select" required onchange="getLocations('city', 'sdn-city')" name="municipality" class="reg_inputs text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
                                     <option value="" class="">Choose a Municipality</option>
                                 </select>
                             </div>
@@ -556,7 +545,7 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-brgy-select" > <span class="text-red-600"></span> Address: Barangay </label>   
                                 </div>
-                                <select id="sdn-brgy-select" name="barangay" class="text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
+                                <select id="sdn-brgy-select" name="barangay" class="reg_inputs text-xs sm:text-base w-full h-full text-center border-2 border-sdnRegistraionColor cursor-pointer outline-none">
                                     <option value="" class="">Choose a Barangay</option>
                                 </select>
                             </div>
@@ -565,56 +554,56 @@
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-zip-code" > <span class="text-red-600"></span> Zip Code </label>   
                                 </div>
-                                <input type="number" id="sdn-zip-code" name="zip_code" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="number" id="sdn-zip-code" name="zip_code" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-email-address" > <span class="text-red-600"></span> Email Address </label>   
                                 </div>
-                                <input type="email" id="sdn-email-address" name="email_address" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="email" id="sdn-email-address" name="email_address" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-landline-no" > <span class="text-red-600"></span> Hospital Landline No. </label>   
                                 </div>
-                                <input type="text" id="sdn-landline-no" name="landline_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="text" id="sdn-landline-no" name="landline_no" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-mobile-no" > <span class="text-red-600"></span> Hospital Mobile No. </label>   
                                 </div>
-                                <input type="text" id="sdn-hospital-mobile-no" name="hospital_mobile_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="text" id="sdn-hospital-mobile-no" name="hospital_mobile_no" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-director" > <span class="text-red-600"></span> Hospital Director </label>   
                                 </div>
-                                <input type="text" id="sdn-hospital-director" name="hospital_director" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
+                                <input type="text" id="sdn-hospital-director" name="hospital_director" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-hospital-director-mobile-no" > <span class="text-red-600"></span> Hospital Director Mobile No. </label>   
                                 </div>
-                                <input type="text" id="sdn-hospital-director-mobile-no" name="hospital_director_mobile_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="text" id="sdn-hospital-director-mobile-no" name="hospital_director_mobile_no" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-point-person" > <span class="text-red-600"></span> Point Person </label>   
                                 </div>
-                                <input type="text" id="sdn-point-person" name="point_person" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
+                                <input type="text" id="sdn-point-person" name="point_person" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                             </div>
 
                             <div class="w-11/12 flex flex-row justify-evenly items-center mt-3">
                                 <div class="w-full flex flex-row justify-start items-center p-1">
                                     <label class="text-xs sm:text-xl  ml-3" for="sdn-point-person-mobile-no" > <span class="text-red-600"></span> Point Person Mobile No. </label>   
                                 </div>
-                                <input type="text" id="sdn-point-person-mobile-no" name="point_person_mobile_no" class="border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
+                                <input type="text" id="sdn-point-person-mobile-no" name="point_person_mobile_no" class="reg_inputs border-2 border-sdnRegistraionColor w-[115%] sm:w-[95%] h-[40px] sm:h-[60px] border-2 outline-none p-2" required autocomplete="off">
                             </div>
 
                             <!-- <div class="flex flex-col justify-start items-center w-full border-2 border-t-sdnRegistraionColor mt-3">
@@ -641,7 +630,7 @@
                             </div> -->
                             
                             <div class="w-full h-15 flex flex-row justify-center items-center mt-3">
-                                <button name="sdn-register-btn" id="sdn-register-btn" class="sdn-register-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4">Register</button>
+                                <button name="sdn-register-btn" id="sdn-register-btn" class="sdn-register-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4 pointer-events-none opacity-35">Register</button>
                             </div>
                         </form>
                     </div>

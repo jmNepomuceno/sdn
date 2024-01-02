@@ -113,7 +113,13 @@
 
     // updating for history log
     $act_type = 'pat_refer';
-    $action = 'Incoming Patient: ';
+    $history_stats = "";
+    if($_POST['action'] === "Approve"){
+        $history_stats = "Approved";
+    }else{
+        $history_stats = "Deferred";
+    }
+    $action = 'Status Patient: ' . $history_stats;
     $pat_name = $data[0]['patlast'] . ' ' . $data[0]['patfirst'] . ' ' . $data[0]['patmiddle'];
     $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
     $stmt = $pdo->prepare($sql);

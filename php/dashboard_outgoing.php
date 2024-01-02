@@ -16,7 +16,11 @@
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
+    if ($_SESSION['user_name'] === 'admin'){
+        $user_name = 'Bataan General Hospital and Medical Center';
+    }else{
+        $user_name = $_SESSION['hospital_name'];
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,8 +76,7 @@
                 </div>
                 <div id="" class="w-auto h-full whitespace-nowrap flex flex-col justify-center items-center cursor-pointer">
                     <!-- <h1 class="text-white text-lg hidden sm:block">John Marvin Nepomuceno</h1> -->
-                    <h1 class="text-white text-lg hidden sm:block"><?php echo $_SESSION['user_name'] ?> |   <?php echo $_SESSION['last_name'] ?>  <?php echo $_SESSION['first_name']  ?> <?php echo $_SESSION['middle_name']  ?>
-                        
+                    <h1 class="text-white text-lg hidden sm:block"><?php echo $user_name ?> |   <?php echo $_SESSION['last_name'] ?>  <?php echo $_SESSION['first_name']  ?> <?php echo $_SESSION['middle_name']  ?>    
                     </h1>
                     
                 </div>

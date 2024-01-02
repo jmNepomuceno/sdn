@@ -26,11 +26,11 @@ $(document).ready(function(){
 
     if(selectedValue === 'login'){
       selectedValue = 'user_login'
-    }else if(selectedValue === 'refer'){
+    }else if(selectedValue === 'incoming'){
       selectedValue = 'pat_refer'
     }else if(selectedValue === 'register'){
       selectedValue = 'pat_form'
-    }else if(selectedValue === 'defer'){
+    }else if(selectedValue === 'outgoing'){
       selectedValue = 'pat_defer'
     }else{
       selectedValue = 'all'
@@ -91,6 +91,33 @@ $(document).ready(function(){
   }
 
   fetchMySQLData(); 
+
+  function fetchHistoryLog() {
+    console.log('fds')
+    $.ajax({
+        url: '../php/fetch_interval.php',
+        method: "POST",
+        data : {
+            from_where : 'history_log'
+        },
+        success: function(data) {
+            // console.log(data);
+            document.querySelector('.history-container').innerHTML = data
+            // $('#notif-span').text(data);
+            // if (parseInt(data) >= 1) {
+            //     $('#notif-circle').removeClass('hidden');
+                
+            //     playAudio();
+            // } else {
+            //     $('#notif-circle').addClass('hidden');
+            // }
+            
+            setTimeout(fetchHistoryLog, 5000);
+        }
+    });
+  }
+
+  fetchHistoryLog();
 
     $('#side-bar-mobile-btn').on('click' , function(event){
       document.querySelector('#side-bar-div').classList.toggle('hidden');

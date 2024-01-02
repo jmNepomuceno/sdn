@@ -342,25 +342,7 @@ $("#otp-input-6").on("keydown",function(){
         document.querySelector('#otp-input-6').value = ""
     }
 })
-  
 
-tms_div.addEventListener('mouseover', function(){
-    ask_account_tms_h3.style.display = "flex"
-    tms_login_btn.style.display = "flex"
-
-    tms_lock_icon.className = "tms-lock-icon fa-solid fa-lock text-white text-3xl"
-    tms_text.className = "tms-text text-white text-3xl"
-    hover_img.src = './assets/main_imgs/tm.png'
-}, false)
-
-tms_div.addEventListener('mouseout', function(){
-    ask_account_tms_h3.style.display = "none"
-    tms_login_btn.style.display = "none"
-
-    tms_lock_icon.className = "tms-lock-icon fa-solid fa-user text-white"
-    tms_text.className = "tms-text text-white text-xl"
-
-}, false)
 
 create_acc_div.addEventListener('mouseover', function(){
     ask_account_cc_h3.style.display = "flex"
@@ -382,6 +364,7 @@ create_acc_div.addEventListener('mouseout', function(){
 }, false)
 
 cc_login_btn.addEventListener('click', () =>{
+    console.log('here')
     main_div.style.filter = "blur(8px)"
     modal_div.style.display = 'flex'
     modal_div.style.zIndex = '10' // z-10
@@ -413,23 +396,6 @@ tms_close_btn.addEventListener('click', () => {
     main_div.style.filter = "blur(0)"
     modal_div.style.zIndex = '0'
     main_div.style.zIndex = '10'
-})
-
-// telemedicine login user
-tms_login_modal_btn.addEventListener('click', () =>{
-    tms_login_modal_div.style.display = "flex"
-    tms_login_modal_div.style.zIndex = "10"
-
-    main_div.style.filter = "blur(8px)"
-    main_div.style.zIndex = "0"
-})
-
-tms_login_close_btn.addEventListener('click', () =>{
-    tms_login_modal_div.style.display = "none"
-    tms_login_modal_div.style.zIndex = "0"
-
-    main_div.style.filter = "blur(0)"
-    main_div.style.zIndex = "10"
 })
 
 // open the SDN modal create account
@@ -533,3 +499,23 @@ let userIsActive = true;
 
     // Start the inactivity timer when the page loads
     startInactivityTimer();
+
+// check if all the input in registration form is filled
+const checkValidity = (ev) =>{
+    let all_filled = true;
+    for(let i = 0; i < document.querySelectorAll('.reg_inputs').length; i++){
+        if(ev.target.value === "" || ev.target.value === null || ev.target.value === undefined || ev.target.value === NaN){
+            all_filled = false;
+        }
+    }
+
+    if(all_filled){
+        document.getElementById('sdn-register-btn').className = 'sdn-register-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4'
+    }else{
+        document.getElementById('sdn-register-btn').className = 'sdn-register-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4 pointer-events-none opacity-10'
+    }
+}
+
+for(let i = 0; i < document.querySelectorAll('.reg_inputs').length; i++){
+    document.querySelectorAll('.reg_inputs')[i].addEventListener('input' , () => checkValidity(event))
+}

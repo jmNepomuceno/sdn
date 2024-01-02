@@ -18,7 +18,7 @@
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
     }else{
-        $user_name = $_SESSION['user_name'];
+        $user_name = $_SESSION['hospital_name'];
     }
 
 ?>
