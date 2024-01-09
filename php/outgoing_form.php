@@ -177,7 +177,12 @@
                                                 <label class="text-md"> Processed: </label>
                                             </td>
                                             <td>
-                                                
+                                                <div class="flex flex-row justify-around items-center">
+                                                    Processing: 
+                                                    <div> 
+                                                        <div class="stopwatch">00:00:00</div>
+                                                    </div>
+                                                </div>
                                             </td>
                                             
                                             <td class=" font-bold text-center bg-gray-500">

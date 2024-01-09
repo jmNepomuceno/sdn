@@ -1,6 +1,7 @@
 <?php
     include("../database/connection2.php");
-
+    session_start();
+    
     include("../Dummy/PHPMailer-6.8.1/src/PHPMailer.php");
     include("../Dummy/PHPMailer-6.8.1/PHPMailer-6.8.1/src/SMTP.php"); // Optional for SMTP support
     include("../Dummy/PHPMailer-6.8.1/PHPMailer-6.8.1/src/Exception.php"); // Optional for error handling
@@ -31,9 +32,28 @@
     $counter = 123456; // Example counter value
     $OTP = generateOTP($secretKey, $counter);
 
+    // Initialize a counter for letters
+    $letterCount = 0;
+
+    // Iterate through each character in the string
+    for ($i = 0; $i < strlen($OTP); $i++) {
+        // Check if the character is a letter
+        if (ctype_alpha($OTP[$i])) {
+            $letterCount++;
+        }
+    }
+    
+    echo strlen($OTP);
+    if(strlen($OTP) <= 5){
+        while (strlen($OTP) <= 5){
+            $OTP = generateOTP($secretKey, $counter);
+        }
+    }
+
     $hospital_name = $_POST['hospital_name'];
     $hospital_code = $_POST['hospital_code'];
-
+    $_SESSION['hospital_code'] = $_POST['hospital_code'];
+    
     $region = $_POST['region'];
     $province = $_POST['province'];
     $municipality = $_POST['municipality'];

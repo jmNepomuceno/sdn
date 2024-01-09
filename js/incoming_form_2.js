@@ -251,25 +251,24 @@ $(document).ready(function(){
             $('#followup-form').removeClass('hidden')
         }
 
-        if(response[0].status === 'Checked'){
-            $('#temp-forward-form').addClass('hidden')
+        // if(response[0].status === 'Checked'){
+        //     $('#temp-forward-form').addClass('hidden')
 
-            $('#pat-status-form').removeClass('text-gray-500')
-            $('#pat-status-form').addClass('text-green-500')
+        //     $('#pat-status-form').removeClass('text-gray-500')
+        //     $('#pat-status-form').addClass('text-green-500')
 
-            $('#status-bg-div').removeClass('bg-gray-600')
-            $('#status-bg-div').addClass('bg-green-500')
+        //     $('#status-bg-div').removeClass('bg-gray-600')
+        //     $('#status-bg-div').addClass('bg-green-500')
 
-            // $('#approval-form').addClass('hidden')
-            $('#pending-start-div').addClass('hidden')
-            $('#arrival-form').addClass('hidden')
-            $('#cancel-form').addClass('hidden')
-            $('#checkup-form').addClass('hidden')
-            $('#followup-form').addClass('hidden')
+        //     // $('#approval-form').addClass('hidden')
+        //     $('#pending-start-div').addClass('hidden')
+        //     $('#arrival-form').addClass('hidden')
+        //     $('#cancel-form').addClass('hidden')
+        //     $('#checkup-form').addClass('hidden')
+        //     $('#followup-form').addClass('hidden')
 
-            $('#discharged-form').removeClass('hidden')
-
-        }
+        //     $('#discharged-form').removeClass('hidden')
+        // }
 
 
         $('#pendingModal').removeClass('hidden')
@@ -547,7 +546,7 @@ $(document).ready(function(){
 
             td_processing_div.appendChild(td_processing_div_2)
 
-            td_processing.appendChild(td_processing_div)
+            td_processing.appendChild(td_processing_div)     
             
             tr.appendChild(td_name)
             tr.appendChild(td_reference_num)
@@ -654,6 +653,7 @@ $(document).ready(function(){
             }else{
                 data_arr[global_single_hpercode].status = "Deferred"
             }
+
 
 
             const data = {
@@ -872,7 +872,7 @@ $(document).ready(function(){
                 if(index_hpercode !== undefined){
                     // printing the formatTime
                     global_stopwatch_all[index_hpercode].textContent = formatTime(elapsedTime)
-
+                    global_pat_status[index_hpercode].textContent = "On-Process"
                     // changing the color of the text based on the 'matagal ma process'
                     if(elapsedTime >= 15000){
                         global_stopwatch_all[index_hpercode].style.color = "red"
@@ -912,6 +912,7 @@ $(document).ready(function(){
                 if(index_hpercode !== undefined){
                     // may laman
                     global_stopwatch_all[index_hpercode].textContent = formatTime(startTime)
+                    global_pat_status[index_hpercode].textContent = "On-Process"
 
                     // changing the color of the text based on the 'matagal ma process'
                     if(startTime >= 15000){
@@ -1012,46 +1013,49 @@ $(document).ready(function(){
                         response = JSON.parse(response);  
                         console.log(response)
 
-                        // Function to format time as HH:MM:SS
-                        function millisecondsToHMS(milliseconds) {
-                            // Calculate total seconds
-                            let totalSeconds = Math.floor(milliseconds / 1000);
+                        if(response.length > 0){
+                            // Function to format time as HH:MM:SS
+                            function millisecondsToHMS(milliseconds) {
+                                // Calculate total seconds
+                                let totalSeconds = Math.floor(milliseconds / 1000);
+                                
+                                // Calculate hours, minutes, and remaining seconds
+                                let hours = Math.floor(totalSeconds / 3600);
+                                let minutes = Math.floor((totalSeconds % 3600) / 60);
+                                let remainingSeconds = totalSeconds % 60;
+                                
+                                // Format the result as HH:MM:SS
+                                let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                                
+                                return formattedTime;
+                            }
                             
-                            // Calculate hours, minutes, and remaining seconds
-                            let hours = Math.floor(totalSeconds / 3600);
-                            let minutes = Math.floor((totalSeconds % 3600) / 60);
-                            let remainingSeconds = totalSeconds % 60;
+                            // Get the current time
+                            let currentTime = new Date();
                             
-                            // Format the result as HH:MM:SS
-                            let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                            // Given formatted time string
+                            let formattedTimeString = response[0].logout_date;
                             
-                            return formattedTime;
-                        }
-                        
-                        // Get the current time
-                        let currentTime = new Date();
-                        
-                        // Given formatted time string
-                        let formattedTimeString = response[0].logout_date;
-                        
-                        // Parse the formatted time string
-                        let formattedTime = new Date(formattedTimeString);
-                        
-                        // Calculate the time difference
-                        let timeDifference = currentTime - formattedTime;
-                        // console.log(currentTime , formattedTime)
+                            // Parse the formatted time string
+                            let formattedTime = new Date(formattedTimeString);
+                            
+                            // Calculate the time difference
+                            let timeDifference = currentTime - formattedTime;
+                            // console.log(currentTime , formattedTime)
 
-                        // console.log(timeDifference) // milliseconds
+                            // console.log(timeDifference) // milliseconds
 
-                        let final_time = millisecondsToHMS(timeDifference  + parseTimeToMilliseconds(response[0].progress_timer));
-                        console.log(final_time);  // Output: "00:11:50"
-                    
-                        console.log(data_arr)
-                        console.log(response)
-                        for(let i = 0; i <response.length; i++){
-                            // data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
-                            data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
+                            let final_time = millisecondsToHMS(timeDifference  + parseTimeToMilliseconds(response[0].progress_timer));
+                            console.log(final_time);  // Output: "00:11:50"
+                        
+                            console.log(data_arr)
+                            console.log(response)
+                            for(let i = 0; i <response.length; i++){
+                                // data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
+                                data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
+                            }
                         }
+
                     }
                 })
             }

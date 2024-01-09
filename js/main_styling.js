@@ -185,7 +185,7 @@ $(document).ready(function(){
         event.preventDefault();
         current_page = "default_page"
         $('#current-page-input').val(current_page)
-
+        
         // loadContent('php/default_view.php')
         // loadContent('php/patient_register_form.php')
         // loadContent('php/opd_referral_form.php')
@@ -283,25 +283,38 @@ $(document).ready(function(){
 
 $(document).ready(function(){
     $('#outgoing-sub-div-id').on('click' , function(event){
-        event.preventDefault();
-        // // document.querySelector('#default-div').classList.add('hidden')
-        // // Define your parameters
-        // // Assuming your base URL is 'https://example.com/'
-        // const baseUrl = 'http://192.168.42.222:8035/main.php';
+            event.preventDefault();
+            // // document.querySelector('#default-div').classList.add('hidden')
+            // // Define your parameters
+            // // Assuming your base URL is 'https://example.com/'
+            // const baseUrl = 'http://192.168.42.222:8035/main.php';
 
-        // // File path and parameters
-        // const filePath = 'php/outgoing_form.php';
-        // const pageParam = 'outgoing_patient_form';
+            // // File path and parameters
+            // const filePath = 'php/outgoing_form.php';
+            // const pageParam = 'outgoing_patient_form';
 
-        // // Construct the URL
-        // const url = `${baseUrl}${filePath}?page=${pageParam}`;
+            // // Construct the URL
+            // const url = `${baseUrl}${filePath}?page=${pageParam}`;
 
-        // // Use the constructed URL
-        // loadContent(url);
-        loadContent('php/outgoing_form.php')
-        current_page = "outgoing_page"
-        $('#current-page-input').val(current_page)
-        })
+            // // Use the constructed URL
+            // loadContent(url);
+            loadContent('php/outgoing_form.php')
+            current_page = "outgoing_page"
+            $('#current-page-input').val(current_page)
+
+        $('#outgoing-sub-div-id').removeClass('opacity-30')
+        $('#outgoing-sub-div-id').addClass('opacity-100')
+        $('#outgoing-sub-div-id').addClass('bg-[#0a0e0f]')
+
+        // reset other side bar buttons
+        $('#incoming-sub-div-id').addClass('opacity-30')
+        $('#incoming-sub-div-id').removeClass('opacity-100')
+        $('#incoming-sub-div-id').removeClass('bg-[#0a0e0f]')
+
+        $('#patient-reg-form-sub-side-bar').addClass('opacity-30')
+        $('#patient-reg-form-sub-side-bar').removeClass('opacity-100')
+        $('#patient-reg-form-sub-side-bar').removeClass('bg-[#0a0e0f]')
+    })
     })
 })
 
@@ -312,6 +325,18 @@ $(document).ready(function(){
         current_page = "incoming_page"
         $('#current-page-input').val(current_page)
 
+        $('#incoming-sub-div-id').removeClass('opacity-30')
+        $('#incoming-sub-div-id').addClass('opacity-100')
+        $('#incoming-sub-div-id').addClass('bg-[#0a0e0f]')
+
+        // reset other side bar buttons
+        $('#outgoing-sub-div-id').addClass('opacity-30')
+        $('#outgoing-sub-div-id').removeClass('opacity-100')
+        $('#outgoing-sub-div-id').removeClass('bg-[#0a0e0f]')
+
+        $('#patient-reg-form-sub-side-bar').addClass('opacity-30')
+        $('#patient-reg-form-sub-side-bar').removeClass('opacity-100')
+        $('#patient-reg-form-sub-side-bar').removeClass('bg-[#0a0e0f]')
     })
 })
 
@@ -322,6 +347,19 @@ $(document).ready(function(){
         current_page = "patient_register_page"
         $('#current-page-input').val(current_page)
 
+
+        $('#patient-reg-form-sub-side-bar').removeClass('opacity-30')
+        $('#patient-reg-form-sub-side-bar').addClass('opacity-100')
+        $('#patient-reg-form-sub-side-bar').addClass('bg-[#0a0e0f]')
+
+        // reset other side bar buttons
+        $('#outgoing-sub-div-id').addClass('opacity-30')
+        $('#outgoing-sub-div-id').removeClass('opacity-100')
+        $('#outgoing-sub-div-id').removeClass('bg-[#0a0e0f]')
+
+        $('#incoming-sub-div-id').addClass('opacity-30')
+        $('#incoming-sub-div-id').removeClass('opacity-100')
+        $('#incoming-sub-div-id').removeClass('bg-[#0a0e0f]')
     })
 })
 

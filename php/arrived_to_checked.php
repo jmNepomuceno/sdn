@@ -25,4 +25,27 @@
     $jsonString = json_encode($data);
     echo $jsonString;
 
+    // history log
+
+    $sql = "SELECT patlast, patfirst, patmiddle FROM incoming_referrals WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $act_type = 'pat_refer';
+    $action = 'Status Patient: Checked';
+    $pat_name = $data[0]['patlast'] . ' ' . $data[0]['patfirst'] . ' ' . $data[0]['patmiddle'];
+    $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->bindParam(1, $global_single_hpercode, PDO::PARAM_STR);
+    $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
+    $stmt->bindParam(3, $currentDateTime, PDO::PARAM_STR);
+    $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
+    $stmt->bindParam(5, $action, PDO::PARAM_STR);
+    $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);
+    $stmt->bindParam(7, $_SESSION['user_name'], PDO::PARAM_STR);
+
+    $stmt->execute();
 ?>

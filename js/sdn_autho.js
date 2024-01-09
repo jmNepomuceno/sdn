@@ -41,6 +41,10 @@ $(document).ready(function(){
                 user_type: 'Sample',
                 user_isActive: false
             }
+
+            if(data.extension_name === ""){
+                data.extension_name = "N/A"
+            }
     
             // console.log(data)
     
@@ -60,14 +64,14 @@ $(document).ready(function(){
                         $('#modal-title').text('Warning')
                         $('#modal-icon').addClass('fa-triangle-exclamation')
                         $('#modal-icon').removeClass('fa-circle-check')
-                        $('#modal-body').text('Maximum number of users has already been sign up from your Hospital.')
+                        $('#modal-body').text('The maximum number of users has already signed up from your hospital.')
                         $('#myModal').modal('show'); 
                     }
                     if(response === 'not valid'){
                         $('#modal-title').text('Warning')
                         $('#modal-icon').addClass('fa-triangle-exclamation')
                         $('#modal-icon').removeClass('fa-circle-check')
-                        $('#modal-body').text('Your hospital code is not registered with our database yet.')
+                        $('#modal-body').text('Your hospital code is not yet registered with our database.')
                         $('#myModal').modal('show'); 
                     }
                     if(response === 'success'){

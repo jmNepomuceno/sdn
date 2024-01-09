@@ -21,7 +21,7 @@
             <h3 class="text-3xl mt-3">Bataan General Hospital and Medical Center</h3>
 
             <div id="license-div" class="absolute bottom-0 w-[80%] h-[10%] flex flex-col justify-around items-center bg-gray-300">
-                <p class="font-bold">Philippine Copyright © 2018 Dr. Glory V. Baltazar</p>
+                <p class="font-bold">Philippine Copyright © 2023 Dr. Glory V. Baltazar</p>
                 <p>This software program is protected by the Republic of the Philippines copyright laws. Reproduction and distribution of the software without prior written permission of the author is prohibited.</p>
                 <p>If you wish to use the software for commercial or other purposes, please contact us at bgh_bataan2005@yahoo.com.ph.</p>
             </div>

@@ -168,6 +168,12 @@
         $errorInfo = $stmt->errorInfo();
         // echo "Error: " . $errorInfo[2];
     }
+
+    // updating the status of the person in the hperson table
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode=:hpercode ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':hpercode', $code, PDO::PARAM_STR);
+    $stmt->execute();
     
     // updating for history log
     // incoming of the own hospital
@@ -183,7 +189,6 @@
     $stmt->bindParam(':hospital_code', $data_hospital_code['hospital_code'], PDO::PARAM_STR);
     $stmt->execute();
     $data_username = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 
     $act_type = 'pat_refer';
     $action = 'Incoming Patient: ';

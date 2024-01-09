@@ -209,4 +209,16 @@ if (in_array($elementToCheck, $myArray)) {
 
 <!-- <input type="hidden" id="total-processed-refer-inp" value=<?php echo $data['COUNT(*)'] ?>> -->
 
-1. upon referring, di nag a update yung sa hperson na type and status ng patient
+1. upon referring, di nag a update yung sa hperson na type and status ng patient = DONE (?)
+2. OTP may case na 5 digits lang yung na r random = DONE (?)
+3. wrong OTP input - modal = DONE (?)
+4. Exisiting Referred Patient -> thou shall not referred again - disable refer button = DONE (?)
+5. Status not automatically changing = DONE (?)
+6. Timer input color should change. = DONE (?)
+
+Flow - Admitted - Discharged - For Follow Up - Referred Back
+
+note: 
+1. pag ka click ng lapis, dat mag r run na yung timer
+2. pag di pa nagagawa yung unang referral na dumating, dat di pa nila pwede gawin yung mga sumunod na referral, first in first out.
+

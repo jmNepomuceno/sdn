@@ -127,10 +127,11 @@ $(document).ready(function(){
                             h3.innerHTML = response[i]['pat_last_name'] + ", " + response[i]['pat_first_name'] + " " + response[i]['pat_middle_name']
                             // h3.id = "patient-name-" + i
 
+                            // console.log(response[i].status)
                             const stat = document.createElement('h3')
                             stat.className = 'mr-5'
-                            stat.innerHTML = (response[i].status) ? "Status: " + response[i].status : "Status: Not yet referred";
-    
+                            stat.innerHTML = (response[i].status) ? "Status: Referred-" + response[i].status : "Status: Not yet referred";
+                            
                             container.appendChild(second)
                             container.appendChild(container_second)
     
@@ -347,11 +348,24 @@ $(document).ready(function(){
                                 // document.querySelector(all_input_arr[i]).classList.add('pointer-events-none bg-[#cccccc]')
                                 // console.log(all_input_arr[j])
                             }
-    
-                            $('#er-patform-btn-id').removeClass('hidden')
-                            $('#ob-patform-btn-id').removeClass('hidden')
-                            $('#opd-patform-btn-id').removeClass('hidden')
-                            $('#pcr-patform-btn-id').removeClass('hidden')
+                            
+                            if(response[i].status === ''){
+                                $('#er-patform-btn-id').removeClass('hidden')
+                                $('#ob-patform-btn-id').removeClass('hidden')
+                                $('#opd-patform-btn-id').removeClass('hidden')
+                                $('#pcr-patform-btn-id').removeClass('hidden')
+                            }else{
+                                $('#er-patform-btn-id').removeClass('hidden')
+                                $('#ob-patform-btn-id').removeClass('hidden')
+                                $('#opd-patform-btn-id').removeClass('hidden')
+                                $('#pcr-patform-btn-id').removeClass('hidden')
+
+                                $('#er-patform-btn-id').addClass('opacity-30 pointer-events-none')
+                                $('#ob-patform-btn-id').addClass('opacity-30 pointer-events-none')
+                                $('#opd-patform-btn-id').addClass('opacity-30 pointer-events-none')
+                                $('#pcr-patform-btn-id').addClass('opacity-30 pointer-events-none')
+                            }
+
                             
 
                             $('#add-patform-btn-id').removeClass('bg-cyan-600 hover:bg-cyan-700')

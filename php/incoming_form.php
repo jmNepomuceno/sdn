@@ -243,7 +243,6 @@
                                                     Processing: 
                                                     <div> 
                                                         <div class="stopwatch">00:00:00</div>
-                                                        
                                                     </div>
                                                 </div>
                                             </td>

@@ -29,7 +29,7 @@
         $stmt = $pdo->prepare('SELECT hospital_code FROM sdn_users WHERE hospital_code = ?');
         $stmt->execute([$hospital_code]);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        
         $user_count = count($data) + 1;
     }
 

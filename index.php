@@ -630,7 +630,7 @@
                             </div> -->
                             
                             <div class="w-full h-15 flex flex-row justify-center items-center mt-3">
-                                <button name="sdn-register-btn" id="sdn-register-btn" class="sdn-register-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4 pointer-events-none opacity-35">Register</button>
+                                <button name="sdn-register-btn" id="sdn-register-btn" class="sdn-register-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded w-2/4 sm:w-1/4 ">Register</button>
                             </div>
                         </form>
                     </div>

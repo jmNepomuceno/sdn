@@ -15,60 +15,77 @@ $(document).ready(function(){
         }
 
         // console.log(data.otp_number, " type of " , typeof(data.otp_number))
-        // console.log(total)
+        console.log(data)
         $.ajax({
             url: './php/verify_otp.php',
             method: "POST",
             data:data,
             success: function(response){
                 console.log(response)
+                
                 if(response === 'verified'){
                     console.log('here')
                     $('#myModal').modal('show');
+                    // sdn_loading_modal_div.classList.remove('z-10')
+                    // sdn_loading_modal_div.classList.add('hidden')
+                    const otp_modal_div = document.querySelector('.otp-modal-div');
+                    otp_modal_div.classList.add('hidden')
+                    otp_modal_div.classList.remove('absolute')
+
+                    $('#sdn-hospital-name').val('')
+                    $('#sdn-hospital-code').val('')
+
+                    $('#sdn-region-select').val('')
+                    $('#sdn-province-select').val('')
+                    $('#sdn-city-select').val('')
+                    $('#sdn-brgy-select').val('')
+                    $('#sdn-zip-code').val('')
+                    $('#sdn-email-address').val('')
+                    $('#sdn-landline-no').val('')
+
+                    $('#sdn-hospital-mobile-no').val('')
+
+                    $('#sdn-hospital-director').val('')
+                    $('#sdn-hospital-director-mobile-no').val('')
+
+                    $('#sdn-point-person').val('')
+                    $('#sdn-point-person-mobile-no').val('')
+
+                    const sdn_modal_div = document.querySelector('.sdn-modal-div')
+                    const main_div = document.querySelector('.main-div')
+                    const modal_div = document.querySelector('.modal-div')
+                    
+                    sdn_modal_div.classList.add('hidden')
+                    sdn_modal_div.classList.remove('absolute')
+                    sdn_modal_div.style.zIndex = '0'
+
+                    main_div.style.filter = "blur(0)"
+                    modal_div.style.zIndex = '0'
+                    main_div.style.zIndex = '10'
+
+                    $('#otp-input-1').val("")
+                    $('#otp-input-2').val("")
+                    $('#otp-input-3').val("")
+                    $('#otp-input-4').val("")
+                    $('#otp-input-5').val("")
+                    $('#otp-input-6').val("")
+                }else{
+                    console.log('wrong')
+                    $('#otp-input-1').val("")
+                    $('#otp-input-2').val("")
+                    $('#otp-input-3').val("")
+                    $('#otp-input-4').val("")
+                    $('#otp-input-5').val("")
+                    $('#otp-input-6').val("")
+
+                    $('#otp-input-1').addClass("border-2 border-red-400")
+                    $('#otp-input-2').addClass("border-2 border-red-400")
+                    $('#otp-input-3').addClass("border-2 border-red-400")
+                    $('#otp-input-4').addClass("border-2 border-red-400")
+                    $('#otp-input-5').addClass("border-2 border-red-400")
+                    $('#otp-input-6').addClass("border-2 border-red-400")
                 }
-                // sdn_loading_modal_div.classList.remove('z-10')
-                // sdn_loading_modal_div.classList.add('hidden')
-                const otp_modal_div = document.querySelector('.otp-modal-div');
-                otp_modal_div.classList.add('hidden')
-                otp_modal_div.classList.remove('absolute')
 
-                $('#sdn-hospital-name').val('')
-                $('#sdn-hospital-code').val('')
-
-                $('#sdn-region-select').val('')
-                $('#sdn-province-select').val('')
-                $('#sdn-city-select').val('')
-                $('#sdn-brgy-select').val('')
-                $('#sdn-zip-code').val('')
-                $('#sdn-email-address').val('')
-                $('#sdn-landline-no').val('')
-
-                $('#sdn-hospital-mobile-no').val('')
-
-                $('#sdn-hospital-director').val('')
-                $('#sdn-hospital-director-mobile-no').val('')
-
-                $('#sdn-point-person').val('')
-                $('#sdn-point-person-mobile-no').val('')
-
-                const sdn_modal_div = document.querySelector('.sdn-modal-div')
-                const main_div = document.querySelector('.main-div')
-                const modal_div = document.querySelector('.modal-div')
-                
-                sdn_modal_div.classList.add('hidden')
-                sdn_modal_div.classList.remove('absolute')
-                sdn_modal_div.style.zIndex = '0'
-
-                main_div.style.filter = "blur(0)"
-                modal_div.style.zIndex = '0'
-                main_div.style.zIndex = '10'
-
-                $('#otp-input-1').val("")
-                $('#otp-input-2').val("")
-                $('#otp-input-3').val("")
-                $('#otp-input-4').val("")
-                $('#otp-input-5').val("")
-                $('#otp-input-6').val("")
             }
         })
 
