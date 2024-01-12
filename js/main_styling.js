@@ -27,6 +27,7 @@ $(document).ready(function(){
     const stopSound = () =>{
         let audio = document.getElementById("notif-sound")
         audio.pause;
+        audio.muted = true;
         audio.currentTime = 0;
     }
 
@@ -46,6 +47,7 @@ $(document).ready(function(){
                     playAudio();
                 } else {
                     $('#notif-circle').addClass('hidden');
+                    stopSound()
                 }
                 
                 setTimeout(fetchMySQLData, 5000);
@@ -173,10 +175,10 @@ const loadContent = (url) => {
     })
 }
 
-loadContent('php/default_view.php')
+// loadContent('php/default_view.php')
 // loadContent('php/patient_register_form.php')
 // loadContent('php/opd_referral_form.php?type="ER"&code=BGHMC-0001')
-// loadContent('php/incoming_form.php')
+loadContent('php/incoming_form.php')
 // loadContent('php/default_view.php') 
 
 

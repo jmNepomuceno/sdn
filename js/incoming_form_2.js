@@ -33,7 +33,6 @@ $(document).ready(function(){
     let length_curr_table = document.querySelectorAll('.hpercode').length;
     let add_minutes = 0;
     // ---------------------------------------------------------------------------------------------------------
-
     let inactivityTimer;
     let userIsActive = true;
     function handleUserActivity() {
@@ -73,7 +72,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 10000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -96,6 +95,7 @@ $(document).ready(function(){
     //start - open modal 
     const ajax_method = (index, event) => {
         global_single_hpercode = document.querySelectorAll('.hpercode')[index].value
+
         const data = {
             hpercode: document.querySelectorAll('.hpercode')[index].value
         }
@@ -109,7 +109,50 @@ $(document).ready(function(){
                 pendingFunction(response)
             }
         })
-        
+
+        console.log(data_arr , global_single_hpercode)
+        if(data_arr[global_single_hpercode].status === 'Pending'){
+            // console.log('here')
+            $('#approval-form').removeClass('hidden')
+            // $('#pat-status-form').text('On-Process')
+            // console.log($('#pat-status-form').text())
+            $.ajax({
+                url: './php/fetch_onProcess.php',
+                method: "POST",
+                success: function(response){     
+                    response = JSON.parse(response);           
+
+                    let hpercode_index = 0;
+                    for(let i = 0; i < document.querySelectorAll('.hpercode').length; i++){
+                        if( document.querySelectorAll('.hpercode')[i].value === global_single_hpercode){
+                            hpercode_index = i;
+                        }
+                    } 
+
+                    console.log(hpercode_index)
+                }
+            })
+
+            // run_timers[pencil_index_clicked]['func'](pencil_index_clicked , "0" , pat_clicked_code);
+
+            // starting the timer // current_time parameter = 0 it is for whenever there is a patient data processing
+            data_arr[global_single_hpercode]['func'](global_single_hpercode , "0") // calling the run_timer function
+            // {hpercode : {time: 0 , func : run_timer},
+            // {hpercode : { time: 0 , func : run_timer},
+            // {hpercode : { time: 0 , func : run_timer}
+            
+            let index_pat_status = 0
+            for(let i = 0; i < global_pat_status.length; i++){
+                if(global_hpercode_all[i].value === global_single_hpercode){
+                    index_pat_status = i
+                    break
+                }
+            }
+
+            console.log("roflmao: " + index_pat_status)
+            global_pat_status[index_pat_status].textContent = "On-Process"
+            data_arr[global_single_hpercode].status = "On-Process"
+        }
     }
 
     const pencil_elements = document.querySelectorAll('.pencil-btn');
@@ -393,8 +436,12 @@ $(document).ready(function(){
                 type_color = 'bg-red-600';
             }
 
+            let fifo_style = ""
+            if(i != 0 && response[i]['status'] === 'Pending'){
+                fifo_style = 'opacity-50 pointer-events-none'
+            }
             const tr = document.createElement('tr')
-            tr.className = 'h-[61px]'
+            tr.className = 'h-[61px] ' + fifo_style
 
             const td_name = document.createElement('td')
             td_name.textContent = response[i]['reference_num'] + " - " + index
@@ -646,7 +693,7 @@ $(document).ready(function(){
                 delete intervalIDs['interval_' + global_single_hpercode];
                 // document.querySelectorAll('.pat-status-incoming')[pencil_index_clicked_temp].textContent = "Approved"
             }
-            // console.log(intervalIDs)
+            console.log(intervalIDs)
             // updating the status of that patient from the data_arr and in the database
             if($('#approved-action-select').val() === 'Approve'){
                 data_arr[global_single_hpercode].status = "Approved"
@@ -873,6 +920,14 @@ $(document).ready(function(){
                     // printing the formatTime
                     global_stopwatch_all[index_hpercode].textContent = formatTime(elapsedTime)
                     global_pat_status[index_hpercode].textContent = "On-Process"
+                    $('#pat-status-form').text('On-Process')
+
+                    $('#pat-status-form').removeClass('text-gray-500')
+                    $('#pat-status-form').addClass('text-green-500')
+                    
+                    $('#status-bg-div').addClass('bg-gray-600')
+                    $('#status-bg-div').removeClass('bg-cyan-500')
+
                     // changing the color of the text based on the 'matagal ma process'
                     if(elapsedTime >= 15000){
                         global_stopwatch_all[index_hpercode].style.color = "red"
@@ -913,6 +968,9 @@ $(document).ready(function(){
                     // may laman
                     global_stopwatch_all[index_hpercode].textContent = formatTime(startTime)
                     global_pat_status[index_hpercode].textContent = "On-Process"
+                    $('#pat-status-form').text('On-Process')
+                    $('#pat-status-form').removeClass('text-gray-500')
+                    $('#pat-status-form').addClass('text-green-500')
 
                     // changing the color of the text based on the 'matagal ma process'
                     if(startTime >= 15000){
@@ -1003,15 +1061,15 @@ $(document).ready(function(){
 
             // after reload, the exisiting processing timer are still running after logout and logging in.
             if($('#post-value-reload-input').val() === 'true' && $('#timer-running-input').val() !== '1' ){
-                console.log("after logout")
-                console.log($('#post-value-reload-input').val())
+                // console.log("after logout")
+                // console.log($('#post-value-reload-input').val())
                 $.ajax({
                     url: './php/save_process_time.php',
                     method: "POST",
                     data : {what: 'continue'},
                     success: function(response){
                         response = JSON.parse(response);  
-                        console.log(response)
+                        // console.log(response)
 
                         if(response.length > 0){
                             // Function to format time as HH:MM:SS
@@ -1163,7 +1221,7 @@ $(document).ready(function(){
 
     $(window).on('load' , function(event){
         event.preventDefault();
-        clearInterval(inactivityTimer);
+        // clearInterval(inactivityTimer);
     })
 
     $('#sdn-title-h1').on('click' , function(event){

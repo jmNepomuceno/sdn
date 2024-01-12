@@ -100,5 +100,5 @@
     echo $finalJsonString;
     
     // print mo lang lahat ng need i print sa incoming_form.js bukas. gege
-    // gl hf tomorrow! :)))))) <333333 kekw
+    // gl hf tomorrow! :)))))) <333333
 ?>

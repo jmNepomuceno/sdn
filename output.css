@@ -659,6 +659,10 @@ video {
   inset-inline-end: 0.25rem;
 }
 
+.left-0 {
+  left: 0px;
+}
+
 .right-0 {
   right: 0px;
 }
@@ -1698,6 +1702,14 @@ video {
 .w-max {
   width: -moz-max-content;
   width: max-content;
+}
+
+.w-\[500px\] {
+  width: 500px;
+}
+
+.w-\[700px\] {
+  width: 700px;
 }
 
 .flex-shrink {
@@ -2864,6 +2876,11 @@ video {
   background-color: rgb(6 92 198 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#0a0e0f\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(10 14 15 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#1f292e\] {
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 46 / var(--tw-bg-opacity));
@@ -2872,11 +2889,6 @@ video {
 .bg-\[\#2f3e46\] {
   --tw-bg-opacity: 1;
   background-color: rgb(47 62 70 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#3d515c\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(61 81 92 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#526c7a\] {
@@ -2974,6 +2986,11 @@ video {
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 
+.bg-green-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(187 247 208 / var(--tw-bg-opacity));
+}
+
 .bg-green-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(134 239 172 / var(--tw-bg-opacity));
@@ -3058,14 +3075,26 @@ video {
   background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
-.bg-red-100 {
+.bg-green-100 {
   --tw-bg-opacity: 1;
-  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity));
 }
 
-.bg-\[\#0a0e0f\] {
+.bg-green-50 {
   --tw-bg-opacity: 1;
-  background-color: rgb(10 14 15 / var(--tw-bg-opacity));
+  background-color: rgb(240 253 244 / var(--tw-bg-opacity));
+}
+
+.bg-opacity-75 {
+  --tw-bg-opacity: 0.75;
+}
+
+.bg-opacity-30 {
+  --tw-bg-opacity: 0.3;
+}
+
+.bg-opacity-20 {
+  --tw-bg-opacity: 0.2;
 }
 
 .decoration-slice {
@@ -3415,6 +3444,14 @@ video {
   font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction);
 }
 
+.tracking-widest {
+  letter-spacing: 0.1em;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
 .text-\[\#333333\] {
   --tw-text-opacity: 1;
   color: rgb(51 51 51 / var(--tw-text-opacity));
@@ -3514,6 +3551,10 @@ video {
   opacity: 0.1;
 }
 
+.opacity-100 {
+  opacity: 1;
+}
+
 .opacity-20 {
   opacity: 0.2;
 }
@@ -3528,10 +3569,6 @@ video {
 
 .opacity-80 {
   opacity: 0.8;
-}
-
-.opacity-100 {
-  opacity: 1;
 }
 
 .bg-blend-normal {

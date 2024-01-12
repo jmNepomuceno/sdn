@@ -199,7 +199,7 @@
 
                                 $index = 0;
                                 $previous = 0;
-
+                                $loop = 0;
                                 // Loop through the data and generate table rows
                                 foreach ($data as $row) {
                                     $type_color;
@@ -213,7 +213,6 @@
                                         $type_color = 'bg-red-600';
                                     }
 
-                                    
                                     if($previous == 0){
                                         $index += 1;
                                     }else{
@@ -223,7 +222,12 @@
                                             $index = 1;
                                         }  
                                     }
-                                    echo '<tr class="h-[61px]">
+                                    
+                                    $style_tr = '';
+                                    if($loop != 0 &&  $row['status'] === 'Pending'){
+                                        $style_tr = 'opacity-50 pointer-events-none';
+                                    }
+                                    echo '<tr class="h-[61px] '. $style_tr .' ">
                                             <td class="text-sm"> ' . $row['reference_num'] . ' - '.$index.' </td>
                                             <td>' . $row['patlast'] , ", " , $row['patfirst'] , " " , $row['patmiddle']  . '</td>
                                             <td class="h-full font-bold text-center ' . $type_color . ' ">' . $row['type'] . '</td>
@@ -250,7 +254,7 @@
                                             <td class=" font-bold text-center bg-gray-500">
                                                 <div class=" flex flex-row justify-around items-center"> 
                                                     
-                                                    <label class="pat-status-incoming"> ' . $row['status'] . ' </label>
+                                                    <label class="pat-status-incoming">' . $row['status'] . '</label>
                                                     <i class="pencil-btn fa-solid fa-pencil cursor-pointer hover:text-white"></i>
                                                     <input class="hpercode" type="hidden" name="hpercode" value= ' . $row['hpercode'] . '>
 
@@ -259,6 +263,7 @@
                                         </tr>';
 
                                     $previous = $row['reference_num'];
+                                    $loop += 1;
                                 }
 
                                 // Close the database connection
@@ -323,9 +328,9 @@
                     </div>
                 </div>
 
-                <div id="pending-start-div" class="bg-white w-full h-[50px] max-h-[50px] min-h-[50px] mt-[1.5%] rounded-sm flex flex-row justify-start items-center">
+                <!-- <div id="pending-start-div" class="bg-white w-full h-[50px] max-h-[50px] min-h-[50px] mt-[1.5%] rounded-sm flex flex-row justify-start items-center">
                     <button id="pending-start-btn" class="bg-green-400 font-semibold w-[12%] h-[80%] ml-2 rounded-sm text-black"> Start </button>
-                </div>
+                </div> -->
 
                 <!-- 2 approval form , shows when the status is On-Process -->
                 <div id='approval-form' class="bg-white w-full h-[500px] max-h-[500px] min-h-[500px] mt-[1.5%] rounded-sm flex flex-col hidden">
