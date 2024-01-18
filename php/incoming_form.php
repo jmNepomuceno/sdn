@@ -53,6 +53,7 @@
 
     // $logout_data = 3;
     // $login_data = 3;
+    // $_SESSION["sub_what"]
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +72,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
 
     <link rel="stylesheet" href="../output.css">
 
@@ -86,7 +88,7 @@
     <!-- <button id="pending-stop-btn" class="border-2 border-black">Stop</button> -->
     <input id="timer-running-input" type="hidden" name="timer-running-input" value=<?php echo $timer_running ?>>
     <input id="post-value-reload-input" type="hidden" name="post-value-reload-input" value=<?php echo $post_value_reload ?>>
-    
+    <input id="post-value-reload-history-input" type="hidden" name="post-value-reload-history-input" value=<?php echo $_SESSION["sub_what"] ?>>
 
     <!-- <input id="timer-running-input" type="hidden" name="timer-running-input" value="false"> -->
 
@@ -369,7 +371,7 @@
                     </div> 
 
                     <div class="flex flex-row justify-end items-center w-full mt-2">
-                        <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Approve </button>
+                        <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black" data-bs-toggle="modal" data-bs-target="#myModal-incoming"> Approve </button>
                         <!-- <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-6 rounded-sm text-black"> Approved </button> -->
                     </div>
                 </div>
@@ -383,7 +385,7 @@
                     <div class="flex flex-col justify-evenly items-start w-full h-[80%] mt-1">
                         <label class="font-bold text-xl ml-4">Arrival Note</label>
                         <textarea id="arrival-text-area" class="border-2 border-[#bfbfbf] w-[95%] h-[55%] ml-4 resize-none outline-none"></textarea>
-                        <button id="arrival-submit" class="bg-green-400 font-semibold w-[12%] h-[30px] ml-4 rounded-sm text-black"> Submit </button>     
+                        <button id="arrival-submit" class="bg-green-400 font-semibold w-[12%] h-[30px] ml-4 rounded-sm text-black" data-bs-toggle="modal" data-bs-target="#myModal-incoming"> Submit </button>     
                     </div> 
                 </div>
                 <!-- 3 approval details  -->
@@ -412,7 +414,7 @@
                     <div class="flex flex-col justify-evenly items-start w-full h-[80%] mt-1">
                         <label class="font-bold text-xl ml-4">Cancellation Reasons</label>
                         <textarea id="cancellation-textarea" class="border-2 border-[#bfbfbf] w-[95%] h-[55%] ml-4 resize-none outline-none"></textarea>
-                        <button id="cancel-submit" class="bg-[#ff4d4d] font-semibold w-[12%] h-[30px] ml-4 rounded-sm text-black"> Cancel </button>     
+                        <button id="cancel-submit" class="bg-[#ff4d4d] font-semibold w-[12%] h-[30px] ml-4 rounded-sm text-black" data-bs-toggle="modal" data-bs-target="#myModal-incoming"> Cancel </button>     
                     </div> 
                 </div>
                 
@@ -437,7 +439,7 @@
                     </div> 
 
                     <div class="flex flex-row justify-end items-center w-full mb-2">
-                        <button id="check-submit-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black"> Submit </button>
+                        <button id="check-submit-btn" class="bg-blue-400 font-semibold w-[10%] mr-4 rounded-sm text-black" data-bs-toggle="modal" data-bs-target="#myModal-incoming"> Submit </button>
                         <!-- <button id="pending-approved-btn" class="bg-blue-400 font-semibold w-[10%] mr-6 rounded-sm text-black"> Approved </button> -->
                     </div>
                 </div>
@@ -581,6 +583,8 @@
             </div>
         </div>
     </div>
+
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->

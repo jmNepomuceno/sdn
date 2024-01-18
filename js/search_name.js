@@ -100,6 +100,7 @@ $(document).ready(function(){
                         container.textContent = 'No User Found'
                         document.querySelector('#search-result-div').appendChild(container)
                     }else{
+                        console.log(response)
                         for(let i = 0; i < response.length - 1; i++){
                             const container = document.createElement('div')
                             container.className = (i % 2 == 0) ? `w-full h-[80px] flex flex-col justify-center items-center border-b border-black cursor-pointer hover:bg-[#85b2f9] patient-code-${i}` : 
@@ -109,21 +110,23 @@ $(document).ready(function(){
                             second.className = 'w-full h-[40%] flex flex-row justify-between items-center'
     
                             const h1 = document.createElement('h1')
-                            h1.innerHTML = "Patient ID: " + response[i]['patient_code']
+                            h1.innerHTML = "Patient ID: " + response[i]['hpercode']
                             // h1.className = `hover:underline patient-code-${i}`
     
     
                             const third = document.createElement('div')
-                            third.className = 'w-[25%] h-full flex flex-row justify-around items-center'
+                            third.className = 'w-[40%] h-full flex flex-row justify-around items-center'
     
                             const h1_second = document.createElement('h1')
-                            h1_second.innerHTML = response[i]['pat_bdate']
+                            h1_second.innerHTML = "Birthdate: " + response[i]['pat_bdate']
+                            h1_second.className = "w-full mr-4"
     
                             const container_second = document.createElement('div')
                             container_second.className = 'w-full h-[40%] flex flex-row justify-between items-center'
     
                             const h3 = document.createElement('h3')
                             // h3.className = `uppercase ml-2 hover:underline patient-name-${i}`
+                            h3.className = "font-bold underline"
                             h3.innerHTML = response[i]['pat_last_name'] + ", " + response[i]['pat_first_name'] + " " + response[i]['pat_middle_name']
                             // h3.id = "patient-name-" + i
 

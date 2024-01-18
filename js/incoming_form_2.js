@@ -72,7 +72,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 2000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 10000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -168,27 +168,27 @@ $(document).ready(function(){
     const pendingFunction = (response) =>{
         $('#pat-status-form').text(response[0].status)
 
-        if(response[0].status === 'Pending'){
-            $('#pat-status-form').addClass('text-gray-500')
-            $('#pat-status-form').removeClass('text-cyan-500')
-            $('#pat-status-form').removeClass('text-green-500')
+        // if(response[0].status === 'Pending'){
+        //     $('#pat-status-form').addClass('text-gray-500')
+        //     $('#pat-status-form').removeClass('text-cyan-500')
+        //     $('#pat-status-form').removeClass('text-green-500')
 
 
-            $('#status-bg-div').addClass('bg-gray-600')
-            $('#status-bg-div').removeClass('bg-cyan-500')
-            $('#status-bg-div').removeClass('bg-green-500')
+        //     $('#status-bg-div').addClass('bg-gray-600')
+        //     $('#status-bg-div').removeClass('bg-cyan-500')
+        //     $('#status-bg-div').removeClass('bg-green-500')
 
 
-            $('#approval-form').addClass('hidden')
-            $('#arrival-form').addClass('hidden')
-            $('#approval-details').addClass('hidden')
-            $('#cancel-form').addClass('hidden')
-            $('#checked-form').addClass('hidden')
-            $('#discharged-form').addClass('hidden')
+        //     $('#approval-form').addClass('hidden')
+        //     $('#arrival-form').addClass('hidden')
+        //     $('#approval-details').addClass('hidden')
+        //     $('#cancel-form').addClass('hidden')
+        //     $('#checked-form').addClass('hidden')
+        //     $('#discharged-form').addClass('hidden')
 
-            $('#pending-start-div').removeClass('hidden')
+        //     $('#pending-start-div').removeClass('hidden')
 
-        }
+        // }
 
         if(response[0].status === 'On-Process'){
             $('#pat-status-form').removeClass('text-gray-500')
@@ -673,7 +673,7 @@ $(document).ready(function(){
         $('#yes-modal-btn-incoming').removeClass('hidden')
         $('#ok-modal-btn-incoming').text('No')
 
-        $('#myModal-incoming').modal('show');
+        // $('#myModal-incoming').modal('show');
     })
 
     $('#close-pending-modal').on('click' , function(event){
@@ -718,12 +718,13 @@ $(document).ready(function(){
                 method: "POST",
                 data : data,
                 success: function(response){
-                    response = JSON.parse(response);    
-                    console.log(response)
+                    // response = JSON.parse(response);    
+                    // console.log(response)
+
                     // $('#pendingModal').addClass('hidden')
-                    // global_stopwatch_all = []
-                    // global_hpercode_all = []
-                    // populateTbody(response)
+                    global_stopwatch_all = []
+                    global_hpercode_all = []
+                    populateTbody(response)
                 }
              })
         }
@@ -840,7 +841,7 @@ $(document).ready(function(){
 
         modal_filter = 'arrival_confirmation'
 
-        $('#myModal-incoming').modal('show');
+        // $('#myModal-incoming').modal('show');
     })
 
     $('#cancel-submit').on('click' , function(event){
@@ -853,7 +854,7 @@ $(document).ready(function(){
 
         modal_filter = 'cancellation_confirmation'
 
-        $('#myModal-incoming').modal('show');
+        // $('#myModal-incoming').modal('show');
     })
 
     $('#check-submit-btn').on('click' , function(event){
@@ -866,7 +867,7 @@ $(document).ready(function(){
 
         modal_filter = 'checked_confirmation'
 
-        $('#myModal-incoming').modal('show');
+        // $('#myModal-incoming').modal('show');
     })
 
     // END MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
@@ -1039,24 +1040,81 @@ $(document).ready(function(){
             // check if the length of session process_timer is > 1, this is for whenever the there is a timer running and the user refresh the page
             let after_reload = []
             // console.log($('#timer-running-input').val(), $('#post-value-reload-input').val())
-            if($('#timer-running-input').val() === '1' && $('#post-value-reload-input').val() !== '1'){ // if global_process_timer_running === 1
+            if($('#timer-running-input').val() === '1'){ // if global_process_timer_running === 1
                 // console.log("refresh")
-                $.ajax({
-                    url: './php/fetch_onProcess.php',
-                    method: "POST",
-                    success: function(response){               
-                        response = JSON.parse(response);
-                        after_reload = response
-                        console.log(after_reload)
-
-                        for(let i = 0; i < response.length; i++){
-                            if(data_arr[after_reload[i].global_single_hpercode].status === 'Pending' || data_arr[after_reload[i].global_single_hpercode].status === 'On-Process'){
-                                global_single_hpercode = after_reload[i].global_single_hpercode
-                                data_arr[after_reload[i].global_single_hpercode]['func'](global_single_hpercode, after_reload[i].elapsedTime)    
+                if($('#post-value-reload-history-input').val() === 'history_log'){
+                    $.ajax({
+                        url: './php/save_process_time.php',
+                        method: "POST",
+                        data : {what: 'continue'},
+                        success: function(response){
+                            response = JSON.parse(response);  
+                            // console.log(response)
+    
+                            if(response.length > 0){
+                                // Function to format time as HH:MM:SS
+                                function millisecondsToHMS(milliseconds) {
+                                    // Calculate total seconds
+                                    let totalSeconds = Math.floor(milliseconds / 1000);
+                                    
+                                    // Calculate hours, minutes, and remaining seconds
+                                    let hours = Math.floor(totalSeconds / 3600);
+                                    let minutes = Math.floor((totalSeconds % 3600) / 60);
+                                    let remainingSeconds = totalSeconds % 60;
+                                    
+                                    // Format the result as HH:MM:SS
+                                    let formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                                    
+                                    return formattedTime;
+                                }
+                                
+                                // Get the current time
+                                let currentTime = new Date();
+                                
+                                // Given formatted time string
+                                let formattedTimeString = response[0].logout_date;
+                                
+                                // Parse the formatted time string
+                                let formattedTime = new Date(formattedTimeString);
+                                
+                                // Calculate the time difference
+                                let timeDifference = currentTime - formattedTime;
+                                // console.log(currentTime , formattedTime)
+    
+                                // console.log(timeDifference) // milliseconds
+    
+                                let final_time = millisecondsToHMS(timeDifference  + parseTimeToMilliseconds(response[0].progress_timer));
+                                console.log(final_time);  // Output: "00:11:50"
+                            
+                                console.log(data_arr)
+                                console.log(response)
+                                for(let i = 0; i <response.length; i++){
+                                    // data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
+                                    data_arr[response[i].hpercode]['func'](response[i].hpercode , final_time)
+                                }
+                            }
+    
+                        }
+                    })
+                }else{
+                    $.ajax({
+                        url: './php/fetch_onProcess.php',
+                        method: "POST",
+                        success: function(response){               
+                            response = JSON.parse(response);
+                            after_reload = response
+                            console.log(after_reload)
+    
+                            for(let i = 0; i < response.length; i++){
+                                if(data_arr[after_reload[i].global_single_hpercode].status === 'Pending' || data_arr[after_reload[i].global_single_hpercode].status === 'On-Process'){
+                                    global_single_hpercode = after_reload[i].global_single_hpercode
+                                    data_arr[after_reload[i].global_single_hpercode]['func'](global_single_hpercode, after_reload[i].elapsedTime)    
+                                }
                             }
                         }
-                    }
-                })
+                    })
+                }
+                
             }
 
             // after reload, the exisiting processing timer are still running after logout and logging in.

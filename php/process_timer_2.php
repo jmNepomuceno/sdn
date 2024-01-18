@@ -23,7 +23,7 @@
     }
     
     if($already_in_session === true){
-        echo "true \n"; 
+        // echo "true \n"; 
         $_SESSION["process_timer"][$index]['elapsedTime'] = $elapsedTime;
     }else{
         // updating the status of the patient in the database
@@ -33,7 +33,7 @@
             // 'table_index' => $table_index,
             // 'approved_bool' => $approved_bool
         );
-        echo "False \n";
+        // echo "False \n";
         $sql = "UPDATE incoming_referrals SET status='On-Process' WHERE hpercode= '". $global_single_hpercode ."' ";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();

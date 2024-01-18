@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('#sdn-register-btn').on('click' , function(event){
+    $('#register-confirm-btn').on('click' , function(event){
         event.preventDefault();
 
         // const data = {
@@ -25,7 +25,7 @@ $(document).ready(function(){
 
         const data = {
             hospital_name : "A+ Medical Center",
-            hospital_code : "4098",
+            hospital_code : "4099",
 
             region : "3",
             province : "308",
@@ -47,8 +47,9 @@ $(document).ready(function(){
         // console.log(data.region)
 
         const sdn_loading_modal_div = document.querySelector('.sdn-loading-div')
-        sdn_loading_modal_div.classList.add('z-10')
-        sdn_loading_modal_div.classList.remove('hidden')
+        sdn_loading_modal_div.style.zIndex = '50'
+        sdn_loading_modal_div.style.display = 'flex'
+        
         $.ajax({
             url: './php/sdn_reg.php',
             method: "POST",

@@ -2,10 +2,6 @@
     include('database/connection2.php');
     session_start();
 
-    $tm_fields = array("Last Name","First Name","Middle Name", "Birthday" ,"Mobile No." ,"Username" ,"Password" ,"Confirm Password");
-    $tm_input_names = array("last_name","first_name","middle_name", "birthday" ,"mobile_no" ,"username" ,"password" ,"confirm_password");
-    $tm_id = array("tms-last-name","tms-first-name","tms-middle-name", "tms-birthday" ,"tms-mobile-no" ,"tms-username" ,"tms-password" ,"tms-confirm-password");
-
     $sdn_fields = array("Hospital Name","Hospital Code","Address: Region","Address: Province", "Address: City/ Municipality" ,"Address: Barangay","Zip Code" ,"Email Address" ,
                 "Hospital Landline No.","Hospital Mobile No.","Hospital Director","Hospital Director Mobile No.","Point Person","Point Person Mobile No.");
     $sdn_input_names = array("hospital_name","hospital_code","address_region","address_province", "address_municipality" ,"address_barangay","zip_code" ,"email_address" ,
@@ -301,72 +297,208 @@
             <form class="sub-content-registration-form">
                 <div class="reg-form-divs">
                     <label for="" class="reg-labels">Hospital Name</label>
+                    <input type="text" class="reg-inputs" required autocomplete="off">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Hospital Code</label>
+                    <input type="number" class="reg-inputs" required autocomplete="off">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Address: Region</label>
+                    <select id="sdn-region-select" class="reg-inputs" name="region" required autocomplete="off" style="cursor:pointer;" onchange="getLocations('region' , 'sdn-region')">
+                        <option value="" class="">Choose a Region</option>
+                        <?php 
+                            $stmt = $pdo->query('SELECT region_code, region_description from region');
+                            while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
+                                echo '<option value="' , $data['region_code'] , '" >' , $data['region_description'] , '</option>';
+                            }                                        
+                        ?>
+                    </select>
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Address: Province</label>
+                    <select id="sdn-province-select" class="reg-inputs" name="province" required autocomplete="off" onchange="getLocations('province' , 'sdn-province')">
+                        <option value="" class="">Choose a Province</option>
+                    </select>
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Address: Municipality</label>
+                    <select id="sdn-city-select" class="reg-inputs" name="city" required autocomplete="off" onchange="getLocations('city', 'sdn-city')">
+                        <option value="" class="">Choose a Municipality</option>
+                    </select>
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Address: Barangay</label>
+                    <select id="sdn-brgy-select" class="reg-inputs" name="brgy" required autocomplete="off">
+                        <option value="" class="">Choose a Barangay</option>
+                    </select>
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Zip Code</label>
+                    <input id="sdn-zip-code" type="number" class="reg-inputs" required autocomplete="off">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Email Address</label>
+                    <input id="sdn-email-address" type="email" class="reg-inputs" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"  required autocomplete="off">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Hospital Landline No.</label>
+                    <input id="sdn-landline-no" type="text" class="reg-inputs" required autocomplete="off">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Hospital Mobile No.</label>
+                    <input id="sdn-hospital-mobile-no" type="text" class="reg-inputs" required autocomplete="off">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Hospital Director</label>
+                    <input id="sdn-hospital-director" type="text" class="reg-inputs" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Hospital Director Mobile No.</label>
+                    <input id="sdn-hospital-director-mobile-no" type="text" class="reg-inputs" required autocomplete="off">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Point Person</label>
+                    <input id="sdn-point-person" type="text" class="reg-inputs" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
+                </div>
+
+                <div class="reg-form-divs">
+                    <label for="" class="reg-labels">Point Person Mobile No.</label>
+                    <input id="sdn-point-person-mobile-no" type="text" class="reg-inputs" required autocomplete="off">
+                </div>
+
+                <!-- <button id="register-confirm-btn" type="button" class="btn btn-success">Success</button> -->
+                <div class="register-confirm-div">
+                    <button id="register-confirm-btn" type="button" class="btn btn-success">Register</button>
+                </div>
+            </form>
+
+            <form class="sub-content-authorization-form">
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Hospital Code</label>
                     <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Cipher Key</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Last Name</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">First Name</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Middle Name</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Extension Name</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Username</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Password</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <div class="autho-form-divs">
+                    <label for="" class="reg-labels">Confirm Password</label>
+                    <input type="text" class="reg-inputs">
                 </div>
 
-                <div class="reg-form-divs">
-                    
+                <!-- <button id="register-confirm-btn" type="button" class="btn btn-success">Success</button> -->
+                <div class="authorization-confirm-div">
+                    <button id="authorization-confirm-btn" type="button" class="btn btn-success">Verify</button>
                 </div>
-
-                <div class="reg-form-divs">
-                    
-                </div>
-
-                <div class="reg-form-divs">
-                    
-                </div>
-
-                <div class="reg-form-divs">
-                    
-                </div>
-
-                <div class="reg-form-divs">
-                    
-                </div>
-
-                <button id="register-confirm-btn">Register</button>
             </form>
         </div>
 
+        
+        <div class="sdn-loading-div">
+            <div id="sdn-loading-div-2">
+                <h3></h3>
+            </div>
+            
+            <h3>SENDING OTP TO YOUR EMAIL...</h3>
+            <div class="loader"></div>
+        </div>
+
+        <div class="otp-modal-div">
+            <div id="email-sent-div">
+                <h3>OTP <span>Email sent</span></h3>
+                <button id="sdn-otp-modal-btn-close" class="sdn-otp-modal-btn-close">X</button>
+            </div>
+            
+            <div id="input-otp-div">
+                <h3>INPUT THE OTP</h3>
+            </div>
+
+            <div id="otp-inputs-div">
+                <div class="otp-inputs">
+                    <input type="number" id="otp-input-1" placeholder="-">
+                </div>
+                <div class="otp-inputs">
+                    <input type="number" id="otp-input-2" placeholder="-">
+                </div>
+                <div class="otp-inputs">
+                    <input type="number" id="otp-input-3" placeholder="-">
+                </div>
+                <div class="otp-inputs">
+                    <input type="number" id="otp-input-4" placeholder="-">
+                </div>
+                <div class="otp-inputs">
+                    <input type="number" id="otp-input-5" placeholder="-">
+                </div>
+                <div class="otp-inputs">
+                    <input type="number" id="otp-input-6" placeholder="-">
+                </div>
+            </div>
+
+            <div id="resend-otp-div">
+                <button id="resend-otp-btn">Resend OTP</button>
+                <label id="resend-otp-timer">00:00</label>
+            </div>
+
+            <div id="otp-verify-div">
+                <button id="otp-verify-btn" class="otp-verify-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 h-full rounded">Verify</button>
+            </div>
+            
+        </div>
 
     </div>
-            
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     
 
     <script src="./index2.js?v=<?php echo time(); ?>"></script>
+    <script src="./js/location.js?v=<?php echo time(); ?>"></script>
+    <script src="./js/sdn_reg.js?v=<?php echo time(); ?>"></script>
+
 </body>
 </html>

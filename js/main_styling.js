@@ -13,7 +13,7 @@ $(document).ready(function(){
     //         console.error('Error loading content');
     //     }
     // });
-
+    jQuery.noConflict();
     let current_page = ""
 
     const playAudio = () =>{
@@ -72,7 +72,7 @@ $(document).ready(function(){
         $('#yes-modal-btn-main').text('Yes');
         $('#yes-modal-btn-main').removeClass('hidden')
 
-        $('#myModal-main').modal('show');
+        // $('#myModal-main').modal('show');
 
 
     })
@@ -97,7 +97,8 @@ $(document).ready(function(){
             url: './php/save_process_time.php',
             data : {
                 what: 'save',
-                date : final_date
+                date : final_date,
+                sub_what: 'logout'
             },
             method: "POST",
             success: function(response) {
@@ -236,14 +237,38 @@ $(document).ready(function(){
 
     $('#dashboard-outgoing-btn').on('click' , function(event){
         event.preventDefault();
-        console.log('here')
         window.location.href = "../php/dashboard_outgoing.php";
     })
 
     $('#history-log-btn').on('click' , function(event){
         event.preventDefault();
-        console.log('here')
-        window.location.href = "../php/history_log.php";
+        // 
+        let currentDate = new Date();
+
+        let year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1; // Adding 1 to get the month in the human-readable format
+        let day = currentDate.getDate();
+
+        let hours = currentDate.getHours();
+        let minutes = currentDate.getMinutes();
+        let seconds = currentDate.getSeconds();
+
+        let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
+        // console.log('here')
+        $.ajax({
+            url: './php/save_process_time.php',
+            data : {
+                what: 'save',
+                date : final_date,
+                sub_what: 'history_log'
+            },
+            method: "POST",
+            success: function(response) {
+                window.location.href = "../php/history_log.php";
+            }
+        });
+
+        
     })
 
     // NOTIFICATION FUNCTIONS
@@ -265,7 +290,6 @@ $(document).ready(function(){
 
 
     $('#notif-div').on('click' , function(event){
-        console.log('here')
         if($('#notif-span').val() === 0){
             $('#notif-circle').addClass('hidden')
             document.getElementById("notif-sound").pause();

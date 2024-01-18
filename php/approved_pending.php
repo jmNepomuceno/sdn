@@ -36,7 +36,7 @@
     // update the approved_details and set the time of approval on the database
     $approve_details = filter_input(INPUT_POST, 'approve_details');
     if($_POST['action'] === "Approve"){
-        $sql = "UPDATE incoming_referrals SET approval_details=:approve_details, approved_time=:approved_time WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+        $sql = "UPDATE incoming_referrals SET approval_details=:approve_details, approved_time=:approved_time, progress_timer=NULL, refer_to_code=NULL WHERE hpercode=:hpercode AND refer_to = '" . $_SESSION["hospital_name"] . "'";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':approve_details', $approve_details, PDO::PARAM_STR); // currentDateTime
         $stmt->bindParam(':approved_time', $currentDateTime, PDO::PARAM_STR);

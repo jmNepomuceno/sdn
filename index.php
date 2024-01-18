@@ -80,7 +80,7 @@
                     $_SESSION['user_type'] = 'outside';
 
                     $_SESSION['post_value_reload'] = 'false';
-
+                    $_SESSION["sub_what"] = "";
                     // Get the current date and time
                     $timezone = new DateTimeZone('Asia/Manila'); // Replace 'Your/Timezone' with your actual time zone
                     $currentDateTime = new DateTime("",$timezone);
@@ -130,7 +130,7 @@
 
                     header('Location: ./main.php');
                 }else{
-                    echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    echo '<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
                             <script type="text/javascript">
                                 var jQuery = $.noConflict(true);
                                 jQuery(document).ready(function() {
@@ -167,6 +167,7 @@
             $_SESSION['user_type'] = 'admin';
             // $_SESSION["process_timer"] = [];
             $_SESSION['post_value_reload'] = 'false';
+            $_SESSION["sub_what"] = "";
 
             // Get the current date and time
             $timezone = new DateTimeZone('Asia/Manila'); // Replace 'Your/Timezone' with your actual time zone
@@ -223,7 +224,7 @@
         } 
 
         else if($sdn_username != 'admin' || $sdn_password != 'admin'){
-            echo '<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            echo '<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
                     <script type="text/javascript">
                         var jQuery = $.noConflict(true);
                         jQuery(document).ready(function() {

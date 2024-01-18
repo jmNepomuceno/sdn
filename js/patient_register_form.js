@@ -191,7 +191,9 @@ $(document).ready(function(){
             
             if(zero_inputs >= 1){
                 // alert('Please fill out the required fields.')
-                $('#myModal').modal('show');
+                // $('#myModal_pat_reg').modal('show');
+                const myModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
+                myModal.show();
             }else{
 
                 data = {
@@ -345,7 +347,8 @@ $(document).ready(function(){
                         $('#yes-modal-btn').text('Register');
                         $('#yes-modal-btn').removeClass('hidden')
 
-                        $('#myModal').modal('show');
+                        const myModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
+                        myModal.show();
         
                         // $('#er-patform-btn-id').removeClass('hidden')
                         // $('#ob-patform-btn-id').removeClass('hidden')
@@ -375,7 +378,9 @@ $(document).ready(function(){
             $('#yes-modal-btn').text('Confirm');
             $('#yes-modal-btn').removeClass('hidden')
 
-            $('#myModal').modal('show');
+            const myModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
+            myModal.show();
+            // $('#myModal').modal('show');
 
             // $('#add-patform-btn-id').addClass('hidden')
             // $('#clear-patform-btn-id').addClass('hidden')
@@ -395,7 +400,9 @@ $(document).ready(function(){
             $('#yes-modal-btn').text('Yes');
             $('#yes-modal-btn').removeClass('hidden')
 
-            $('#myModal').modal('show');
+            const myModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
+            myModal.show();
+            // $('#myModal').modal('show');
 
             for(let i = 0; i < all_input_arr.length; i++){
                 $(all_input_arr[i]).addClass('pointer-events-none bg-[#cccccc]')
@@ -467,7 +474,9 @@ $(document).ready(function(){
 
                 $('#yes-modal-btn').addClass('hidden')
                 $('#ok-modal-btn').text('Ok')
-                $('#myModal').modal('show');
+                const myModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
+                myModal.show();
+                // $('#myModal').modal('show');
             }, 500);
             
         }

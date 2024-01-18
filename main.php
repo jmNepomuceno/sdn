@@ -197,7 +197,7 @@
                     </div>
 
                     <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
-                        <h2 id='logout-btn' class="">Logout</h2>
+                        <h2 id='logout-btn' class="" data-bs-toggle="modal" data-bs-target="#myModal-main">Logout</h2>
                     </div>
                 </div>
         </div>
