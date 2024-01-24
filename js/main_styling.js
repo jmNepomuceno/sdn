@@ -53,16 +53,29 @@ $(document).ready(function(){
                 setTimeout(fetchMySQLData, 5000);
             }
         });
-    }
+    }   
 
     fetchMySQLData(); 
 
+    let side_bar_btn_counter = 0
     $('#side-bar-mobile-btn').on('click' , function(event){
         document.querySelector('#side-bar-div').classList.toggle('hidden');
+
+        if(side_bar_btn_counter === 0){
+            document.querySelector('#side-bar-mobile-btn').className = 'side-bar-mobile-btn w-[50%] ml-2 h-[10px] absolute flex flex-row justify-start items-center cursor-pointer transition duration-700 ease-in-out'
+            side_bar_btn_counter = 1;
+            $('#sdn-title-h1').addClass('hidden')
+        }else{
+            document.querySelector('#side-bar-mobile-btn').className = 'side-bar-mobile-btn w-[50%] ml-2 h-full flex flex-row justify-start items-center cursor-pointer delay-150'
+            $('#sdn-title-h1').removeClass('hidden')
+            side_bar_btn_counter = 0;
+        }
+        
     })
 
     
     $('#logout-btn').on('click' , function(event){
+        
         event.preventDefault(); // Prevent the default behavior (navigating to the link)
 
         $('#modal-title-main').text('Warning')
@@ -73,7 +86,6 @@ $(document).ready(function(){
         $('#yes-modal-btn-main').removeClass('hidden')
 
         // $('#myModal-main').modal('show');
-
 
     })
 
@@ -176,12 +188,11 @@ const loadContent = (url) => {
     })
 }
 
-// loadContent('php/default_view.php')
+loadContent('php/default_view.php')
 // loadContent('php/patient_register_form.php')
-// loadContent('php/opd_referral_form.php?type="ER"&code=BGHMC-0001')
-loadContent('php/incoming_form.php')
+// loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
+// loadContent('php/incoming_form.php')
 // loadContent('php/default_view.php') 
-
 
 $(document).ready(function(){
     $(window).on('load' , function(event){

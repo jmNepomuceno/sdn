@@ -9,7 +9,7 @@ include("dbconn.php");
 include("dbfunc.php");
 
 // Set session-related configurations
-ini_set('session.cookie_lifetime', 0);
+ini_set('session.cookie_lifetime', 0); 
 ini_set('session.cookie_path', '/');
 ini_set('session.cookie_domain', '');
 ini_set('session.cookie_httponly', true);
@@ -39,7 +39,7 @@ $sessionID = session_id();
 setcookie('PHPSESSID', $sessionID, 0, '/', '', true, true);
 
 // Monitor the session and echo the session ID and CSRF token
- echo "Session ID: " . $sessionID . "<br>";
+echo "Session ID: " . $sessionID . "<br>";
 echo "CSRF Token: " . $_SESSION['_csrf_token'];
 
 ?>

@@ -27,6 +27,7 @@
     // echo $data[0]['hospital_name']
     $hospital_names = $data;
 
+    $date_today =  date("Y-m-d H:i:s");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,7 +90,7 @@
             <div class="w-full h-[11%] flex flex-row justify-around items-start ">
                 <div class="w-[30%] flex flex-col">
                     <label class="-ml-[2%] font-bold">Parent/Guardian(If minor)</label>
-                    <input id="parent-guard-input" type="textbox" class="rounded-md  w-[98%] border-2  border-[#bfbfbf] -ml-[2%] outline-none">
+                    <input id="parent-guard-input" type="text" class="rounded-md  w-[98%] border-2  border-[#bfbfbf] -ml-[2%] outline-none" autocomplete="off">
                 </div>
                 
                 <div class="ml-[2%] w-[15%]">
@@ -112,8 +113,8 @@
                 </div>
 
                 <div class="ml-[2%] w-[23%]">
-                    <label class="ml-[0.5%] font-bold">Date/Time Admitted <span class="text-red-600 font-bold text-xl">*</span></label>
-                    <input type="datetime" class="rounded-md ml-[%] w-[100%] border-2  border-[#bfbfbf] outline-none">
+                    <label class="ml-[0.5%] font-bold">Date/Time Admitted <span class="text-red-600 font-bold text-xl"></span></label>
+                    <input type="text" class="rounded-md ml-[%] w-[100%] border-2 border-[#bfbfbf] outline-none bg-slate-500 pointer-events-none" value=<?php echo $date_today ?> >
                 </div>   
 
                 
@@ -144,14 +145,44 @@
 
                     <div class="w-[97%] h-[87%] flex flex-col justify-start items-left">
                         <label class="w-full font-bold ">Chief Complaint and History <span class="text-red-600 font-bold text-xl">*</span></label>
-                        <textarea id="complaint-history-input" class="border-2  border-[#bfbfbf] w-full h-[33.3%] resize-none outline-none"></textarea>
+                        <textarea id="complaint-history-input" class="border-2  border-[#bfbfbf] w-full h-[33.3%] resize-none outline-none" autocomplete="off"></textarea>
 
                         <label class="w-full font-bold  ">Reason for Referral <span class="text-red-600 font-bold text-xl">*</span></label>
-                        <textarea id="reason-referral-input" class="border-2  border-[#bfbfbf] w-full h-[33.3%] resize-none outline-none"></textarea>
+                        <textarea id="reason-referral-input" class="border-2  border-[#bfbfbf] w-full h-[33.3%] resize-none outline-none" autocomplete="off"></textarea>
 
                         <label class="w-full font-bold  ">Impression / Diagnosis <span class="text-red-600 font-bold text-xl">*</span></label>
-                        <textarea id="diagnosis" class="border-2  border-[#bfbfbf] w-full h-[33.3%] resize-none outline-none"></textarea>
+                        <textarea id="diagnosis" class="border-2  border-[#bfbfbf] w-full h-[33.3%] resize-none outline-none" autocomplete="off"></textarea>
                     </div>
+
+
+                    <!-- only for OB -->
+
+                    <?php 
+                        if($type === "OB"){
+                            echo '<div class="w-[97%] h-[15%] flex flex-row justify-around items-left">
+                                <div class="w-[20%] h-full flex flex-col justify-end items-left">
+                                    <label class="w-full font-bold">Fetal Heart Tone<span class="text-red-600 font-bold text-xl">*</span></label>
+                                    <input type="text" id="fetal-heart-inp" class="border-2 border-[#bfbfbf] w-full h-[50%] resize-none outline-none" autocomplete="off"/>
+                                </div>
+
+                                <div class="w-[20%] h-full  flex flex-col justify-end items-left">
+                                    <label class="w-full font-bold">Fundal Height<span class="text-red-600 font-bold text-xl">*</span></label>
+                                    <input type="text" id="fundal-height-inp" class="border-2 border-[#bfbfbf] w-full h-[50%] resize-none outline-none" autocomplete="off"/>
+                                </div>
+
+                                <div class="w-[20%] h-full  flex flex-col justify-end items-left">
+                                    <label class="w-full font-bold">Cervical Dilation<span class="text-red-600 font-bold text-xl">*</span></label>
+                                    <input type="text" id="cervical-dilation-inp" class="border-2 border-[#bfbfbf] w-full h-[50%] resize-none outline-none" autocomplete="off"/>
+                                </div>
+
+                                <div class="w-[20%] h-full  flex flex-col justify-end items-left">
+                                    <label class="w-full font-bold">Bag of Water<span class="text-red-600 font-bold text-xl">*</span></label>
+                                    <input type="text" id="bag-water-inp" class="border-2 border-[#bfbfbf] w-full h-[50%] resize-none outline-none"/>
+                                </div>
+                            </div>';
+                        }
+                    ?>
+                    
                 </div>
 
                 <div class="w-[50%] h-full flex flex-col justify-between items-left">
@@ -165,7 +196,7 @@
                                         <h4 class="text-xs text-white">i</h4>
                                     </button>
                                 </div>
-                                <input id='bp-input' type="textbox" class="border-2  border-[#bfbfbf] w-[98%] outline-none">                      
+                                <input id='bp-input' type="text" class="border-2  border-[#bfbfbf] w-[98%] outline-none" autocomplete="off">                      
                             </div>
 
                             <div class="w-[20%]  ml-[3%]">
@@ -175,7 +206,7 @@
                                         <h4 class="text-xs text-white">i</h4>
                                     </button>
                                 </div>
-                                <input id='hr-input' type="textbox" class="border-2  border-[#bfbfbf] w-[98%] outline-none">     
+                                <input id='hr-input' type="text" class="border-2  border-[#bfbfbf] w-[98%] outline-none" autocomplete="off">     
                             </div>
 
                             <div class="w-[20%]  ml-[3%]">
@@ -185,7 +216,7 @@
                                         <h4 class="text-xs text-white">i</h4>
                                     </button>
                                 </div>
-                                <input id='rr-input' type="textbox" class="border-2  border-[#bfbfbf] w-[98%] outline-none">     
+                                <input id='rr-input' type="text" class="border-2  border-[#bfbfbf] w-[98%] outline-none" autocomplete="off">     
                             </div>
 
                                
@@ -197,7 +228,7 @@
                                         <h4 class="text-xs text-white">i</h4>
                                     </button>
                                 </div>
-                                <input id='temp-input' type="textbox" class="border-2  border-[#bfbfbf] w-[98%] outline-none"> 
+                                <input id='temp-input' type="text" class="border-2  border-[#bfbfbf] w-[98%] outline-none" autocomplete="off"> 
                             </div>
                         </div>
                         <div class="flex flex-col w-[20%] h-[12%] mt-[10px] justify-center items-left ">
@@ -207,20 +238,39 @@
                                     <h4 class="text-xs text-white">i</h4>
                                 </button>
                             </div>
-                            <input id='weight-input' type="textbox" class="border-2  border-[#bfbfbf] w-[98%] outline-none"> 
+                            <input id='weight-input' type="text" class="border-2  border-[#bfbfbf] w-[98%] outline-none" autocomplete="off"> 
                         </div> 
 
-                        <div class="w-[90%] h-[70%]">
+                        <div class="w-[90%] h-[70%] mb-6">
                             <label class="ml-2 font-bold">Pertinent PE Findings <span class="text-red-600 font-bold text-xl">*</span>       </label>
-                            <textarea id="pe-findings-input" class="border-2 border-[#bfbfbf] w-[98%] outline-none h-[88%] ml-[1%] rounded-lg"></textarea>
+                            <textarea id="pe-findings-input" class="border-2 border-[#bfbfbf] w-[98%] outline-none h-[88%] ml-[1%] rounded-lg" autocomplete="off"></textarea>
                         </div>
                     </div>
+
+                    <!-- only for OB -->
+                    <?php 
+                            if($type === "OB"){
+                                echo '
+                                <div class="w-[97%] h-[20%] flex flex-row justify-around items-left mb-2">
+                                    <div class="w-[20%] h-full flex flex-col justify-end items-left">
+                                        <label class="w-full font-bold">Presentation<span class="text-red-600 font-bold text-xl">*</span></label>
+                                        <input type="text" id="presentation-ob-inp" class="border-2 border-[#bfbfbf] w-full h-[50%] resize-none outline-none" autocomplete="off"/>
+                                    </div>
+        
+                                    <div class="w-[70%] h-full  flex flex-col justify-end items-left">
+                                        <label class="w-full font-bold">Others<span class="text-red-600 font-bold text-xl">*</span></label>
+                                        <textarea id="others-ob-inp" class="border-2  border-[#bfbfbf] w-full h-[50%] resize-none outline-none" autocomplete="off"></textarea>
+                                    </div>
+                                </div>
+                                ';
+                            }
+                        ?>
                 </div>
 
                 
             </div>
 
-            <div class="w-[95%] flex flex-row justify-start items-center mr-2 mt-2">
+            <div class="w-[95%] flex flex-row justify-center items-center mr-2 mt-4">
                 <button id="submit-referral-btn-id" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mr-2">Submit</button>
                 <button id="cancel-referral-btn-id" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]">Cancel</button>
             </div>

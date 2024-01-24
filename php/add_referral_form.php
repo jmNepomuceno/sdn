@@ -92,13 +92,20 @@
     $reason_referral_input = $_POST['reason_referral_input'];
     $diagnosis = $_POST['diagnosis'];
 
-
     $bp_input = $_POST['bp_input'];
     $hr_input = $_POST['hr_input'];
     $rr_input = $_POST['rr_input'];
     $temp_input = $_POST['temp_input'];
     $weight_input = $_POST['weight_input'];
     $pe_findings_input = $_POST['pe_findings_input'];
+
+    
+    $fetal_heart_inp = $_POST['fetal_heart_inp'];
+    $fundal_height_inp = $_POST['hr_input'];
+    $cervical_dilation_inp = $_POST['cervical_dilation_inp'];
+    $bag_water_inp = $_POST['bag_water_inp'];
+    $presentation_ob_inp = $_POST['presentation_ob_inp'];
+    $others_ob_inp = $_POST['others_ob_inp'];
 
     // echo $reference_num;
     // echo $patlast;
@@ -114,13 +121,17 @@
 
     // echo "success";
 
-
-    $sql = "INSERT INTO incoming_referrals (hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, parent_guardian , phic_member, transport, referring_doctor, chief_complaint_history, reason, diagnosis, bp, hr, rr, temp, weight, pertinent_findings)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-    // $sql = "INSERT INTO incoming_referrals (hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, sensitive)
-    // VALUES (?,?,?,?,?,?,?,?,?,?,?,?, ?,?)";
-
+    $sql = "";
+   if($type === "OB"){
+        $sql = "INSERT INTO incoming_referrals (hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, sensitive_case, parent_guardian , phic_member, transport,
+            referring_doctor, chief_complaint_history, reason, diagnosis, bp, hr, rr, temp, weight, pertinent_findings,
+            fetal_heart_tone, fundal_height, cervical_dilation, bag_water, presentation, others_ob)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?,?,?,?,?,?)";
+   }else{
+        $sql = "INSERT INTO incoming_referrals (hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, sensitive_case, parent_guardian , phic_member, transport, referring_doctor, chief_complaint_history, reason, diagnosis, bp, hr, rr, temp, weight, pertinent_findings)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?)";
+   }
+    
     $stmt = $pdo->prepare($sql);
 
     $stmt->bindParam(1, $code, PDO::PARAM_STR);
@@ -139,36 +150,36 @@
     $stmt->bindParam(12, $status, PDO::PARAM_STR);
 
     $stmt->bindParam(13, $refer_to, PDO::PARAM_STR);
-    // $stmt->bindParam(14, $sensitive_case, PDO::PARAM_STR);
+    $stmt->bindParam(14, $sensitive_case, PDO::PARAM_STR);
 
-    $stmt->bindParam(14, $parent_guardian, PDO::PARAM_STR);
-    $stmt->bindParam(15, $phic_member, PDO::PARAM_STR);
-    $stmt->bindParam(16, $transport, PDO::PARAM_STR);
-    $stmt->bindParam(17, $referring_doc, PDO::PARAM_STR);
+    $stmt->bindParam(15, $parent_guardian, PDO::PARAM_STR);
+    $stmt->bindParam(16, $phic_member, PDO::PARAM_STR);
+    $stmt->bindParam(17, $transport, PDO::PARAM_STR);
+    $stmt->bindParam(18, $referring_doc, PDO::PARAM_STR);
 
-    $stmt->bindParam(18, $complaint_history_input, PDO::PARAM_STR);
-    $stmt->bindParam(19, $reason_referral_input, PDO::PARAM_STR);
-    $stmt->bindParam(20, $diagnosis, PDO::PARAM_STR);
+    $stmt->bindParam(19, $complaint_history_input, PDO::PARAM_STR);
+    $stmt->bindParam(20, $reason_referral_input, PDO::PARAM_STR);
+    $stmt->bindParam(21, $diagnosis, PDO::PARAM_STR);
 
-    $stmt->bindParam(21, $bp_input, PDO::PARAM_INT);
-    $stmt->bindParam(22, $hr_input, PDO::PARAM_STR);
-    $stmt->bindParam(23, $rr_input, PDO::PARAM_STR);
+    $stmt->bindParam(22, $bp_input, PDO::PARAM_INT);
+    $stmt->bindParam(23, $hr_input, PDO::PARAM_STR);
+    $stmt->bindParam(24, $rr_input, PDO::PARAM_STR);
 
-    $stmt->bindParam(24, $temp_input, PDO::PARAM_STR);
-    $stmt->bindParam(25, $weight_input, PDO::PARAM_INT);
-    $stmt->bindParam(26, $pe_findings_input, PDO::PARAM_STR);
+    $stmt->bindParam(25, $temp_input, PDO::PARAM_STR);
+    $stmt->bindParam(26, $weight_input, PDO::PARAM_INT);
+    $stmt->bindParam(27, $pe_findings_input, PDO::PARAM_STR);
 
-    if ($stmt->execute()) {
-        // Statement executed successfully
-        // You can fetch data or perform further actions here
-        // echo "success";
-    } else {
-        // Statement did not execute properly
-        // You can handle the error or display an error message
-        $errorInfo = $stmt->errorInfo();
-        // echo "Error: " . $errorInfo[2];
+    if($type === "OB"){
+        $stmt->bindParam(28, $fetal_heart_inp, PDO::PARAM_STR);
+        $stmt->bindParam(29, $fundal_height_inp, PDO::PARAM_STR);
+        $stmt->bindParam(30, $cervical_dilation_inp, PDO::PARAM_STR);
+        $stmt->bindParam(31, $bag_water_inp, PDO::PARAM_STR);
+        $stmt->bindParam(32, $presentation_ob_inp, PDO::PARAM_STR);
+        $stmt->bindParam(33, $others_ob_inp, PDO::PARAM_STR);
     }
-
+    
+    $stmt->execute();
+   
     // updating the status of the person in the hperson table
     $sql = "UPDATE hperson SET status='Pending' WHERE hpercode=:hpercode ";
     $stmt = $pdo->prepare($sql);

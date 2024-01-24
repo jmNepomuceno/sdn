@@ -90,7 +90,7 @@
     $pat_office_mobile_no_ofw = $_POST['pat_office_mobile_no_ofw'];
     $pat_mobile_no_ofw = $_POST['pat_mobile_no_ofw'];
 
-    $created_at = $_POST['created_at'];
+    $created_at =  date("Y-m-d H:i:s");
 
 
     
@@ -189,9 +189,9 @@
     $stmt->bindParam(55, $created_at, PDO::PARAM_STR);
 
     $stmt->execute();
-
+    
     $act_type = 'pat_form';
-    $pat_name = $patlast . ', ' . $patfirst . ' ' . $patmiddle . ' . ';
+    $pat_name = $patlast . ', ' . $patfirst . ' ' . $patmiddle;
     $action = 'Register Patient: ';
     $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
     $stmt = $pdo->prepare($sql);

@@ -31,7 +31,7 @@
         }
     }else if($_POST['from_where'] == 'history_log'){
         try{
-            $sql = "SELECT * FROM sdn_users JOIN history_log ON sdn_users.username = history_log.username WHERE sdn_users.username='" . $_SESSION["user_name"] . "' ORDER BY history_log.date DESC";
+            $sql = "SELECT * FROM sdn_users JOIN history_log ON sdn_users.username = history_log.username WHERE sdn_users.hospital_code='" . $_SESSION["hospital_code"] . "' ORDER BY history_log.date DESC";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

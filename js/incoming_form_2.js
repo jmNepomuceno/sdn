@@ -166,6 +166,7 @@ $(document).ready(function(){
     //end - open modal 
 
     const pendingFunction = (response) =>{
+        console.log(response)
         $('#pat-status-form').text(response[0].status)
 
         // if(response[0].status === 'Pending'){
@@ -231,6 +232,8 @@ $(document).ready(function(){
             $('#cancel-form').removeClass('hidden')
 
             $('#approval-details-id').text('Approval Details')
+            $('#classification-lbl').text(response[0].pat_class)
+            $('#admin-action-lbl').text(response[0].approval_details)
         }
 
         if(response[0].status === 'Deferred'){
@@ -253,7 +256,9 @@ $(document).ready(function(){
             $('#approval-details').removeClass('hidden')
 
             $('#approval-details-id').text('Deferral Details')
-        }
+            $('#classification-lbl').text(response[0].pat_class)
+            $('#admin-action-lbl').text(response[0].approval_details)
+        }   
 
         if(response[0].status === 'Arrived'){
             $('#temp-forward-form').addClass('hidden')

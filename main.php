@@ -82,10 +82,10 @@
     <div id="main-div" class="flex flex-col justify-between items-left w-full h-screen overflow-hidden">
         <header class="header-div w-full h-[50px] flex flex-row justify-between items-center bg-[#1f292e]">
             <div class="w-[30%] h-full flex flex-row justify-start items-center">
-                <div id="side-bar-mobile-btn" class="side-bar-mobile-btn w-[10%] h-full flex flex-row justify-center items-center cursor-pointer">
+                <h1 id="sdn-title-h1" class="text-white text-xl ml-7 mr-4 cursor-pointer"> Service Delivery Network</h1>
+                <div id="side-bar-mobile-btn" class="side-bar-mobile-btn w-[50%] ml-4 h-full flex flex-row justify-start items-center cursor-pointer delay-150 bg-[#1f292e]">
                     <i class="fa-solid fa-bars text-white text-4xl"></i>
                 </div>
-                <h1 id="sdn-title-h1" class="text-white text-2xl ml-2 cursor-pointer"> Service Delivery Network</h1>
             </div>
             <div class="account-header-div w-[35%] h-full flex flex-row justify-end items-center mr-2">
 
@@ -114,9 +114,14 @@
                     </div>
                     <div id="" class="w-auto h-full whitespace-nowrap flex flex-col justify-center items-center cursor-pointer">
                         <!-- <h1 class="text-white text-lg hidden sm:block">John Marvin Nepomuceno</h1> -->
-                        <h1 class="text-white text-lg hidden sm:block"><?php echo $user_name ?> |   <?php echo $_SESSION['last_name'] ?>  <?php echo $_SESSION['first_name']  ?> <?php echo $_SESSION['middle_name']  ?>
-                           
-                        </h1>
+                        <?php 
+                            if($_SESSION['last_name'] === 'Administrator'){
+                                echo '<h1 class="text-white text-base hidden sm:block">' . $user_name . ' | ' . $_SESSION["last_name"] . '</h1>';
+                            }else{
+                                echo '<h1 class="text-white text-base hidden sm:block">' . $user_name . ' | ' . $_SESSION["last_name"] . ', ' . $_SESSION['first_name'] . ' ' . $_SESSION['middle_name'] . '</h1>';;
+
+                            }
+                        ?>
                         
                     </div>
                     <div class="w-[5%] h-full flex flex-col justify-center items-center sm:m-1">
@@ -241,11 +246,10 @@
                                 <i class="fa-solid fa-inbox ml-8 text-lg text-white opacity-80"></i>
                                 <h3 class="m-3 text-white">Incoming</h3>
                             </div>
-                            <div id="pcr-request-id" class="w-full h-[50px] flex flex-row justify-start items-center border-b border-[#29363d] opacity-30 hover:opacity-100 duration-150">
-                                <!-- <h3 class="m-16 text-white">PCR Request List</h3> -->
+                            <!-- <div id="pcr-request-id" class="w-full h-[50px] flex flex-row justify-start items-center border-b border-[#29363d] opacity-30 hover:opacity-100 duration-150">
                                 <i class="fa-solid fa-inbox ml-8 text-lg text-white opacity-80"></i>
                                 <h3 class="m-3 text-white">PCR Request List</h3>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
             </aside>

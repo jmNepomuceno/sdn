@@ -1,15 +1,11 @@
 <?php
 
-    
-
 function connect_to_db(string $callback, array $params = null, string $errcallback = null)
 {
     return connect_to_db_by_ini(CONFIG_FILE, "DBConn", $callback, $params, $errcallback);
     // Function code here
 }
   
-
-
 function connect_to_db_by_ini(string $file, string $dbserver, string $callback, mixed $params = null, string $errcallback = null)
 {
     $ini_arr = parse_ini_file($file, true);

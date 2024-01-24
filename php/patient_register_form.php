@@ -54,8 +54,8 @@
         <div class="w-full h-[50px] flex flex-row flex flex-row justify-start items-center">
             <div class="w-[20%] h-full flex flex-row justify-around items-center">
                 <button class="h-[79%] w-[78px] mt-3 z-10 border-t-2 border-r-2 border-l-2 border-[#bfbfbf] bg-white">Patient</button>
-                <button class="text-blue-500 h-[79%] w-[100px] mt-3 bg-white">Admission</button>
-                <button class="text-blue-500 h-[79%] w-[100px] mt-3 bg-white">Referral</button>
+                <button class="text-blue-500 h-[79%] w-[100px] mt-3 bg-white"></button>
+                <button class="text-blue-500 h-[79%] w-[100px] mt-3 bg-white"></button>
             </div>
             <div id="privacy-reminder-div" class="hidden w-[75%] h-[60%] flex flex-row justify-around items-baseline rounded-lg bg-amber-100 mt-3">
                 <p class="text-sm"> <span class="font-bold">Notice: </span>For data integrity purposes. Changing of Name and Birthday will be restricted. Please send an email to bataan.bghmc.ihomp@gmail.com for your request of patient name change. </p>
@@ -179,7 +179,7 @@
                                         <div class="w-full flex flex-row justify-start items-center p-1">
                                             <label class="text-base" for="hperson-age"> Age </label>
                                         </div>
-                                        <input id="hperson-age" tabindex="-1" disabled="disabled" type="number" name="hperson-age" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none" autocomplete="off">
+                                        <input id="hperson-age" tabindex="-1" disabled="disabled" type="number" name="hperson-age" class="w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none " autocomplete="off">
                                     </div>
 
                                 </div>
@@ -259,14 +259,14 @@
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base ml-3" for="hperson-hospital-no"> Hospital No. </label>
                                     </div>
-                                    <input id="hperson-hospital-no" type="number" name="hperson-hospital-no" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none" autocomplete="off" value=<?php echo $_SESSION['hospital_code'] ?>>
+                                    <input id="hperson-hospital-no" type="number" name="hperson-hospital-no" class="ml-3 w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2 pointer-events-none bg-slate-500 font-bold text-white" autocomplete="off" value=<?php echo $_SESSION['hospital_code'] ?>>
                                 </div>
                                 
                                 <div class="w-[50%] h-full flex-col justify-around items-center">
                                     <div class="w-full flex flex-row justify-start items-center p-1">
                                         <label class="text-base" for="hperson-phic">PHIC </label>
                                     </div>
-                                    <input id="hperson-phic" type="number" name="hperson-phic" class=" w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off" placeholder="PhilHealth Number" required>
+                                    <input id="hperson-phic" type="text" name="hperson-phic" class=" w-[90%] h-[40%] border-2 border-[#bfbfbf] rounded-lg outline-none p-2" autocomplete="off" placeholder="PhilHealth Number" required>
                                 </div>
                             </div>
                         </div>

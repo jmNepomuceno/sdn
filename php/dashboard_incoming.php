@@ -46,7 +46,7 @@
             <div id="side-bar-mobile-btn" class="side-bar-mobile-btn w-[10%] h-full flex flex-row justify-center items-center cursor-pointer">
                 <i class="fa-solid fa-bars text-white text-4xl"></i>
             </div>
-            <h1 id="sdn-title-h1" class="text-white text-2xl ml-2 cursor-pointer"> Service Delivery Network</h1>
+            <h1 id="sdn-title-h1" class="text-white text-xl ml-2 cursor-pointer"> Service Delivery Network</h1>
         </div>
         <div class="account-header-div w-[35%] h-full flex flex-row justify-end items-center mr-2">
 
@@ -75,9 +75,14 @@
                 </div>
                 <div id="" class="w-auto h-full whitespace-nowrap flex flex-col justify-center items-center cursor-pointer">
                     <!-- <h1 class="text-white text-lg hidden sm:block">John Marvin Nepomuceno</h1> -->
-                    <h1 class="text-white text-lg hidden sm:block"><?php echo $user_name ?> |   <?php echo $_SESSION['last_name'] ?>  <?php echo $_SESSION['first_name']  ?> <?php echo $_SESSION['middle_name']  ?>
-                        
-                    </h1>
+                    <?php 
+                        if($_SESSION['last_name'] === 'Administrator'){
+                            echo '<h1 class="text-white text-base hidden sm:block">' . $user_name . ' | ' . $_SESSION["last_name"] . '</h1>';
+                        }else{
+                            echo '<h1 class="text-white text-base hidden sm:block">' . $user_name . ' | ' . $_SESSION["last_name"] . ', ' . $_SESSION['first_name'] . ' ' . $_SESSION['middle_name'] . '</h1>';;
+
+                        }
+                    ?>
                     
                 </div>
                 <div class="w-[5%] h-full flex flex-col justify-center items-center sm:m-1">

@@ -1,15 +1,49 @@
 $(document).ready(function(){
+  let intervalHistoryLog;
 
-    //fetch data
-    // $.ajax({
-    //     url: '../php/history_log.php',
-    //     method: 'POST',
-    //     success: function(response) {
-    //         response = JSON.parse(response);    
-    //         console.log(response)
-    //     }
-    // });
+  let inactivityTimer;
+  let userIsActive = true;
+  function handleUserActivity() {
+      userIsActive = true;
+      // Additional code to handle user activity if needed
+      console.log('active')
+      clearInterval(intervalHistoryLog)
 
+  }
+
+  function handleUserInactivity() {
+      console.log('inactive')
+      userIsActive = false;
+      // Additional code to handle user inactivity if needed
+      intervalHistoryLog = setInterval(fetchHistoryLog, 10000);
+  }
+
+  // Attach event listeners
+  document.addEventListener('mousemove', handleUserActivity);
+
+  // Set up a timer to check user inactivity periodically
+  const inactivityInterval = 10000; // Execute every 5 seconds (adjust as needed)
+
+  function startInactivityTimer() {
+      inactivityTimer = setInterval(() => {
+          if (!userIsActive) {
+              handleUserInactivity();
+          }
+          userIsActive = false; // Reset userIsActive after each check
+          
+      }, inactivityInterval);
+  }
+
+  function resetInactivityTimer() {
+      clearInterval(inactivityTimer);
+
+      startInactivityTimer();
+  }
+
+  // Start the inactivity timer when the page loads
+  startInactivityTimer();
+
+  //----------------------------------------------------------------------------
 
     $('#total-processed-refer').text($('#total-processed-refer-inp').val())
   console.log($('#total-processed-refer-inp').val())
@@ -85,7 +119,7 @@ $(document).ready(function(){
                 $('#notif-circle').addClass('hidden');
             }
             
-            setTimeout(fetchMySQLData, 5000);
+            setTimeout(fetchMySQLData, 10000);
         }
     });
   }
@@ -101,22 +135,13 @@ $(document).ready(function(){
             from_where : 'history_log'
         },
         success: function(data) {
-            // console.log(data);
             document.querySelector('.history-container').innerHTML = data
-            // $('#notif-span').text(data);
-            // if (parseInt(data) >= 1) {
-            //     $('#notif-circle').removeClass('hidden');
-                
-            //     playAudio();
-            // } else {
-            //     $('#notif-circle').addClass('hidden');
-            // }
-            
-            setTimeout(fetchHistoryLog, 5000);
         }
     });
   }
 
+  intervalHistoryLog = setInterval(fetchHistoryLog, 10000);
+  
   fetchHistoryLog();
 
     $('#side-bar-mobile-btn').on('click' , function(event){
@@ -158,7 +183,7 @@ $(document).ready(function(){
         data : {  
             what: 'save',
             date : final_date,
-            sub_what: 'logout'
+            sub_what: 'history_log'
         },
         method: "POST",
         success: function(response) {

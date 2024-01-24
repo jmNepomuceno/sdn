@@ -81,58 +81,58 @@
     if(count($data) >= 1){
         echo "Invalid";
     }
-    // else{
-    //     $sql = "INSERT INTO sdn_hospital (hospital_code, hospital_name, hospital_region_code, hospital_province_code, hospital_municipality_code, hospital_barangay_code, hospital_zip_code, hospital_email, hospital_landline, hospital_mobile, hospital_director, hospital_director_mobile, hospital_point_person, hospital_point_person_mobile, hospital_OTP)
-    //             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    else{
+        $sql = "INSERT INTO sdn_hospital (hospital_code, hospital_name, hospital_region_code, hospital_province_code, hospital_municipality_code, hospital_barangay_code, hospital_zip_code, hospital_email, hospital_landline, hospital_mobile, hospital_director, hospital_director_mobile, hospital_point_person, hospital_point_person_mobile, hospital_OTP)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-    //     $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
 
-    //     $stmt->bindParam(1, $hospital_code, PDO::PARAM_INT);
-    //     $stmt->bindParam(2, $hospital_name, PDO::PARAM_STR);
-    //     $stmt->bindParam(3, $region, PDO::PARAM_STR);
-    //     $stmt->bindParam(4, $province, PDO::PARAM_STR);
-    //     $stmt->bindParam(5, $municipality, PDO::PARAM_STR);
-    //     $stmt->bindParam(6, $barangay, PDO::PARAM_STR);
-    //     $stmt->bindParam(7, $zip_code, PDO::PARAM_STR);
-    //     $stmt->bindParam(8, $email, PDO::PARAM_STR);
-    //     $stmt->bindParam(9, $landline_no, PDO::PARAM_STR);
-    //     $stmt->bindParam(10, $hospital_mobile_no, PDO::PARAM_STR);
-    //     $stmt->bindParam(11, $hospital_director, PDO::PARAM_STR);
-    //     $stmt->bindParam(12, $hospital_director_mobile_no, PDO::PARAM_STR);
-    //     $stmt->bindParam(13, $point_person, PDO::PARAM_STR);
-    //     $stmt->bindParam(14, $point_person_mobile_no, PDO::PARAM_STR);
-    //     $stmt->bindParam(15, $OTP, PDO::PARAM_INT);
+        $stmt->bindParam(1, $hospital_code, PDO::PARAM_INT);
+        $stmt->bindParam(2, $hospital_name, PDO::PARAM_STR);
+        $stmt->bindParam(3, $region, PDO::PARAM_STR);
+        $stmt->bindParam(4, $province, PDO::PARAM_STR);
+        $stmt->bindParam(5, $municipality, PDO::PARAM_STR);
+        $stmt->bindParam(6, $barangay, PDO::PARAM_STR);
+        $stmt->bindParam(7, $zip_code, PDO::PARAM_STR);
+        $stmt->bindParam(8, $email, PDO::PARAM_STR);
+        $stmt->bindParam(9, $landline_no, PDO::PARAM_STR);
+        $stmt->bindParam(10, $hospital_mobile_no, PDO::PARAM_STR);
+        $stmt->bindParam(11, $hospital_director, PDO::PARAM_STR);
+        $stmt->bindParam(12, $hospital_director_mobile_no, PDO::PARAM_STR);
+        $stmt->bindParam(13, $point_person, PDO::PARAM_STR);
+        $stmt->bindParam(14, $point_person_mobile_no, PDO::PARAM_STR);
+        $stmt->bindParam(15, $OTP, PDO::PARAM_INT);
 
-    //     $stmt->execute();
+        $stmt->execute();
 
-    //     //SENDING EMAIL
-    //     try {                
-    //         //Server settings
-    //         $mail->SMTPDebug = SMTP::DEBUG_OFF; // Set the debugging level (options: DEBUG_OFF, DEBUG_CLIENT, DEBUG_SERVER)
-    //         $mail->isSMTP(); // Set mailer to use SMTP
-    //         $mail->AuthType = 'PLAIN'; 
-    //         $mail->Host = 'smtp.gmail.com'; // Specify your SMTP server
-    //         $mail->SMTPAuth = true; // Enable SMTP authentication
-    //         $mail->Username = 'nepojohn031@gmail.com'; // SMTP username 
-    //         $mail->Password = 'pzvidyfmvhdfgdwc'; // SMTP password
-    //         $mail->SMTPSecure = 'tls'; // Enable TLS encryption, 'ssl' also accepted
-    //         $mail->Port = 587; // TCP port to connect to
+        //SENDING EMAIL
+        try {                
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_OFF; // Set the debugging level (options: DEBUG_OFF, DEBUG_CLIENT, DEBUG_SERVER)
+            $mail->isSMTP(); // Set mailer to use SMTP
+            $mail->AuthType = 'PLAIN'; 
+            $mail->Host = 'smtp.gmail.com'; // Specify your SMTP server
+            $mail->SMTPAuth = true; // Enable SMTP authentication
+            $mail->Username = 'nepojohn031@gmail.com'; // SMTP username 
+            $mail->Password = 'pzvidyfmvhdfgdwc'; // SMTP password
+            $mail->SMTPSecure = 'tls'; // Enable TLS encryption, 'ssl' also accepted
+            $mail->Port = 587; // TCP port to connect to
 
-    //         //Recipients
+            //Recipients
             
-    //         $mail->addAddress($email);
-    //         //Content
-    //         $mail->isHTML(true); // Set email format to HTML
-    //         $mail->Subject = 'Job Order';
-    //         $mail->Body = $OTP; // OTP value from sdn_reg
-    //         $mail->AltBody = 'This is the plain text message body';
+            $mail->addAddress($email);
+            //Content
+            $mail->isHTML(true); // Set email format to HTML
+            $mail->Subject = 'Job Order';
+            $mail->Body = $OTP; // OTP value from sdn_reg
+            $mail->AltBody = 'This is the plain text message body';
 
-    //         $mail->send();
-    //         echo 'Message has been sent';
-    //     } catch (Exception $e) {
-    //         echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
-    //     }
-    // }
+            $mail->send();
+            echo 'Message has been sent';
+        } catch (Exception $e) {
+            echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+        }
+    }   
 
     
 

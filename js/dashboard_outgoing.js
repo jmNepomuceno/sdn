@@ -621,7 +621,8 @@ $(document).ready(function(){
         url: '../php/save_process_time.php',
         data : {  
             what: 'save',
-            date : final_date
+            date : final_date,
+            sub_what: 'logout'
         },
         method: "POST",
         success: function(response) {

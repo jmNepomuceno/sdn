@@ -357,6 +357,11 @@ $(document).ready(function(){
                                 $('#ob-patform-btn-id').removeClass('hidden')
                                 $('#opd-patform-btn-id').removeClass('hidden')
                                 $('#pcr-patform-btn-id').removeClass('hidden')
+
+                                $('#er-patform-btn-id').removeClass('opacity-30 pointer-events-none')
+                                $('#ob-patform-btn-id').removeClass('opacity-30 pointer-events-none')
+                                $('#opd-patform-btn-id').removeClass('opacity-30 pointer-events-none')
+                                $('#pcr-patform-btn-id').removeClass('opacity-30 pointer-events-none')
                             }else{
                                 $('#er-patform-btn-id').removeClass('hidden')
                                 $('#ob-patform-btn-id').removeClass('hidden')

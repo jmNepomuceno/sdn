@@ -397,11 +397,11 @@
                     <div class="flex flex-col justify-center items-start w-full h-[80%] mt-1">
                         <div class="w-full h-[50%] flex flex-col justify-center items-start">
                             <label class="font-bold text-xl ml-4">Emergency Room Administrator Action</label>
-                            <p class="ml-4">asdfasdfasdfasdfasd</p>
+                            <p class="ml-4" id="admin-action-lbl">ffff</p>
                         </div>
                         <div class="w-full h-[50%] flex flex-col justify-center items-start">
                             <label class="font-bold text-xl ml-4">Case Category</label>
-                            <label class="ml-4">asdfasdfasdfasdfasd</label>
+                            <label class="ml-4" id="classification-lbl">asdfasdfasdfasdfasd</label>
                         </div>
                     </div> 
                 </div>

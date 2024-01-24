@@ -10,26 +10,49 @@
     $search_fname = filter_input(INPUT_POST, 'search_fname');
     $search_mname = filter_input(INPUT_POST, 'search_mname');
     if($search_fname == "" && $search_mname == ""  && $search_lname != ""){   
-        // $sql = "SELECT * FROM hperson WHERE patlast LIKE '%$search_lname%' ";
         $sql = "SELECT * FROM hperson WHERE patlast LIKE :search_lname";
         $stmt = $pdo->prepare($sql);
         $search_lname_param = "%$search_lname%";
         $stmt->bindParam(':search_lname', $search_lname_param, PDO::PARAM_STR);
     }
     else if($search_lname == "" && $search_mname == ""  && $search_fname != ""){
-        // $sql = "SELECT * FROM hperson WHERE patfirst LIKE '%$search_fname%' ";
         $sql = "SELECT * FROM hperson WHERE patfirst LIKE :search_fname";
         $stmt = $pdo->prepare($sql);
         $search_fname_param = "%$search_fname%";
         $stmt->bindParam(':search_fname', $search_fname_param, PDO::PARAM_STR);
     }
     else if($search_fname == "" && $search_lname == "" && $search_mname != ""){
-        // $sql = "SELECT * FROM hperson WHERE patmiddle LIKE '%$search_mname%' ";
         $sql = "SELECT * FROM hperson WHERE patmiddle LIKE :search_mname";
         $search_mname = "%$search_mname%";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':search_mname', $search_mname, PDO::PARAM_STR);
-    }else{
+    }
+
+    else if($search_fname != "" && $search_lname != "" && $search_mname == ""){
+        $sql = "SELECT * FROM hperson WHERE patfirst LIKE :search_fname AND patlast LIKE :search_lname";
+        $search_fname_param = "%$search_fname%";
+        $search_lname_param = "%$search_lname%";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':search_fname', $search_fname_param, PDO::PARAM_STR);
+        $stmt->bindParam(':search_lname', $search_lname_param, PDO::PARAM_STR);
+    }
+    else if($search_fname != "" && $search_lname == "" && $search_mname != ""){
+        $sql = "SELECT * FROM hperson WHERE patfirst LIKE :search_fname AND patmiddle LIKE :search_mname";
+        $search_fname_param = "%$search_fname%";
+        $search_mname = "%$search_mname%";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':search_fname', $search_fname_param, PDO::PARAM_STR);
+        $stmt->bindParam(':search_mname', $search_mname, PDO::PARAM_STR);
+    }
+    else if($search_fname == "" && $search_lname != "" && $search_mname != ""){
+        $sql = "SELECT * FROM hperson WHERE patlast LIKE :search_lname AND patmiddle LIKE :search_mname";
+        $search_lname_param = "%$search_lname%";
+        $search_mname = "%$search_mname%";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':search_lname', $search_lname_param, PDO::PARAM_STR);
+        $stmt->bindParam(':search_mname', $search_mname, PDO::PARAM_STR);
+    }
+    else{
         $sql = 'SELECT * FROM hperson WHERE patlast="'. $search_lname .'" && patfirst="'. $search_fname .'" && patmiddle="'. $search_mname .'"';
         $stmt = $pdo->prepare($sql);
     }

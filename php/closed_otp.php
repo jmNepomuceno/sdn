@@ -32,7 +32,7 @@
 
     // $stmt->bindParam(1, $hospital_code, PDO::PARAM_INT);
     // $stmt->bindParam(2, $region, PDO::PARAM_STR);
-    if ($stmt->execute()) {
+    if ($stmt->execute()) { 
         echo 'deleted';
     }
 ?>

@@ -1,7 +1,3 @@
-// document.querySelector('#check-if-registered-btn').addEventListener('mouseover', function(){
-//     console.log("here")
-// })
-
 $(document).ready(function(){
     
     $('#check-if-registered-btn').on('click' , function(event){
@@ -16,7 +12,7 @@ $(document).ready(function(){
             setTimeout(function() {
                 // Your code here
                 // document.querySelector('#check-if-registered-h3').classList.toggle('hidden');
-
+                console.log('here')
                 document.querySelector('#check-if-registered-h3').classList.remove('hidden');
 
 
@@ -271,7 +267,7 @@ $(document).ready(function(){
                     pat_mobile_no_ofw : parseInt($('#hperson-mobile-no-ofw').val()) ? $('#hperson-mobile-no-ofw').val() : 0,
 
                     created_at : created_at,
-                }
+                }   
 
              
                 for (var key in data) {
@@ -298,41 +294,6 @@ $(document).ready(function(){
                     // $(all_input_arr[i]).addClass('pointer-events-none bg-[#cccccc]')
                 }
 
-
-                // $('#modal-title').text('Warning')
-                // $('#modal-icon').addClass('fa-triangle-exclamation')
-                // $('#modal-icon').removeClass('fa-circle-check')
-                // $('#modal-body').text('Are you sure with the information?')
-                // $('#ok-modal-btn').text('No')
-
-                // $('#yes-modal-btn').text('Register');
-                // $('#yes-modal-btn').removeClass('hidden')
-
-                // $('#myModal').modal('show');
-
-                // $('#modal-title').text('Successed')
-                // $('#modal-icon').removeClass('fa-triangle-exclamation')
-                // $('#modal-icon').addClass('fa-circle-check')
-                // $('#modal-body').text('Registered Successfully')
-                // $('#myModal').modal('show');
-
-                
-
-                // $('#er-patform-btn-id').removeClass('hidden')
-                // $('#ob-patform-btn-id').removeClass('hidden')
-                // $('#opd-patform-btn-id').removeClass('hidden')
-                // $('#pcr-patform-btn-id').removeClass('hidden')
-                
-
-                // $('#add-patform-btn-id').removeClass('bg-cyan-600 hover:bg-cyan-700')
-                // $('#add-patform-btn-id').addClass('bg-green-600 hover:bg-green-700')
-                // $('#add-patform-btn-id').addClass('pointer-events-none opacity-20')
-
-                // $('#clear-patform-btn-id').text('Cancel')
-                // $('#check-if-registered-btn').addClass('hidden')
-
-                // $('#privacy-reminder-div').removeClass('hidden')
-
                 $.ajax({
                     url: './php/add_patient_form.php',
                     method: "POST",
@@ -349,21 +310,7 @@ $(document).ready(function(){
 
                         const myModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
                         myModal.show();
-        
-                        // $('#er-patform-btn-id').removeClass('hidden')
-                        // $('#ob-patform-btn-id').removeClass('hidden')
-                        // $('#opd-patform-btn-id').removeClass('hidden')
-                        // $('#pcr-patform-btn-id').removeClass('hidden')
                         
-                        
-                        // $('#add-patform-btn-id').removeClass('bg-cyan-600 hover:bg-cyan-700')
-                        // $('#add-patform-btn-id').addClass('bg-green-600 hover:bg-green-700')
-                        // $('#add-patform-btn-id').addClass('pointer-events-none opacity-20')
-        
-                        // $('#clear-patform-btn-id').text('Cancel')
-                        // $('#check-if-registered-btn').addClass('hidden')
-        
-                        // $('#privacy-reminder-div').removeClass('hidden')
                         console.log(response)
                     }
                 })

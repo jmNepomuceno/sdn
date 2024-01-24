@@ -29,8 +29,20 @@ $(document).ready(function(){
                     // sdn_loading_modal_div.classList.remove('z-10')
                     // sdn_loading_modal_div.classList.add('hidden')
                     const otp_modal_div = document.querySelector('.otp-modal-div');
-                    otp_modal_div.classList.add('hidden')
-                    otp_modal_div.classList.remove('absolute')
+                    const sdn_loading_div = document.querySelector('.sdn-loading-div');
+                    otp_modal_div.style.display = 'none'
+                    otp_modal_div.style.position = ''
+
+                    sdn_loading_div.style.display = 'none'
+                    
+                    // magic gatas = after ng microfiber cloth
+                    // helmet spray
+                    // guapo motorcycle soap
+                    // microfiber cloth = pag tuyo na
+                    // chamois cloth = after maligo
+                    // footrest
+                    // bomber jacket
+                    // ls2
 
                     $('#sdn-hospital-name').val('')
                     $('#sdn-hospital-code').val('')
@@ -51,17 +63,17 @@ $(document).ready(function(){
                     $('#sdn-point-person').val('')
                     $('#sdn-point-person-mobile-no').val('')
 
-                    const sdn_modal_div = document.querySelector('.sdn-modal-div')
-                    const main_div = document.querySelector('.main-div')
-                    const modal_div = document.querySelector('.modal-div')
+                    // const sdn_modal_div = document.querySelector('.sdn-modal-div')
+                    // const main_div = document.querySelector('.main-div')
+                    // const modal_div = document.querySelector('.modal-div')
                     
-                    sdn_modal_div.classList.add('hidden')
-                    sdn_modal_div.classList.remove('absolute')
-                    sdn_modal_div.style.zIndex = '0'
+                    // sdn_modal_div.classList.add('hidden')
+                    // sdn_modal_div.classList.remove('absolute')
+                    // sdn_modal_div.style.zIndex = '0'
 
-                    main_div.style.filter = "blur(0)"
-                    modal_div.style.zIndex = '0'
-                    main_div.style.zIndex = '10'
+                    // main_div.style.filter = "blur(0)"
+                    // modal_div.style.zIndex = '0'
+                    // main_div.style.zIndex = '10'
 
                     $('#otp-input-1').val("")
                     $('#otp-input-2').val("")
