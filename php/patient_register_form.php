@@ -120,13 +120,36 @@
                 </div> -->
 
             </div>
-            
-
         </div>
+
+        <!-- <div class="w-full flex flex-row justify-end items-center mr-2">
+            <button id="add-patform-btn-id" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mr-2">Add</button>
+            <button id="clear-patform-btn-id" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]">Clear</button>
+        </div> -->
 
         <div class="w-[99%] h-[95%]  border-2 border-[#bfbfbf] border-2">
             <form action="" class="w-full h-full flex flex-row justify-evenly items-center">
-                <div id="patient-reg-form-div-1" class="w-[30%] h-full flex flex-col justify-start items-center">
+                <aside class="w-[15%] h-full">
+                    <!-- FUNCTION BUTTONS -->
+                    <div class="patient-form-btns w-full mt-3 h-full flex flex-col justify-start items-center">       
+                        <div class="w-full h-auto flex flex-row justify-center items-start mt-3">
+                            <select id="classification-dropdown" class="hidden bg-[#526c7a] w-full text-white font-bold py-2 px-4 rounded outline-none cursor-pointer text-xl">
+                                <option value="">Classification</option>
+                                <option class="cursor-pointer" value="er">ER</option>
+                                <option class="cursor-pointer" value="ob">OB</option>
+                                <option class="cursor-pointer" value="opd">OPD</option>
+                                <option class="cursor-pointer" value="pcr">PCR</option>
+                            </select>
+                        </div>
+
+                        <div id="add-clear-btn-div" class="w-full flex flex-row justify-evenly items-center">
+                            <button id="add-patform-btn-id" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded">Add</button>
+                            <button id="clear-patform-btn-id" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]">Clear</button>
+                        </div>
+                    </div>
+                </aside>
+                
+                <div id="patient-reg-form-div-1" class="w-[27%] h-full flex flex-col justify-start items-center">
                     <!-- PERSONAL INFORMATION DIVSION -->
                     <div class="w-full h-[78%] flex flex-col justify-center items-center">
                         <div class="w-full h-[30px] flex flex-row justify-start items-center">
@@ -273,7 +296,7 @@
                     </div>
                 </div>
 
-                <div id="patient-reg-form-div-2" class="w-[30%] h-full flex flex-col justify-start items-center">
+                <div id="patient-reg-form-div-2" class="w-[27%] h-full flex flex-col justify-start items-center">
                     <div class="w-full h-[45%] flex flex-col justify-center items-center">
                         <div class="w-full h-[30px] flex flex-row justify-start items-center">
                             <h3 class="ml-3 font-bold">Permanent Address</h3>
@@ -481,7 +504,7 @@
                     </div> -->
                 </div>
 
-                <div id="patient-reg-form-div-3" class="w-[30%] h-full flex flex-col justify-start items-center">
+                <div id="patient-reg-form-div-3" class="w-[27%] h-full flex flex-col justify-start items-center">
                     <div class="w-full h-[45%] flex flex-col justify-center items-center">
                         <div class="w-full h-[30px] flex flex-row justify-start items-center">
                             <h3 class="ml-3 font-bold">Current Workplace Address</h3>
@@ -716,22 +739,6 @@
         </div>
     </div>
 
-    <!-- FUNCTION BUTTONS -->
-    <div class="patient-form-btns absolute w-[52.5%] mt-3 h-[50px] right-[30%] bottom-0 flex flex-row justify-between items-center">
-        <div class="w-[35%] flex flex-row justify-between items-center mr-2">
-            <button id="er-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">ER</button>
-            <button id="ob-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">OB</button>
-            <button id="opd-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">OPD</button>
-            <button id="pcr-patform-btn-id" class="hidden bg-[#526c7a] hover:bg-mainColor text-white font-bold py-2 px-4 rounded">PCR</button>
-        </div>
-        <div class="w-[18%] flex flex-row justify-between items-center mr-2">
-            <button id="add-patform-btn-id" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded mr-2">Add</button>
-            <button id="clear-patform-btn-id" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]">Clear</button>
-        </div>
-    </div>
-
-    
-    
     <script type="text/javascript" src="./js/patient_register_form.js?v=<?php echo time(); ?>"></script>
     <script src="./js/search_name.js?v=<?php echo time(); ?>"></script>    
 </body>

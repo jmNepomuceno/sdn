@@ -78,9 +78,26 @@
 
     <style>
         .dataTables_length {
-        margin-top:0;
-        margin-bottom:5px;
-    }   
+            margin-top:0;
+            margin-bottom:5px;
+        }   
+
+        .tr-incoming {
+            height: 61px;
+            transition-property: all;
+            /* transition-delay: 150ms; */
+            transition-duration: 300ms;
+            transition-timing-function: ease;
+        }
+
+        .breakdown-div{
+            display:none;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            width:100%;
+            height: 250px;
+        }
     </style>
 
 </head>
@@ -168,8 +185,6 @@
                 <button id='incoming-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46]">Search</button>
             </div>
         </div>
-        
-
 
         <section class=" w-[98%] h-[80%] flex flex-row justify-center items-center rounded-lg border-2 border-[#bfbfbf] mt-3">
             
@@ -229,8 +244,30 @@
                                     if($loop != 0 &&  $row['status'] === 'Pending'){
                                         $style_tr = 'opacity-50 pointer-events-none';
                                     }
-                                    echo '<tr class="h-[61px] '. $style_tr .' ">
-                                            <td class="text-sm"> ' . $row['reference_num'] . ' - '.$index.' </td>
+
+                                    // $waiting_time = "--:--:--";
+                                    $date1 = new DateTime($row['date_time']);
+                                    $waiting_time_bd = "";
+                                    if($row['reception_time'] != null){
+                                        $date2 = new DateTime($row['reception_time']);
+                                        $waiting_time = $date1->diff($date2);
+
+                                        // if ($waiting_time->days > 0) {
+                                        //     $differenceString .= $waiting_time->days . ' days ';
+                                        // }
+
+                                        $waiting_time_bd .= sprintf('%02d:%02d:%02d', $waiting_time->h, $waiting_time->i, $waiting_time->s);
+
+                                    }else{
+                                        $waiting_time_bd = "00:00:00";
+                                    }
+
+                                    if($row['reception_time'] == ""){
+                                        $row['reception_time'] = "00:00:00";
+                                    }
+
+                                    echo '<tr class="tr-incoming '. $style_tr .' ">
+                                            <td class="text-xs"> ' . $row['reference_num'] . ' - '.$index.' </td>
                                             <td>' . $row['patlast'] , ", " , $row['patfirst'] , " " , $row['patmiddle']  . '</td>
                                             <td class="h-full font-bold text-center ' . $type_color . ' ">' . $row['type'] . '</td>
                                             <td>
@@ -240,9 +277,25 @@
                                                     <label class="text-[7.7pt] ml-1"> Mobile: ' . $row['mobile_no'] . ' </label>
                                                 </div>
                                             </td>
-                                            <td> 
-                                                <label class="text-sm"> Referred: ' . $row['date_time'] . ' </label>
-                                                <label class="text-sm"> Processed: 00:00:00</label>
+                                            <td class="flex flex-col justify-center items-left relative"> 
+                                                <i class="absolute bottom-0 right-0 accordion-btn fa-solid fa-plus border-2 border-[#a4b7c1] p-1 text-xs rounded bg-[#d1dbe0] opacity-40 cursor-pointer hover:opacity-100"></i>
+
+                                                <label class="referred-time-lbl text-sm w-[95%] border-b border-[#bfbfbf]"> Referred: ' . $row['date_time'] . ' </label>
+                                                <label class="queue-time-lbl text-sm w-[95%] border-b border-[#bfbfbf] mt-1"> Queue Time: ' . $waiting_time_bd . ' </label>
+                                                <label class="reception-time-lbl text-sm w-[95%] border-b border-[#bfbfbf] mt-1"> Reception: '. $row['reception_time'] .'</label>
+                                                
+                                                <div class="breakdown-div">
+                                                    <label class="processed-time-lbl text-sm w-full border-b border-[#bfbfbf] mt-1"> Processed: 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Approval: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Deferral: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Cancelled: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Arrived: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Checked: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Admitted: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Discharged: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Follow up: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Ref. Back: 0000-00-00 00:00:00  </label>  
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="flex flex-row justify-around items-center">
@@ -584,6 +637,7 @@
         </div>
     </div>
 
+    
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

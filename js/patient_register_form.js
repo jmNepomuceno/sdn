@@ -400,6 +400,9 @@ $(document).ready(function(){
             $('#add-patform-btn-id').removeClass('bg-green-600 hover:bg-green-700')
             $('#add-patform-btn-id').removeClass('pointer-events-none opacity-20')
 
+            $("#classification-dropdown").addClass('hidden')
+            $('#add-clear-btn-div').removeClass('mt-[70%]')
+
             for(let i = 0; i < all_input_arr.length; i++){
                 $(all_input_arr[i]).removeClass('pointer-events-none bg-[#cccccc]')
                 $(all_input_arr[i]).val('')
@@ -428,19 +431,6 @@ $(document).ready(function(){
             
         }
         else if($('#yes-modal-btn').text() == 'Confirm'){
-            // console.log("back")
-            // paste here the const data and the ajax
-            // $.ajax({
-            //     url: './php/add_patient_form.php',
-            //     method: "POST",
-            //     data:data,
-            //     success: function(response){
-            //         console.log(response)
-            //     }
-            // })
-            // console.log('here')
-            // console.log($('#tertiary-case').val())
-            // console.log($('#hpercode-input').val())
             loadContent('php/opd_referral_form.php?type=' + $('#tertiary-case').val() + "&code=" + $('#hpercode-input').val())
         }
     })
@@ -549,6 +539,41 @@ $(document).ready(function(){
         $('#opd-patform-btn-id').removeClass('bg-mainColor')
         $('#er-patform-btn-id').removeClass('bg-mainColor')
     })
+
+    let classification_dd_counter = true
+    $('#classification-dropdown').on('click' , function(event){
+        if(classification_dd_counter){
+            $('#add-clear-btn-div').removeClass('mt-10')
+            $('#add-clear-btn-div').addClass('mt-[70%]')
+
+            classification_dd_counter = false
+        }else{
+            $('#add-clear-btn-div').addClass('mt-10')
+            $('#add-clear-btn-div').removeClass('mt-[70%]')
+
+            classification_dd_counter = true
+        }
+    })
+
+    // Use jQuery to handle the change event
+    $("#classification-dropdown").change(function() {
+        // Get the selected value using val()
+        var selectedValue = $(this).val();
+  
+        // Display the selected value
+        console.log("Selected Value: " + selectedValue);
+        let chosen_case = ""
+        switch(selectedValue){
+            case 'er' : chosen_case = "ER"; break;
+            case 'ob' : chosen_case = "OB"; break;
+            case 'opd' : chosen_case = "OPD"; break;
+            // case 'er' : chosen_case = "ER";
+        }
+        console.log(chosen_case)
+        $('#add-patform-btn-id').removeClass('pointer-events-none opacity-20')
+        $('#add-patform-btn-id').text('Refer')
+        $('#tertiary-case').val(chosen_case)
+      });
 
 })
 

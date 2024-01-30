@@ -384,7 +384,8 @@ $(document).ready(function(){
                             // $('#check-if-registered-btn').addClass('hidden')
 
                             $('#privacy-reminder-div').removeClass('hidden')
-    
+                            $("#classification-dropdown").removeClass('hidden')
+                            $('#add-clear-btn-div').addClass('mt-10')
                         })
                     }
     

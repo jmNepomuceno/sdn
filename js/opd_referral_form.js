@@ -137,7 +137,7 @@ $(document).ready(function(){
 
                     $('#yes-modal-btn').addClass('hidden')
                     $('#ok-modal-btn').text('OK')
-                    $('#myModal').modal('show');
+                    // $('#myModal').modal('show');
                     
 
                     $('#ok-modal-btn').on('click' , function(event){
@@ -145,9 +145,6 @@ $(document).ready(function(){
                             loadContent('php/default_view.php')
                         }
                     })
-                },
-                error:function(xhr, status, error){
-                    console.error("asdf" , status)
                 }
             })
 

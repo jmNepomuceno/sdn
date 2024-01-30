@@ -62,6 +62,7 @@
    // R3-BTN-LIMAY-FCSH-2023-12-06
    if($data_municipality_desc['municipality_description'] === "CITY OF BALANGA (Capital)"){
         $data_municipality_desc['municipality_description'] = "BALANGA";
+        $abbreviation = "BGHMC";
    }
     $reference_num = 'R3-BTN-'. $data_municipality_desc['municipality_description'] . '-' . $abbreviation . '-' . $year . '-' . $month . '-' . $day;
     $patlast = $data['patlast'];
@@ -99,13 +100,15 @@
     $weight_input = $_POST['weight_input'];
     $pe_findings_input = $_POST['pe_findings_input'];
 
+    if($type === "OB"){
+        $fetal_heart_inp = $_POST['fetal_heart_inp'];
+        $fundal_height_inp = $_POST['hr_input'];
+        $cervical_dilation_inp = $_POST['cervical_dilation_inp'];
+        $bag_water_inp = $_POST['bag_water_inp'];
+        $presentation_ob_inp = $_POST['presentation_ob_inp'];
+        $others_ob_inp = $_POST['others_ob_inp'];
+    }
     
-    $fetal_heart_inp = $_POST['fetal_heart_inp'];
-    $fundal_height_inp = $_POST['hr_input'];
-    $cervical_dilation_inp = $_POST['cervical_dilation_inp'];
-    $bag_water_inp = $_POST['bag_water_inp'];
-    $presentation_ob_inp = $_POST['presentation_ob_inp'];
-    $others_ob_inp = $_POST['others_ob_inp'];
 
     // echo $reference_num;
     // echo $patlast;
@@ -131,6 +134,8 @@
         $sql = "INSERT INTO incoming_referrals (hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, sensitive_case, parent_guardian , phic_member, transport, referring_doctor, chief_complaint_history, reason, diagnosis, bp, hr, rr, temp, weight, pertinent_findings)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?)";
    }
+
+   
     
     $stmt = $pdo->prepare($sql);
 
@@ -233,5 +238,10 @@
     $stmt->bindParam(6, $pat_name, PDO::PARAM_STR);
     $stmt->bindParam(7, $_SESSION['user_name'], PDO::PARAM_STR);
 
+    $stmt->execute();
+
+    $sql = "UPDATE hperson SET status='Pending', type='". $type ."' WHERE hpercode=:hpercode ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':hpercode', $global_single_hpercode, PDO::PARAM_STR);
     $stmt->execute();
 ?>

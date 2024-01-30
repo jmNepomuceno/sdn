@@ -20,7 +20,13 @@
     $sdn_autho_input_names = array("hospital_code", "cipher_key" , "last_name", "first_name", "middle_name", "extension_name", "username" , "password", "confirm_password");
     
     $sdn_autho_id = array("sdn-auth-hospital-code", "sdn-cipher-key" , "sdn-last-name", "sdn-first-name", "sdn-middle-name", "sdn-extension-name", "sdn-username" , "sdn-password", "sdn-confirm-password");
+    
     if($_POST){
+        // if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['_csrf_token']) {
+        //     // CSRF token verification failed, handle accordingly (e.g., show an error)
+        //     die("CSRF token verification failed");
+        // }
+
         $_SESSION["process_timer"] = [] ;
             $sdn_username = $_POST['sdn_username'];
             $sdn_password = $_POST['sdn_password'];
@@ -259,6 +265,8 @@
             <div class="glass-div">
                 <h1 id="login-txt">Login</h1>
                 <form action="index.php" method="POST">
+                    <!-- here csrf -->
+
                     <div id="username-div">
                         <i class="username-icon fa-solid fa-user"></i>
                         <input type="text" name="sdn_username" id="username-inp" placeholder="Username" required autocomplete="off">

@@ -450,3 +450,8 @@ note:
 
 13.43
 23.87
+
+
+<input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
+
+9:20

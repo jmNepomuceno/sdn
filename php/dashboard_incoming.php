@@ -8,17 +8,120 @@
     // Format the DateTime object to get the year, month, and day
     $formattedDate = $dateTime->format('Y-m-d') . '%';
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
-    // $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived' OR status='Approved') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    // $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE '2024-01-29%' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
+    // $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    echo $data['COUNT(*)'];
+
+
 
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
     }else{
         $user_name = $_SESSION['hospital_name'];
+    }
+
+    $averageDuration_reception = "00:00:00";
+    $averageDuration_approval  = "00:00:00";
+    $averageDuration_total  = "00:00:00";
+    $fastest_response_final  = "00:00:00";
+    $slowest_response_final  = "00:00:00";
+
+    if($data['COUNT(*)'] > 0){
+        $currentDateTime = date('Y-m-d');
+        // echo $currentDateTime;
+        $sql = "SELECT reception_time, date_time, final_progressed_timer FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE :current_date";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
+        $currentDateTime_param = "%$currentDateTime%";
+        $stmt->bindParam(':current_date', $currentDateTime_param, PDO::PARAM_STR); 
+        $stmt->execute();
+        $dataRecep = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+        echo '<pre>'; print_r($dataRecep); echo '</pre>';
+
+        $recep_arr = array();
+        for($i = 0; $i < count($dataRecep); $i++){
+            // Given dates
+            $date1 = new DateTime($dataRecep[$i]['reception_time']);
+            $date2 = new DateTime($dataRecep[$i]['date_time']);
+
+            // Calculate the difference
+            $interval = $date1->diff($date2);
+
+            // Format the difference as hh:mm:ss
+            $formattedDifference = sprintf(
+                '%02d:%02d:%02d',
+                $interval->h,
+                $interval->i,
+                $interval->s
+            );
+
+            array_push($recep_arr, $formattedDifference);
+        }
+
+        // print_r($recep_arr);
+
+        $fastest_recep_secs = array();
+        // Function to convert duration to seconds
+        function durationToSeconds($duration) {
+            list($hours, $minutes, $seconds) = explode(':', $duration);
+            return $hours * 3600 + $minutes * 60 + $seconds;
+        }
+
+        // Function to convert seconds to duration
+        function secondsToDuration($seconds) {
+            $hours = floor($seconds / 3600);
+            $minutes = floor(($seconds % 3600) / 60);
+            $seconds = $seconds % 60;
+
+            return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+        }
+
+        // for average reception time
+        $averageSeconds_reception = 0;
+        for($i = 0; $i < count($recep_arr); $i++){
+            $averageSeconds_reception += durationToSeconds($recep_arr[$i]);
+        }
+
+        // for approval time
+        $averageSeconds_approval = 0;
+        for($i = 0; $i < count($dataRecep); $i++){
+            $averageSeconds_approval += durationToSeconds($dataRecep[$i]['final_progressed_timer']);
+        }
+
+        // for total time
+        $averageSeconds_total = 0;
+        for($i = 0; $i < count($dataRecep); $i++){
+            $averageSeconds_total += (durationToSeconds($dataRecep[$i]['final_progressed_timer']) + durationToSeconds($recep_arr[$i]));
+        }
+
+        // echo $averageSeconds_total;
+
+
+        for($i = 0; $i < count($recep_arr); $i++){
+            durationToSeconds($recep_arr[$i]);
+            array_push($fastest_recep_secs, (durationToSeconds($recep_arr[$i]) + durationToSeconds($dataRecep[$i]['final_progressed_timer'])));
+        }
+
+        
+        // print_r($fastest_recep_secs);
+
+        $averageSeconds_reception = (int) round($averageSeconds_reception / 3);
+        $averageDuration_reception = secondsToDuration($averageSeconds_reception);  
+
+        $averageSeconds_approval = (int) round($averageSeconds_approval / 3);
+        $averageDuration_approval = secondsToDuration($averageSeconds_approval);
+
+        $averageSeconds_total = (int) round($averageSeconds_total / 3);
+        $averageDuration_total = secondsToDuration($averageSeconds_total);
+
+        // $fastest_response_final = secondsToDuration(min($fastest_recep_secs));
+        // $slowest_response_final = secondsToDuration(max($fastest_recep_secs));
+        // echo $slowest_response_final;
     }
 
 ?>
@@ -39,6 +142,7 @@
 </head>
 <body class="h-screen overflow-hidden">
 
+    <input type="hidden" id="total-processed-refer-inp" value=<?php echo $data['COUNT(*)'] ?>>
     <input type="hidden" id="total-processed-refer-inp" value=<?php echo $data['COUNT(*)'] ?>>
     
     <header class="header-div w-full h-[50px] flex flex-row justify-between items-center bg-[#1f292e]">
@@ -196,27 +300,27 @@
 
                 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label class="average-reception-lbl font-semibold text-3xl"><?php echo $averageDuration_reception ?></label>
                     <label>Average Reception Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label class="font-semibold text-3xl"><?php echo $averageDuration_approval ?></label>
                     <label>Average Approval Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label class="font-semibold text-3xl"><?php echo $averageDuration_total ?></label>
                     <label>Average Total Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label class="font-semibold text-3xl"><?php echo $fastest_response_final ?></label>
                     <label>Fastest Response Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label class="font-semibold text-3xl"><?php echo $slowest_response_final ?></label>
                     <label>Slowest Response Time</label>
                 </div>
                 
