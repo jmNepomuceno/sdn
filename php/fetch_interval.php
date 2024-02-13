@@ -5,13 +5,17 @@
     $notif_value = 0;
     if($_POST['from_where'] == 'bell'){
         try{
-            $sql = "SELECT status FROM incoming_referrals WHERE status='Pending' AND refer_to='". $_SESSION["hospital_name"] . "'";
+            $sql = "SELECT status, type, patfirst FROM incoming_referrals WHERE status='Pending' AND refer_to='". $_SESSION["hospital_name"] . "'";
             $stmt = $pdo->prepare($sql);
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            $notif_value = count($data);
-            echo $notif_value;
+            // $notif_value = count($data);
+            // echo $notif_value;
+
+            $finalJsonString = json_encode($data);
+            echo $finalJsonString;
+
         }catch(PDOException $e){
             echo $notif_value;
         }

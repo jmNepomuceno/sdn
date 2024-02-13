@@ -37,6 +37,10 @@ $(document).ready(function(){
     let intervalIDs = {};
     let length_curr_table = document.querySelectorAll('.hpercode').length;
     let add_minutes = 0;
+    let toggle_accordion_obj = {}
+    for(let i = 0; i < length_curr_table; i++){
+        toggle_accordion_obj[i] = true
+    }
     // ---------------------------------------------------------------------------------------------------------
     let inactivityTimer;
     let userIsActive = true;
@@ -203,14 +207,6 @@ $(document).ready(function(){
         });
     });
 
-    // const expand_elements = document.querySelectorAll('.accordion-btn');
-    // pencil_elements.forEach(function(element, index) {
-    //     element.addEventListener('click', function() {
-    //         console.log('den')
-    //         ajax_method(index)
-    //     });
-    // });
-
     //end - open modal 
 
     const pendingFunction = (response) =>{
@@ -366,10 +362,10 @@ $(document).ready(function(){
         //     $('#discharged-form').removeClass('hidden')
         // }
 
-
+        console.log(response)
         $('#pendingModal').removeClass('hidden')
         $('#refer-agency').text(" " + response[0].referred_by)
-        $('#refer-reason').text(" " + response[0].reason_referral)
+        $('#refer-reason').text(" " + response[0].reason)
         $('#pending-type-lbl').text(response[0].type)
         $('#pending-name').text(" " + response[0].patlast + ", " + response[0].patfirst + " " + response[0].patmiddle)
         $('#pending-bday').text(" " + response[1].patbdate)
@@ -455,7 +451,9 @@ $(document).ready(function(){
         // need to update the laman of all global variables on every populate of tbody.
         // update the global_hpercode_all based on the current laman of the table
         length_curr_table = response.length
-
+        for(let i = 0; i < length_curr_table; i++){
+            toggle_accordion_obj[i] = true
+        }
         const incoming_tbody = document.querySelector('#incoming-tbody')
         // console.log(incoming_tbody.hasChildNodes())
         while (incoming_tbody.hasChildNodes()) {
@@ -806,6 +804,8 @@ $(document).ready(function(){
             }
         }
 
+    
+
         console.log("roflmao: " + index_pat_status)
         global_pat_status[index_pat_status].textContent = "On-Process"
         data_arr[global_single_hpercode].status = "On-Process"
@@ -878,7 +878,17 @@ $(document).ready(function(){
                     // $('#pendingModal').addClass('hidden')
                     global_stopwatch_all = []
                     global_hpercode_all = []
+
                     populateTbody(response)
+
+                    console.log(document.querySelectorAll('.pencil-btn').length)
+                    const pencil_elements = document.querySelectorAll('.pencil-btn');
+                    pencil_elements.forEach(function(element, index) {
+                        element.addEventListener('click', function() {
+                            console.log('den')
+                            ajax_method(index)
+                        });
+                    });
                 }
              })
 
@@ -1464,26 +1474,17 @@ $(document).ready(function(){
         clearInterval(inactivityTimer);
     })
 
-    let toggle_accordion = false
+    
     $(document).on('click' , '.accordion-btn' , function(event){
-        console.log(global_breakdown_index)
-        if(prev_clicked_breakdown_index !== global_breakdown_index){
-            toggle_accordion = !toggle_accordion;
-        }
-        prev_clicked_breakdown_index = global_breakdown_index;
-        console.log(toggle_accordion)
-
-        if(toggle_accordion){
+        console.log(toggle_accordion_obj)
+        if(toggle_accordion_obj[global_breakdown_index]){
             document.querySelectorAll('.tr-incoming')[global_breakdown_index].style.height = "300px"
             document.querySelectorAll('.breakdown-div')[global_breakdown_index].style.display = 'block'
-            toggle_accordion = false;
+            toggle_accordion_obj[global_breakdown_index] = false
         }else{
-
             document.querySelectorAll('.tr-incoming')[global_breakdown_index].style.height = "61px"
             document.querySelectorAll('.breakdown-div')[global_breakdown_index].style.display = 'none'
-
-            toggle_accordion = true;
+            toggle_accordion_obj[global_breakdown_index] = true
         }
-        
     })
 })

@@ -70,7 +70,7 @@ $(document).ready(function(){
     // })
 
     let input_arr = ['#hperson-last-name' , '#hperson-first-name' , '#hperson-middle-name' , ' #hperson-birthday' , '#hperson-gender' , '#hperson-civil-status' , 
-                        '#hperson-religion' , '#hperson-nationality' , '#hperson-phic' , '#hperson-hospital-no' , '#hperson-house-no-pa' , '#hperson-street-block-pa' , '#hperson-region-select-pa' ,
+                        '#hperson-religion' , '#hperson-nationality' , '#hperson-phic'  , '#hperson-house-no-pa' , '#hperson-street-block-pa' , '#hperson-region-select-pa' ,
                          '#hperson-region-select-pa' , '#hperson-province-select-pa' , '#hperson-city-select-pa' , '#hperson-brgy-select-pa' , '#hperson-mobile-no-pa',
                          '#hperson-house-no-ca' , '#hperson-street-block-ca' , '#hperson-region-select-ca' , '#hperson-province-select-ca' , 
                          '#hperson-city-select-ca' , '#hperson-brgy-select-ca' , '#hperson-mobile-no-ca']
@@ -449,26 +449,6 @@ $(document).ready(function(){
                 $(input_arr[i]).addClass('border-2 border-[#bfbfbf]')
             }
         }
-
-        // if($('#yes-modal-btn').text() == 'No'){
-        //     $('#er-patform-btn-id').addClass('hidden')
-        //     $('#ob-patform-btn-id').addClass('hidden')
-        //     $('#opd-patform-btn-id').addClass('hidden')
-        //     $('#pcr-patform-btn-id').addClass('hidden')
-
-        //     $('#check-if-registered-btn').removeClass('hidden')
-
-        //     $('#yes-modal-btn').addClass('hidden')
-        //     $('#ok-modal-btn').text('Ok')
-        //     $('#clear-patform-btn-id').text('Clear')
-
-        //     $('#add-patform-btn-id').text('Add')
-        //     $('#add-patform-btn-id').addClass('bg-cyan-600 hover:bg-cyan-700')
-        //     $('#add-patform-btn-id').removeClass('bg-green-600 hover:bg-green-700')
-        //     $('#add-patform-btn-id').removeClass('pointer-events-none opacity-20')
-        // }else{
-        //     loadContent('php/opd_referral_form.php')
-        // }
     })
 
     $('#er-patform-btn-id').on('click' , function(event){
@@ -567,6 +547,7 @@ $(document).ready(function(){
             case 'er' : chosen_case = "ER"; break;
             case 'ob' : chosen_case = "OB"; break;
             case 'opd' : chosen_case = "OPD"; break;
+            case 'toxicology' : chosen_case = "Toxicology"; break;
             // case 'er' : chosen_case = "ER";
         }
         console.log(chosen_case)

@@ -39,28 +39,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="output.css" />
-
-    
-
-    <!-- <script>
-        //using query parameters
-        // var queryParams = new URLSearchParams(window.location.search);
-        // var dataReceived = queryParams.get("user"); 
-        // console.log(dataReceived); // Outputs: "Hello World"
-
-        var dataReceived = sessionStorage.getItem("user");
-    // console.log(dataReceived); // Outputs: "Hello World"
-    </script> -->
-
-    <!-- <script>
-        const socket = new WebSocket('ws:\\192.168.42.222');
-        
-        socket.addEventListener('message', function(event) {
-            // Handle the incoming data, which can include the count.
-            const data = JSON.parse(event.data);
-            document.getElementById('notif-span').textContent = data.count;
-        });
-    </script> -->
+    <style>
+         .scrollbar-hidden {
+            /* Hide scrollbar for Firefox */
+            scrollbar-width: none;
+            /* Hide scrollbar for WebKit/Blink */
+            -webkit-scrollbar {
+            display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- <div id="modal-div" class="absolute w-full h-full flex flex-col justify-center items-center z-10">
@@ -89,23 +77,30 @@
             </div>
             <div class="account-header-div w-[35%] h-full flex flex-row justify-end items-center mr-2">
 
-                <div class="w-auto h-5/6 flex flex-row justify-end items-center mr-2">
+                <div class="w-auto h-5/6 flex flex-row justify-end items-center mr-4">
                     <!-- <div class="w-[33.3%] h-full   flex flex-row justify-end items-center -mr-1">
                         <h1 class="text-center w-full rounded-full p-1 bg-yellow-500 font-bold">6</h1>
                     </div> -->
                     
-                        <div id="notif-div" class="w-[20px] h-full flex flex-col justify-center items-center cursor-pointer">
+                        <div id="notif-div" class="w-[20px] h-full flex flex-col justify-center items-center cursor-pointer relative">
                             <h1 id="notif-circle" class="absolute top-2 text-center w-[17px] h-[17px] rounded-full bg-red-600 ml-5 text-white text-xs "><span id="notif-span"></span></h1>
                             <i class="fa-solid fa-bell text-white text-xl"></i>
                             <audio id="notif-sound" preload='auto' muted loop>
                                 <source src="../assets/sound/water_droplet.mp3" type="audio/mpeg">
                             </audio>
+
+                            <div id="notif-sub-div" class="hidden absolute top-[85%] w-[200px] h-[90px] bg-[#1f292e] border-4 border-[#7694a2] rounded-sm overflow-y-scroll scrollbar-hidden flex flex-col justify-start items-center">
+                                <!-- <div class="h-[30px] w-full border border-black flex flex-row justify-evenly items-center">
+                                    <h4 class="font-bold text-lg">3</h4>
+                                    <h4 class="font-bold text-lg">OB</h4>
+                                </div> -->
+                                <!-- b3b3b3 -->
+                            </div>
                         </div>
 
-                        <div class="w-[20px] h-full flex flex-col justify-center items-center">
+                        <!-- <div class="w-[20px] h-full flex flex-col justify-center items-center">
                             <i class="fa-solid fa-caret-down text-white text-xs mt-2"></i>
-                        </div>
-                    
+                        </div> -->
                 </div>
 
                 <div id="nav-account-div" class="header-username-div w-auto h-5/6 flex flex-row justify-end items-center mr-2">
@@ -173,7 +168,7 @@
         <div id="nav-drop-account-div" class="hidden z-10 absolute right-0 top-[45px] flex flex-col justify-start items-center bg-[#1f292e] text-white fixed w-[15%] h-[400px]">
                 <div class="w-full h-[350px] flex flex-col justify-around items-center">
                     <?php if($_SESSION["user_name"] == "admin") {?>
-                        <div class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
+                        <div id="admin-module-btn" class="w-2/3 h-[50px] border-b-2 border-[#29363d] flex flex-row justify-center items-center cursor-pointer opacity-30 hover:opacity-100 duration-150">
                             <h2 id="admin-module-id" class="">Admin</h2>
                         </div>
                     <?php } ?>
@@ -302,7 +297,7 @@
     <script src="./js/patient_register_form.js?v=<?php echo time(); ?>"></script>
     <script src="./js/opd_referral_form.js?v=<?php echo time(); ?>"></script>
     <script src="./js/location.js?v=<?php echo time(); ?>"></script>
-    <script src="./js/search_name.js?v=<?php echo time(); ?>"></script>
+    <script src="./js/search_name_2.js?v=<?php echo time(); ?>"></script>
     <script src="./js/opd_referral_form.js?v=<?php echo time(); ?>"></script>
     
     <!-- <script src="./js/incoming_form_2.js?v=<?php echo time(); ?>"></script> -->

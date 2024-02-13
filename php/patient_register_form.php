@@ -1,33 +1,24 @@
 <?php
     session_start();
     include('../database/connection2.php');
-    // include('php/admin_module.php')
-    // echo isset($_SESSION["user_name"]);    
-    // echo isset($_SESSION["user_name"]);
-    // Use JavaScript to log the PHP variable to the browser's console
-    // echo '<script>';
-    // echo 'console.log("PHP Variable Value: ' . isset($_SESSION["user_name"]) . '");';
-    // echo '</script>';
+    $sql = "SELECT classifications FROM classifications";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // echo '<pre>'; print_r($data); echo '</pre>';
 
-    // $act_type = 'reg_pat';
-    // // $user_name = $patlast + $patfirst + $patmiddle;
-    // $action = 'reg_pat';
-    // $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, user_name) VALUES (?,?,?,?,?,?)";
-    // $stmt = $pdo->prepare($sql);
+    if ($_SESSION['user_name'] === 'admin'){
+        $user_name = 'Bataan General Hospital and Medical Center';
+    }else{
+        $user_name = $_SESSION['hospital_name'];
+    }
 
-    // $user_name = "den den";
-    // $created_at = "today";
-    // $hpercode = "BGHMC-0033";
+    $classification_arr = array();
+    for($i = 0; $i < count($data); $i++){
+        array_push($classification_arr, $data[$i]['classifications']);
+    }
 
-
-    // $stmt->bindParam(1, $hpercode, PDO::PARAM_STR);
-    // $stmt->bindParam(2, $_SESSION['hospital_code'], PDO::PARAM_INT);
-    // $stmt->bindParam(3, $created_at, PDO::PARAM_STR);
-    // $stmt->bindParam(4, $act_type, PDO::PARAM_STR);
-    // $stmt->bindParam(5, $action, PDO::PARAM_STR);
-    // $stmt->bindParam(6, $user_name, PDO::PARAM_STR);
-
-    // $stmt->execute();
+    // print_r($classification_arr);
 ?>
 
 <!DOCTYPE html>
@@ -105,7 +96,9 @@
             </div>
             <div id="search-result-div" class="w-[95%] h-[82%] flex flex-col justify-start items-center">
                 <!-- <h1 class="mt-2">No Patient Found</h1> -->
+                
                 <!-- SEARCH QUERY RESULT -->
+                <div class="search-sub-div"></div>
                 <!-- <div class="w-full h-[80px] flex flex-col justify-center items-center border-b border-black bg-[#e6e6e6]">
                     <div class="w-full h-[40%] flex flex-row justify-between items-center">
                         <h1 class="ml-2">Patient ID: 292719</h1>
@@ -133,12 +126,19 @@
                     <!-- FUNCTION BUTTONS -->
                     <div class="patient-form-btns w-full mt-3 h-full flex flex-col justify-start items-center">       
                         <div class="w-full h-auto flex flex-row justify-center items-start mt-3">
-                            <select id="classification-dropdown" class="hidden bg-[#526c7a] w-full text-white font-bold py-2 px-4 rounded outline-none cursor-pointer text-xl">
+                            <!-- <select id="classification-dropdown" class="hidden bg-[#526c7a] w-full text-white font-bold py-2 px-4 rounded outline-none cursor-pointer text-xl">
                                 <option value="">Classification</option>
                                 <option class="cursor-pointer" value="er">ER</option>
                                 <option class="cursor-pointer" value="ob">OB</option>
                                 <option class="cursor-pointer" value="opd">OPD</option>
                                 <option class="cursor-pointer" value="pcr">PCR</option>
+                            </select> -->
+                            <!-- classification_arr -->
+                            <select id="classification-dropdown" class="hidden bg-[#526c7a] w-full text-white font-bold py-2 px-4 rounded outline-none cursor-pointer text-xl">
+                                <option value="">Classification</option>
+                                <?php for($i = 0; $i < count($classification_arr); $i++){ ?>
+                                    <option class="cursor-pointer" value=<?php echo strtolower($classification_arr[$i]) ?>><?php echo $classification_arr[$i] ?></option>
+                                <?php }?>
                             </select>
                         </div>
 
@@ -740,6 +740,6 @@
     </div>
 
     <script type="text/javascript" src="./js/patient_register_form.js?v=<?php echo time(); ?>"></script>
-    <script src="./js/search_name.js?v=<?php echo time(); ?>"></script>    
+    <script src="./js/search_name_2.js?v=<?php echo time(); ?>"></script>    
 </body>
 </html>

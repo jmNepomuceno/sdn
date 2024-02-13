@@ -168,6 +168,7 @@ $(document).ready(function(){
                             while (parentElement.firstChild) {
                                 parentElement.removeChild(parentElement.firstChild);
                             }
+                            
                             //Personal Information
                             $('#hpercode-input').val(response[i].hpercode)
                             document.querySelector('#hperson-last-name').value = response[i].pat_last_name
@@ -363,22 +364,16 @@ $(document).ready(function(){
                                 $('#opd-patform-btn-id').removeClass('opacity-30 pointer-events-none')
                                 $('#pcr-patform-btn-id').removeClass('opacity-30 pointer-events-none')
                             }else{
-                                $('#er-patform-btn-id').removeClass('hidden')
-                                $('#ob-patform-btn-id').removeClass('hidden')
-                                $('#opd-patform-btn-id').removeClass('hidden')
-                                $('#pcr-patform-btn-id').removeClass('hidden')
-
-                                $('#er-patform-btn-id').addClass('opacity-30 pointer-events-none')
-                                $('#ob-patform-btn-id').addClass('opacity-30 pointer-events-none')
-                                $('#opd-patform-btn-id').addClass('opacity-30 pointer-events-none')
-                                $('#pcr-patform-btn-id').addClass('opacity-30 pointer-events-none')
+                                $('#add-patform-btn-id').removeClass('bg-cyan-600 hover:bg-cyan-700')
+                                $('#add-patform-btn-id').addClass('bg-green-600 hover:bg-green-700')
+                                $('#add-patform-btn-id').addClass('pointer-events-none opacity-20')
                             }
 
                             
 
-                            $('#add-patform-btn-id').removeClass('bg-cyan-600 hover:bg-cyan-700')
-                            $('#add-patform-btn-id').addClass('bg-green-600 hover:bg-green-700')
-                            $('#add-patform-btn-id').addClass('pointer-events-none opacity-20')
+                            // $('#add-patform-btn-id').removeClass('bg-cyan-600 hover:bg-cyan-700')
+                            // $('#add-patform-btn-id').addClass('bg-green-600 hover:bg-green-700')
+                            // $('#add-patform-btn-id').addClass('pointer-events-none opacity-20')
 
                             $('#clear-patform-btn-id').text('Cancel')
                             // $('#check-if-registered-btn').addClass('hidden')

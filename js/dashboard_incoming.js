@@ -1,3 +1,5 @@
+const initialPieChartLoad = () =>{
+
 const add = document.querySelectorAll('.add');
 const totals_elements =document.querySelectorAll('.sumCell');
 let totals_array = [];
@@ -63,8 +65,6 @@ rows.forEach(function(row) {
     // Add the rowSum to the sum of the first column.
     totalSum += rowSum;
 });
-
-
 
 
 //For Secondary
@@ -388,7 +388,6 @@ const data = {
     // temp_data3.push(document.querySelectorAll('.sumCell')[i].value)
     temp_datasets.push(document.querySelectorAll('.sumCell')[i].textContent)
   }
-  // console.log(temp_data3)
   // rasi
   const data3 = {
     labels: temp_data3,
@@ -454,7 +453,9 @@ const data = {
         }
       }
   });
+}
 
+initialPieChartLoad();
  
   
 const date = document.getElementById('date');
@@ -501,7 +502,7 @@ date.textContent = "As of " + formattedDate_word;
 
 
 
-  button1 = document.getElementById('butbut');
+  button1 = document.getElementById('filter-date-btn');
 
    // Replace 'yourTableId' with the actual ID of your table
 
@@ -520,10 +521,7 @@ date.textContent = "As of " + formattedDate_word;
       var previousRow = table.rows[rowIndex - 1]; // Get the previous row
       for (var i = 0; i < previousRow.cells.length; i++) {
           // Create a new cell for each cell in the previous row
-          var newCell = newRow.insertCell();
-  
-          // Set the content of the new cell based on the content of the corresponding cell in the previous row
-          newCell.textContent = "New Content"; // Replace this with your logic                                                                                                                                                                                                                                                                                                                                                                                                                                         
+          var newCell = newRow.insertCell();                                                                                                                                                                                                                                                                                                                                                                                                                                       
       }
   }
   
@@ -534,7 +532,6 @@ date.textContent = "As of " + formattedDate_word;
 //  ME ME ME ME ME ME ME
 $(document).ready(function(){
   $('#total-processed-refer').text($('#total-processed-refer-inp').val())
-  console.log($('#total-processed-refer-inp').val())
   const playAudio = () =>{
     let audio = document.getElementById("notif-sound")
     audio.muted = false;
@@ -568,7 +565,6 @@ $(document).ready(function(){
             from_where : 'bell'
         },
         success: function(data) {
-            console.log(data);
             $('#notif-span').text(data);
             if (parseInt(data) >= 1) {
                 $('#notif-circle').removeClass('hidden');
@@ -660,27 +656,141 @@ $(document).ready(function(){
     window.location.href = "../main.php";
   })
 
-  // $.ajax({
-  //   url: '../php/fetch_interval.php',
-  //   method: "POST",
-  //   data: { /* your data here */ },
-  //   success: function (data) {
-  //       // Log data to the server
-  //       var logData = {
-  //           action: 'fetch_interval',
-  //           requestData: { /* your request data here */ },
-  //           responseData: data,
-  //           timestamp: new Date()
-  //       };
+  $('#filter-date-btn').on('click' , function(event){
+    event.preventDefault();
 
-  //       logDataToServer(logData);
+    const data = {
+      from_date : $('#from-date-inp').val(),
+      to_date : $('#to-date-inp').val()
+    }
 
-  //       // Your existing success callback logic here
-  //       // ...
-  //   }
-  // });  
-  
-  // Function to log data to the server
+    console.log(data)
+    
+    $.ajax({
+      url: '../php/filter_date_incoming.php',
+      method: "POST",
+      data : data,
+      success: function(response) { 
+        response = JSON.parse(response);
+        console.log(response)
+
+        $('#total-processed-refer').text(response.totalReferrals)
+        $('#average-reception-id').text(response.averageDuration_reception)
+        $('#average-approve-id').text(response.averageDuration_approval)
+        $('#average-total-id').text(response.averageDuration_total)
+        $('#fastest-id').text(response.fastest_response_final)
+        $('#slowest-id').text(response.slowest_response_final)
+      }
+    });
+
+
+    // populate table
+    $.ajax({
+      url: '../php/filter_date_table_incoming.php',
+      method: "POST",
+      data : data,
+      success: function(response) {
+        console.log(response)
+        document.getElementById('tbody-class').innerHTML = response
+
+        let chart1 = Chart.getChart('myPieChart');
+        if (chart1) {
+            chart1.destroy();
+        }
+
+        // Destroy chart with ID 'myPieChart2' if it exists
+        let chart2 = Chart.getChart('myPieChart2');
+        if (chart2) {
+            chart2.destroy();
+        }
+
+        // Destroy chart with ID 'myPieChart3' if it exists
+        let chart3 = Chart.getChart('myPieChart3');
+        if (chart3) {
+            chart3.destroy();
+        }
+
+        initialPieChartLoad();
+
+      }
+    });
+
+  })
+
+  // Get the timer element
+  let recep_time = document.getElementById('average-reception-id').textContent
+  let approve_time = document.getElementById('average-approve-id').textContent
+  let total_time = document.getElementById('average-total-id').textContent
+  let fastest_time = document.getElementById('fastest-id').textContent
+  let slowest_time = document.getElementById('slowest-id').textContent
+
+  // Get the initial time in seconds
+  var initialTime = getTimeInSeconds('00:00:01');
+
+  // Set the initial time
+  setTimer(initialTime);
+
+  // Start the timer
+  setInterval(function() {
+      // Increment the time by 1 second
+      initialTime++;
+
+      // Update the timer display
+      setTimer(initialTime , "reception");
+      setTimer(initialTime , "approve");
+      setTimer(initialTime , "total");
+      setTimer(initialTime , "fastest");
+      setTimer(initialTime , "slowest");
+  }, 5);
+
+  // Function to convert HH:MM:SS format to seconds
+  function getTimeInSeconds(timeString) {
+      var timeArray = timeString.split(':');
+      return parseInt(timeArray[0]) * 3600 + parseInt(timeArray[1]) * 60 + parseInt(timeArray[2]);
+  }
+
+  // Function to set the timer display
+  function setTimer(seconds, elem) {
+      // let real_time = getTimeInSeconds('00:01:38')
+      let real_time;  
+      // = getTimeInSeconds('00:05:31')
+      switch(elem){
+        case 'reception': real_time = getTimeInSeconds(recep_time); break;
+        case 'approve': real_time = getTimeInSeconds(approve_time); break; 
+        case 'total': real_time = getTimeInSeconds(total_time); break;
+        case 'fastest': real_time = getTimeInSeconds(fastest_time); break;
+        case 'slowest': real_time = getTimeInSeconds(slowest_time); break;
+      }
+
+
+      if(real_time >= seconds){
+        var hours = Math.floor(seconds / 3600);
+        var minutes = Math.floor((seconds % 3600) / 60);
+        var remainingSeconds = seconds % 60;
+
+        // Format the time as HH:MM:SS
+        var formattedTime = pad(hours) + ':' + pad(minutes) + ':' + pad(remainingSeconds);
+        
+        // Update the timer element content
+        // document.getElementById('average-reception-id').textContent = formattedTime;
+        switch(elem){
+          case 'reception': document.getElementById('average-reception-id').textContent = formattedTime;; break;
+          case 'approve':document.getElementById('average-approve-id').textContent = formattedTime;; break;
+          case 'total': document.getElementById('average-total-id').textContent = formattedTime; break;
+          case 'fastest': document.getElementById('fastest-id').textContent = formattedTime;; break;
+          case 'slowest': document.getElementById('slowest-id').textContent = formattedTime;; break;
+        }
+      }else{
+        clearInterval()
+      }
+
+  }
+
+  // Function to pad single-digit numbers with a leading zero
+  function pad(number) {
+      return (number < 10) ? '0' + number : number;
+  }
+
 })
 
 

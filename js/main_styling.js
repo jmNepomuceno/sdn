@@ -38,13 +38,57 @@ $(document).ready(function(){
             data : {
                 from_where : 'bell'
             },
-            success: function(data) {
-                // console.log(data);
-                $('#notif-span').text(data);
-                if (parseInt(data) >= 1) {
+            success: function(response) {
+                response = JSON.parse(response);  
+                // console.log(response);
+
+                $('#notif-span').text(response.length);
+                if (parseInt(response.length) >= 1) {
+                    playAudio();
+
                     $('#notif-circle').removeClass('hidden');
                     
-                    playAudio();
+                    // populate notif-sub-div
+                    // document.querySelector('.notif-sub-div').innerHTML = 
+
+                    let type_counter = []
+                    for(let i = 0; i < response.length; i++){
+
+                        if(!type_counter.includes(response[i]['type'])){
+                            type_counter.push(response[i]['type'])
+                        }
+                    }
+
+                    // console.log(type_counter)
+                    
+                    document.getElementById('notif-sub-div').innerHTML = '';
+                    for(let i = 0; i < type_counter.length; i++){
+                        let type_var  = type_counter[i]
+                        let type_counts  = 0
+
+                        for(let j = 0; j < response.length; j++){
+                            if(type_counter[i] ===  response[j]['type']){
+                                type_counts += 1
+                            }
+                        }
+
+                        if(i % 2 === 0){
+                            document.getElementById('notif-sub-div').innerHTML += '\
+                            <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-transparent text-white opacity-30 hover:opacity-100">\
+                            <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                                <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                            </div>\
+                        ';
+                        }else{
+                            document.getElementById('notif-sub-div').innerHTML += '\
+                            <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-white opacity-30 hover:opacity-100">\
+                            <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                                <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                            </div>\
+                        ';
+                        }
+                    }
+
                 } else {
                     $('#notif-circle').addClass('hidden');
                     stopSound()
@@ -188,17 +232,17 @@ const loadContent = (url) => {
     })
 }
 
-// loadContent('php/default_view.php')
+loadContent('php/default_view.php')
 // loadContent('php/patient_register_form.php')
 // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
-loadContent('php/incoming_form.php')
+// loadContent('php/incoming_form.php')
 
 $(document).ready(function(){
     $(window).on('load' , function(event){
         event.preventDefault();
         current_page = "default_page"
         $('#current-page-input').val(current_page)
-        
+
         // loadContent('php/default_view.php')
         // loadContent('php/patient_register_form.php')
         // loadContent('php/opd_referral_form.php')
@@ -277,8 +321,35 @@ $(document).ready(function(){
                 window.location.href = "../php/history_log.php";
             }
         });
+    })
 
-        
+    $('#admin-module-btn').on('click' , function(event){
+        event.preventDefault();
+        // 
+        let currentDate = new Date();
+
+        let year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1; // Adding 1 to get the month in the human-readable format
+        let day = currentDate.getDate();
+
+        let hours = currentDate.getHours();
+        let minutes = currentDate.getMinutes();
+        let seconds = currentDate.getSeconds();
+
+        let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
+        // console.log('here')
+        $.ajax({
+            url: './php/save_process_time.php',
+            data : {
+                what: 'save',
+                date : final_date,
+                sub_what: 'history_log'
+            },
+            method: "POST",
+            success: function(response) {
+                window.location.href = "../php/admin.php";
+            }
+        });
     })
 
     // NOTIFICATION FUNCTIONS
@@ -300,6 +371,10 @@ $(document).ready(function(){
 
 
     $('#notif-div').on('click' , function(event){
+        $('#notif-sub-div').removeClass('hidden')
+    })
+
+    $('#notif-sub-div').on('click' , function(event){
         if($('#notif-span').val() === 0){
             $('#notif-circle').addClass('hidden')
             document.getElementById("notif-sound").pause();
@@ -309,7 +384,6 @@ $(document).ready(function(){
             current_page = "incoming_page"
             $('#current-page-input').val(current_page)
         }
-
     })
 
     // mikas
@@ -404,4 +478,5 @@ $(document).ready(function(){
         event.preventDefault();
     })
     
+
 })

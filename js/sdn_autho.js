@@ -133,6 +133,14 @@ $(document).ready(function(){
                             $('#sdn-autho-password').val("")
                             $('#sdn-autho-confirm-password').val("")
                         }
+
+                        if(response === 'same_username'){
+                            $('#modal-title').text('Warning')
+                            $('#modal-icon').addClass('fa-triangle-exclamation')
+                            $('#modal-icon').removeClass('fa-circle-check')
+                            $('#modal-body').text('The username is already in use by another user.')
+                            $('#myModal').modal('show'); 
+                        }
                     }
                 })
             }

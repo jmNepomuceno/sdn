@@ -64,18 +64,18 @@
                             <?php } ?>
                         </select>
                     </div>
-
-                    <div class="w-[30%] h-full ml-[4%] flex flex-col justify-center items-left">
-                        <div class="ml-1 flex flex-row justify-start items-center font-bold mt-3">
+                            <!-- bg-[#1f292e] -->
+                    <div class="w-[20%] h-full ml-[4%] mb-8 flex flex-col justify-center items-center bg-[#1f292e] rounded-lg">
+                        <div class="ml-1 flex flex-row justify-start items-center font-bold mt-3 text-white">
                             <h1>Sensitive Case <span class="text-red-600 font-bold text-xl">*</span> </h1>
                             <button class="ml-1 w-4 h-4 rounded-full bg-blue-500 hover:bg-blue-700 focus:outline-none cursor-pointer text-black flex flex-row justify-center items-center">
                                 <h4 class="text-xs text-white">i</h4>
                             </button>
                         </div>
-                        <div class="w-full h-[40px]">
-                            <input type="radio" name="sensitive" class="ml-[5%]" value="true"> 
+                        <div class="w-full h-[40px] flex flex-row justify-center items-center text-white ">
+                            <input type="radio" name="sensitive_case" class="" value="true"> 
                             <label class="mb-[0.3%] ml-[0.2%]">Yes</label>
-                            <input type="radio" name= "sensitive" class="ml-[2%]" value="false">
+                            <input type="radio" name= "sensitive_case" class="ml-[5%]" value="false">
                             <label class="mb-[0.3%] ml-[0.2%]">No</label>
                         </div>
                     </div>

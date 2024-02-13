@@ -63,17 +63,13 @@ $(document).ready(function(){
                     $('#sdn-point-person').val('')
                     $('#sdn-point-person-mobile-no').val('')
 
-                    // const sdn_modal_div = document.querySelector('.sdn-modal-div')
-                    // const main_div = document.querySelector('.main-div')
-                    // const modal_div = document.querySelector('.modal-div')
-                    
-                    // sdn_modal_div.classList.add('hidden')
-                    // sdn_modal_div.classList.remove('absolute')
-                    // sdn_modal_div.style.zIndex = '0'
+                    $('#modal-title').text('Successed')
+                    $('#modal-icon').removeClass('fa-triangle-exclamation')
+                    $('#modal-icon').addClass('fa-circle-check')
+                    $('#modal-body').text('Verified OTP successfully')
+                    $('#ok-modal-btn').text('OK')
 
-                    // main_div.style.filter = "blur(0)"
-                    // modal_div.style.zIndex = '0'
-                    // main_div.style.zIndex = '10'
+                    $('#myModal').modal('show');
 
                     $('#otp-input-1').val("")
                     $('#otp-input-2').val("")
@@ -82,7 +78,14 @@ $(document).ready(function(){
                     $('#otp-input-5').val("")
                     $('#otp-input-6').val("")
                 }else{
-                    console.log('wrong')
+                    $('#modal-title').text('Warning')
+                    $('#modal-icon').addClass('fa-triangle-exclamation')
+                    $('#modal-icon').removeClass('fa-circle-check')
+                    $('#modal-body').text('Wrong OTP number')
+                    $('#ok-modal-btn').text('OK')
+
+                    $('#myModal').modal('show');
+
                     $('#otp-input-1').val("")
                     $('#otp-input-2').val("")
                     $('#otp-input-3').val("")
@@ -102,4 +105,27 @@ $(document).ready(function(){
         })
 
     })
+
+    window.addEventListener('beforeunload', function (event) {
+        // Your code to execute before the page is reloaded
+        // For example, you might want to show a confirmation message
+    
+        const data = {
+            hospital_code : $('#sdn-hospital-code').val(),
+        }
+        console.log("closed, " + 1)
+        $.ajax({
+            url: './php/closed_otp.php',
+            method: "POST",
+            data:data,
+            success: function(){
+                
+            }
+        })
+
+        // var confirmationMessage = 'Are you sure you want to leave? All data will be remove upon leaving.';
+        // event.returnValue = confirmationMessage;
+        // return confirmationMessage; 
+        
+    });
 })

@@ -1,15 +1,8 @@
-// document.querySelector('#check-if-registered-btn').addEventListener('mouseover', function(){
-//     console.log("here")
-// })
-
 $(document).ready(function(){
 
-    
-
     $('#submit-referral-btn-id').on('click' , function(event){
-        // console.log($('#hospital_code').val())
-        // var selectedValue = $('input[name="sensitive"]:checked').val();
-        // console.log(selectedValue)
+        var selectedValue = $('input[name="sensitive"]:checked').val();
+        console.log(selectedValue)
 
         var sensitive_radios = document.querySelectorAll('input[name="sensitive"]');
         var sensitive_selected = true;
@@ -32,13 +25,13 @@ $(document).ready(function(){
 
         //     $('#myModal').modal('show');
         // } 
-        if(true) {
+        if(sensitive_selected) {
             const data = {
                 type : $('#type-input').val(),
                 code : $('#code-input').val(),
 
                 refer_to : $('#refer-to-select').val(),
-                sensitive_case : $('input[name="sensitive"]:checked').val(),
+                sensitive_case : $('input[name="sensitive_case"]:checked').val(),
                 parent_guardian : $('#parent-guard-input').val(),
                 phic_member : $('#phic-member-select').val(),
                 transport : $('#transport-select').val(),

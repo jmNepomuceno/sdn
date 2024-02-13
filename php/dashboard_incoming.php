@@ -8,15 +8,13 @@
     // Format the DateTime object to get the year, month, and day
     $formattedDate = $dateTime->format('Y-m-d') . '%';
 
-    // $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE '2024-01-29%' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    // $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE '2024-02-08%' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt = $pdo->prepare($sql);
-    // $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
+    $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    echo $data['COUNT(*)'];
-
-
+    // echo $data['COUNT(*)'];
 
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
@@ -29,11 +27,14 @@
     $averageDuration_total  = "00:00:00";
     $fastest_response_final  = "00:00:00";
     $slowest_response_final  = "00:00:00";
+    
+    // echo $data['COUNT(*)'];
 
     if($data['COUNT(*)'] > 0){
         $currentDateTime = date('Y-m-d');
         // echo $currentDateTime;
         $sql = "SELECT reception_time, date_time, final_progressed_timer FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE :current_date";
+        // $sql = "SELECT reception_time, date_time, final_progressed_timer FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE '%2024-02-08%'";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
         $currentDateTime_param = "%$currentDateTime%";
@@ -41,7 +42,6 @@
         $stmt->execute();
         $dataRecep = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
-        echo '<pre>'; print_r($dataRecep); echo '</pre>';
 
         $recep_arr = array();
         for($i = 0; $i < count($dataRecep); $i++){
@@ -110,20 +110,21 @@
         
         // print_r($fastest_recep_secs);
 
-        $averageSeconds_reception = (int) round($averageSeconds_reception / 3);
+        $averageSeconds_reception = (int) round($averageSeconds_reception / $data['COUNT(*)']);
         $averageDuration_reception = secondsToDuration($averageSeconds_reception);  
 
-        $averageSeconds_approval = (int) round($averageSeconds_approval / 3);
+        $averageSeconds_approval = (int) round($averageSeconds_approval / $data['COUNT(*)']);
         $averageDuration_approval = secondsToDuration($averageSeconds_approval);
 
-        $averageSeconds_total = (int) round($averageSeconds_total / 3);
+        $averageSeconds_total = (int) round($averageSeconds_total / $data['COUNT(*)']);
         $averageDuration_total = secondsToDuration($averageSeconds_total);
 
-        // $fastest_response_final = secondsToDuration(min($fastest_recep_secs));
-        // $slowest_response_final = secondsToDuration(max($fastest_recep_secs));
+        $fastest_response_final = secondsToDuration(min($fastest_recep_secs));
+        $slowest_response_final = secondsToDuration(max($fastest_recep_secs));
         // echo $slowest_response_final;
     }
 
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -270,28 +271,25 @@
 
     <div class="flex flex-row justify-start items-center w-full h-full"> 
 
-        
-
-        <div class="w-full h-full border flex flex-col justify-start items-start overflow-hidden">
-            <div class="w-full h-[5%] flex flex-row justify-between items-center border-t-0  rounded-md">
-                <label class="text-5xl font-serif text-[#333333] mt-4 ml-14">Dashboard For Incoming Referrals</label>
-
-                <div class="flex flex-col mt-8 mr-14"> 
+        <div class="w-full h-full flex flex-col justify-start items-start">
+            <div class="w-full h-[15%] flex flex-row justify-between items-center border-t-0 rounded-md">
+                <label class="text-5xl font-serif text-[#333333] ml-14">Dashboard For Incoming Referrals</label>
+                <div class="flex flex-col mr-14"> 
                     <label id="month" class="text-3xl font-semibold">OCTOBER 2023</label>
                     <label id="date" class="font-semibold">as of October 20, 2023 - 10:09AM</label>
                 </div>
             </div>
 
-            <div class="w-[40%] h-[15%] ml-[3%] mt-[1%] flex flex-col justify-start items-start">
+            <div class="w-[40%] h-[15%] ml-[3%] flex flex-col justify-start items-start">
                 <label class="text-xl mt-2 mb-4">Filter</label>
 
                 <div class="flex flex-row">
-                    <label>From <input type="date"class="w-[200px] border border-slate-700 rounded-md"> to <input type="date" class=" w-[200px] border border-slate-700 rounded-md"></label>
-                    <button id="butbut" class="w-[50px] h-[25px] bg-green-600 rounded-md ml-[10px] mt-[1px]">Go</button>
+                    <label>From <input type="date" class="w-[200px] border border-slate-700 rounded-md" id='from-date-inp'> to <input type="date" class=" w-[200px] border border-slate-700 rounded-md" id='to-date-inp'></label>
+                    <button id="filter-date-btn" class="w-[50px] h-[25px] bg-green-600 rounded-md ml-[10px] mt-[1px]">Go</button>
                 </div>
             </div>
 
-            <div class="flex flex-row justify-evenly items-center  w-[93%] h-[15%] ml-[3%] mt-[1%]">
+            <div class="flex flex-row justify-evenly items-center  w-[93%] h-[15%] ml-[3%]">
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
                     <label class="font-semibold text-3xl" id="total-processed-refer">18</label>
@@ -300,148 +298,236 @@
 
                 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="average-reception-lbl font-semibold text-3xl"><?php echo $averageDuration_reception ?></label>
+                    <label id="average-reception-id" class="average-reception-lbl font-semibold text-3xl"><?php echo $averageDuration_reception ?></label>
                     <label>Average Reception Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl"><?php echo $averageDuration_approval ?></label>
+                    <label id="average-approve-id" class="font-semibold text-3xl"><?php echo $averageDuration_approval ?></label>
                     <label>Average Approval Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl"><?php echo $averageDuration_total ?></label>
+                    <label id="average-total-id" class="font-semibold text-3xl"><?php echo $averageDuration_total ?></label>
                     <label>Average Total Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl"><?php echo $fastest_response_final ?></label>
+                    <label id="fastest-id" class="font-semibold text-3xl"><?php echo $fastest_response_final ?></label>
                     <label>Fastest Response Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl"><?php echo $slowest_response_final ?></label>
+                    <label id="slowest-id" class="font-semibold text-3xl"><?php echo $slowest_response_final ?></label>
                     <label>Slowest Response Time</label>
                 </div>
                 
 
             </div>
 
-
-            <div class="flex flex-row justify-between items-center w-[93%] h-[25%]  ml-[3%] mt-[3%] ">
+            <div class="flex flex-row justify-between items-center w-[93%] h-[20%]  ml-[3%] mt-[4%]">
             
-                <div class="w-[20%] h-[110%] ml-[2%]  flex flex-col  justify-center">
-                    <label class="ml-[5.5%] font-semibold text-xl">Case Category</label>
-                    <canvas id="myPieChart" class="w-full  "></canvas>
+                <div class="w-[20%] h-full flex flex-col justify-center items-center">
+                    <label class="font-semibold text-xl ">Case Category</label>
+                    <canvas id="myPieChart"></canvas>
                     
                 </div>
 
-                <div class="w-[20%] h-[98%] ml-[2%] mb-[1.5%]  flex flex-col ">
-                    <label class="ml-[9.5%] font-semibold text-xl">Case Type</label>
-                    <canvas id="myPieChart2" class="w-full  "></canvas>
+                <div class="w-[20%] h-full flex flex-col justify-center items-center">
+                    <label class="font-semibold text-xl">Case Type</label>
+                    <canvas id="myPieChart2"></canvas>
                 </div>
 
 
-                <div class="w-[20%] h-[130%] ml-[2%] mt-[1.7%]  flex flex-col  ">
-                    <label class="-ml-[1%] mt-[0.5%] absolute font-semibold text-xl">Referring Health Facility</label>
-                    <canvas id="myPieChart3" class="w-full"></canvas>
+                <div class="w-[20%] h-full flex flex-col justify-center items-center">
+                    <label class="font-semibold text-xl">Referring Health Facility</label>
+                    <canvas id="myPieChart3"></canvas>
                 </div>
             </div>
 
-            <div class="w-full h-[50%]  absolute mt-[35%]">
-                <table id="tablet" class=" border-2 border-slate-700 w-full border-collapse text-center">
+            <div class="w-full h-auto mt-4">
+            <table id="tablet" class="border-2 border-slate-700 w-full border-collapse text-center">
+                <thead class="w-full">
+                    <tr>
+                        <th class="border-2 border-slate-700" rowspan="3">
+                            <label>Referring Health Facility</label>
+                        </th>
 
-                    <thead class="w-full">
-                        <tr>
-                            <th class="border-2 border-slate-700" rowspan="3">
-                                <label>Referring Health Facility</label>
-                            </th>
+                        <th class="border-2 border-slate-700" colspan="3">
+                            <label>ER</label>
+                        </th>
 
-                            <th class="border-2 border-slate-700" colspan="3">
-                                <label>ER</label>
-                            </th>
+                        <th class="border-2 border-slate-700" colspan="3">
+                            <label>OB</label>
+                        </th>
 
-                            <th class="border-2 border-slate-700" colspan="3">
-                                <label>OB</label>
-                            </th>
+                        <th class="border-2 border-slate-700" colspan="3">
+                            <label>OPD</label>
+                        </th>
 
-                            <th class="border-2 border-slate-700" colspan="3">
-                                <label>OPD</label>
-                            </th>
+                        <th class="border-2 border-slate-700" rowspan="2">
+                            <label>Total</label>
+                        </th>
+                    </tr>   
 
-                            <th class="border-2 border-slate-700" rowspan="2">
-                                <label>Total</label>
-                            </th>
-                        </tr>   
-            
-                        <tr>
-                            <th class="border-2 border-slate-700">
-                                <label>Primary</label>
-                            </th>
-
-
-                            <th class="border-2 border-slate-700">
-                                <label>Secondary</label>
-                            </th>
-
-                            <th class="border-2 border-slate-700">
-                                <label>Tertiary</label>
-                            </th>
-
-                            <th class="border-2 border-slate-700">
-                                <label>Primary</label>
-                            </th>
-
-                            <th class="border-2 border-slate-700">
-                                <label>Secondary</label>
-                            </th>
-
-                            <th class="border-2 border-slate-700">
-                                <label>Tertiary</label>
-                            </th>
-
-                            <th class="border-2 border-slate-700">
-                                <label>Primary</label>
-                            </th>
-
-                            <th class="border-2 border-slate-700">
-                                <label>Secondary</label>
-                            </th>
-
-                            <th class="border-2 border-slate-700">
-                                <label>Tertiary</label>
-                            </th>
-                        </tr> 
-                    </thead> 
-                
-                    <tbody class="w-full">
-                            <!-- <tr class="tr-div text-center">
-                                <td class="border-2 border-slate-700 col-span-3">CENTRO MEDICO DE SANTISIMO ROSARIO</td>
-
-                                <td class="add border-2 border-slate-700">10</td>
-                                <td class="add border-2 border-slate-700">2</td>
-                                <td class="add border-2 border-slate-700">2</td>
-
-                                <td class="add border-2 border-slate-700">2</td>
-                                <td class="add border-2 border-slate-700">3</td>
-                                <td class="add border-2 border-slate-700">2</td>
-
-                                <td class="add border-2 border-slate-700">45</td>
-                                <td class="add border-2 border-slate-700">6</td>
-                                <td class="add border-2 border-slate-700">2</td>
-                                <td class="sumCell border-2 border-slate-700"></td>
-                            </tr>              -->
+                    <tr>
+                        <th class="border-2 border-slate-700">
+                            <label>Primary</label>
+                        </th>
 
 
-                        <?php 
-                            $sql = "SELECT DISTINCT referred_by FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived' OR status='Approved') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute();
-                            $refer = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            // echo '<pre>'; print_r($refer); echo '</pre>';
+                        <th class="border-2 border-slate-700">
+                            <label>Secondary</label>
+                        </th>
 
-                            
+                        <th class="border-2 border-slate-700">
+                            <label>Tertiary</label>
+                        </th>
 
+                        <th class="border-2 border-slate-700">
+                            <label>Primary</label>
+                        </th>
+
+                        <th class="border-2 border-slate-700">
+                            <label>Secondary</label>
+                        </th>
+
+                        <th class="border-2 border-slate-700">
+                            <label>Tertiary</label>
+                        </th>
+
+                        <th class="border-2 border-slate-700">
+                            <label>Primary</label>
+                        </th>
+
+                        <th class="border-2 border-slate-700">
+                            <label>Secondary</label>
+                        </th>
+
+                        <th class="border-2 border-slate-700">
+                            <label>Tertiary</label>
+                        </th>
+                    </tr> 
+                </thead> 
+
+                <tbody id="tbody-class" class="w-full">
+                        <!-- <tr class="tr-div text-center">
+                            <td class="border-2 border-slate-700 col-span-3">CENTRO MEDICO DE SANTISIMO ROSARIO</td>
+
+                            <td class="add border-2 border-slate-700">10</td>
+                            <td class="add border-2 border-slate-700">2</td>
+                            <td class="add border-2 border-slate-700">2</td>
+
+                            <td class="add border-2 border-slate-700">2</td>
+                            <td class="add border-2 border-slate-700">3</td>
+                            <td class="add border-2 border-slate-700">2</td>
+
+                            <td class="add border-2 border-slate-700">45</td>
+                            <td class="add border-2 border-slate-700">6</td>
+                            <td class="add border-2 border-slate-700">2</td>
+                            <td class="sumCell border-2 border-slate-700"></td>
+                        </tr>              -->
+
+
+                    <?php 
+                        $ER_primary  = 0;
+                        $ER_secondary  = 0;
+                        $ER_tertiary  = 0;
+
+                        $OB_primary  = 0;
+                        $OB_secondary  = 0;
+                        $OB_tertiary  = 0;
+                        
+                        $OPD_primary  = 0;
+                        $OPD_secondary  = 0;
+                        $OPD_tertiary  = 0; 
+
+
+                        $dateTime = new DateTime();
+                        // Format the DateTime object to get the year, month, and day
+                        $formattedDate = $dateTime->format('Y-m-d') . '%';
+                        // echo $formattedDate;
+
+                        $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+                        // $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
+                        $stmt->execute();
+                        $tr_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        // echo '<pre>'; print_r($tr_data); echo '</pre>';
+
+                        for($i = 0; $i < count($tr_data); $i++){
+                            echo '<input type="hidden" class="referred-by-class" value="' . $tr_data[$i]["referred_by"] . '">';
+                        }
+
+                        $in_table = [];
+                        
+                        foreach ($tr_data as $row){
+                            if (!in_array($row['referred_by'], $in_table)) {
+                                $in_table[] = $row['referred_by'];
+                            }   
+                        }
+
+                        for($i = 0; $i < count($in_table); $i++){
+                            foreach ($tr_data as $row){
+                                if($in_table[$i] === $row['referred_by']){
+                                    $referred_by = $row['referred_by'];
+
+                                    if($row['type'] === 'ER'){
+                                        if($row['pat_class'] === 'Tertiary'){
+                                            $ER_tertiary += 1;
+                                        }else if($row['pat_class'] === 'Secondary'){
+                                            $ER_secondary += 1;
+                                        }else if($row['pat_class'] === 'Primary'){
+                                            $ER_primary += 1;
+                                        }
+                                    }
+
+                                    else if($row['type'] === 'OB'){
+                                        if($row['pat_class'] === 'Tertiary'){
+                                            $OB_tertiary += 1;
+                                        }else if($row['pat_class'] === 'Secondary'){
+                                            $OB_secondary += 1;
+                                        }else if($row['pat_class'] === 'Primary'){
+                                            $OB_primary += 1;
+                                        }
+                                    }
+
+                                    else if($row['type'] === 'OPD'){
+                                        if($row['pat_class'] === 'Tertiary'){
+                                            $OPD_tertiary += 1;
+                                        }else if($row['pat_class'] === 'Secondary'){
+                                            $OPD_secondary += 1;
+                                        }else if($row['pat_class'] === 'Primary'){
+                                            $OPD_primary += 1;
+                                        }
+                                    }  
+                                }        
+                            }
+
+                            echo '
+                            <tr class="tr-div text-center"> 
+                                <td class="border-2 border-slate-700 col-span-3">'.$referred_by.'</td>
+                                <!-- ER -->
+                                <td class="add border-2 border-slate-700">'. $ER_primary .'</td>
+                                <td class="add border-2 border-slate-700">'. $ER_secondary .'</td>
+                                <td class="add border-2 border-slate-700">'. $ER_tertiary .'</td>
+
+                                <!-- OB -->
+                                <td class="add border-2 border-slate-700">'. $OB_primary .'</td>
+                                <td class="add border-2 border-slate-700">'. $OB_secondary .'</td>
+                                <td class="add border-2 border-slate-700">'. $OB_tertiary .'</td>
+
+                                <!-- OPD -->
+                                <td class="add border-2 border-slate-700">'. $OPD_primary .'</td>
+                                <td class="add border-2 border-slate-700">'. $OPD_secondary .'</td>
+                                <td class="add border-2 border-slate-700">'. $OPD_tertiary .'</td>
+
+                                <td class="sumCell border-2 border-slate-700">'. $row['referred_by'] .'</td>
+                            </tr>
+
+                        ';
+                        
                             $ER_primary  = 0;
                             $ER_secondary  = 0;
                             $ER_tertiary  = 0;
@@ -453,114 +539,14 @@
                             $OPD_primary  = 0;
                             $OPD_secondary  = 0;
                             $OPD_tertiary  = 0;
-
-
-                            $dateTime = new DateTime();
-                            // Format the DateTime object to get the year, month, and day
-                            $formattedDate = $dateTime->format('Y-m-d') . '%';
-                            // echo $formattedDate;
-                            $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
-                            // $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
-                            $stmt->execute();
-                            $tr_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            // echo '<pre>'; print_r($tr_data); echo '</pre>';
-
-                            for($i = 0; $i < count($tr_data); $i++){
-                                echo '<input type="hidden" class="referred-by-class" value="' . $tr_data[$i]["referred_by"] . '">';
-                            }
-
-                            $in_table = [];
-                            
-                            foreach ($tr_data as $row){
-                                if (!in_array($row['referred_by'], $in_table)) {
-                                    $in_table[] = $row['referred_by'];
-                                }   
-                            }
-
-                            for($i = 0; $i < count($in_table); $i++){
-                                foreach ($tr_data as $row){
-                                    if($in_table[$i] === $row['referred_by']){
-                                        $referred_by = $row['referred_by'];
-            
-                                        if($row['type'] === 'ER'){
-                                            if($row['pat_class'] === 'Tertiary'){
-                                                $ER_tertiary += 1;
-                                            }else if($row['pat_class'] === 'Secondary'){
-                                                $ER_secondary += 1;
-                                            }else if($row['pat_class'] === 'Primary'){
-                                                $ER_primary += 1;
-                                            }
-                                        }
-            
-                                        else if($row['type'] === 'OB'){
-                                            if($row['pat_class'] === 'Tertiary'){
-                                                $OB_tertiary += 1;
-                                            }else if($row['pat_class'] === 'Secondary'){
-                                                $OB_secondary += 1;
-                                            }else if($row['pat_class'] === 'Primary'){
-                                                $OB_primary += 1;
-                                            }
-                                        }
-            
-                                        else if($row['type'] === 'OPD'){
-                                            if($row['pat_class'] === 'Tertiary'){
-                                                $OPD_tertiary += 1;
-                                            }else if($row['pat_class'] === 'Secondary'){
-                                                $OPD_secondary += 1;
-                                            }else if($row['pat_class'] === 'Primary'){
-                                                $OPD_primary += 1;
-                                            }
-                                        }  
-                                    }        
-                                }
-
-                                echo '
-                                <tr class="tr-div text-center"> 
-                                    <td class="border-2 border-slate-700 col-span-3">'.$referred_by.'</td>
-                                    <!-- ER -->
-                                    <td class="add border-2 border-slate-700">'. $ER_primary .'</td>
-                                    <td class="add border-2 border-slate-700">'. $ER_secondary .'</td>
-                                    <td class="add border-2 border-slate-700">'. $ER_tertiary .'</td>
-
-                                    <!-- OB -->
-                                    <td class="add border-2 border-slate-700">'. $OB_primary .'</td>
-                                    <td class="add border-2 border-slate-700">'. $OB_secondary .'</td>
-                                    <td class="add border-2 border-slate-700">'. $OB_tertiary .'</td>
-
-                                    <!-- OPD -->
-                                    <td class="add border-2 border-slate-700">'. $OPD_primary .'</td>
-                                    <td class="add border-2 border-slate-700">'. $OPD_secondary .'</td>
-                                    <td class="add border-2 border-slate-700">'. $OPD_tertiary .'</td>
-
-                                    <td class="sumCell border-2 border-slate-700">'. $row['referred_by'] .'</td>
-                                </tr>
-
-                            ';
-                            
-                                $ER_primary  = 0;
-                                $ER_secondary  = 0;
-                                $ER_tertiary  = 0;
-
-                                $OB_primary  = 0;
-                                $OB_secondary  = 0;
-                                $OB_tertiary  = 0;
-                                
-                                $OPD_primary  = 0;
-                                $OPD_secondary  = 0;
-                                $OPD_tertiary  = 0;
-                            }   
-                        ?>
-                    </tbody>
-            </table>
-
-
-            
+                        }   
+                    ?>
+                </tbody>
+                </table>
+            </div>
+   
         </div>
         <!-- ADMIN MODULE -->
-
-    </div>
     </div>
 
         <!-- Modal -->
