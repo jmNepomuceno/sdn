@@ -160,12 +160,20 @@
                     <h1 class="text-center w-full rounded-full p-1 bg-yellow-500 font-bold">6</h1>
                 </div> -->
                 
-                    <div id="notif-div" class="w-[20px] h-full flex flex-col justify-center items-center cursor-pointer">
-                        <h1 id="notif-circle" class="absolute top-2 text-center w-[17px] h-[17px] rounded-full bg-red-600 ml-5 text-white text-xs "><span id="notif-span"></span></h1>
+                    <div id="notif-div" class="w-[20px] h-full flex flex-col justify-center items-center cursor-pointer relative">
+                        <h1 id="notif-circle" class="absolute top-2 text-center w-[17px] h-[17px] rounded-full bg-red-600 ml-5 text-white text-xs "><span id="notif-span" class="z-30"></span></h1>
                         <i class="fa-solid fa-bell text-white text-xl"></i>
                         <audio id="notif-sound" preload='auto' muted loop>
                             <source src="../assets/sound/water_droplet.mp3" type="audio/mpeg">
                         </audio>
+
+                        <div id="notif-sub-div" class="hidden absolute top-[85%] w-[200px] h-[90px] bg-[#1f292e] border-4 border-[#7694a2] rounded-sm overflow-y-scroll scrollbar-hidden flex flex-col justify-start items-center">
+                            <!-- <div class="h-[30px] w-full border border-black flex flex-row justify-evenly items-center">
+                                <h4 class="font-bold text-lg">3</h4>
+                                <h4 class="font-bold text-lg">OB</h4>
+                            </div> -->
+                            <!-- b3b3b3 -->
+                        </div>
                     </div>
 
                     <div class="w-[20px] h-full flex flex-col justify-center items-center">
@@ -295,8 +303,6 @@
                     <label class="font-semibold text-3xl" id="total-processed-refer">18</label>
                     <label>Total Processed Referrals</label>
                 </div>
-
-                
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
                     <label id="average-reception-id" class="average-reception-lbl font-semibold text-3xl"><?php echo $averageDuration_reception ?></label>
                     <label>Average Reception Time</label>

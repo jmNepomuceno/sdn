@@ -8,11 +8,24 @@
     // from_date
     $from_date = new DateTime($_POST['from_date']);
     $to_date = new DateTime($_POST['to_date']);
-    $formattedDate = $from_date->format('Y-m-d') . '%';
 
-    $sql = "SELECT  reception_time, date_time, final_progressed_timer FROM incoming_referrals WHERE (status!='Pending' OR status!='On-Process' OR status!='Deferred' OR status!='Deferred' OR status!='Cancelled' OR status!='Discharged' OR status!='Referred Back') AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    // $from_date = new DateTime('2024-01-25');
+    // $to_date = new DateTime('2024-01-31');
+
+    $formattedFromDate = $from_date->format('Y-m-d') . '%';
+    $formattedToDate = $to_date->format('Y-m-d') . '%';
+
+    $sql = "";
+    if($_POST['where'] === 'incoming'){
+        $sql = "SELECT  reception_time, date_time, final_progressed_timer, hpercode FROM incoming_referrals WHERE (status!='Pending' OR status!='On-Process' OR status!='Deferred' OR status!='Deferred' OR status!='Cancelled' OR status!='Discharged' OR status!='Referred Back') AND approved_time BETWEEN :start_date AND :end_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";   
+    }else{
+        $sql = "SELECT  reception_time, date_time, final_progressed_timer, hpercode FROM incoming_referrals WHERE (status!='Pending' OR status!='On-Process' OR status!='Deferred' OR status!='Deferred' OR status!='Cancelled' OR status!='Discharged' OR status!='Referred Back') AND approved_time BETWEEN :start_date AND :end_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
+    }
+
+    // $sql = "SELECT  reception_time, date_time, final_progressed_timer, hpercode FROM incoming_referrals WHERE (status!='Pending' OR status!='On-Process' OR status!='Deferred' OR status!='Deferred' OR status!='Cancelled' OR status!='Discharged' OR status!='Referred Back') AND approved_time BETWEEN :start_date AND :end_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
+    $stmt->bindParam(':start_date', $formattedFromDate, PDO::PARAM_STR);
+    $stmt->bindParam(':end_date', $formattedToDate, PDO::PARAM_STR);
     $stmt->execute();
     $dataDate = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // echo '<pre>'; print_r($dataDate); echo '</pre>';
@@ -20,9 +33,9 @@
     // $finalJsonString = json_encode($dataDate);
     // echo $finalJsonString;
 
-    /////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
 
-    $recep_arr = array();
+    $recep_arr = array(); 
     for($i = 0; $i < count($dataDate); $i++){
         // Given dates
         $date1 = new DateTime($dataDate[$i]['reception_time']);
@@ -109,8 +122,11 @@
         'averageSeconds_total' => $averageSeconds_total,
         'averageDuration_total' => $averageDuration_total,
         'fastest_response_final' => $fastest_response_final,
-        'slowest_response_final' => $slowest_response_final
+        'slowest_response_final' => $slowest_response_final,
+        'hpercode' => $dataDate[0]['hpercode']
     );
+
+    // print_r($associativeArray);
 
     $finalJsonString = json_encode($associativeArray);
     echo $finalJsonString;

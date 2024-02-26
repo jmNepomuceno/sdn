@@ -8,8 +8,6 @@
         $user_name = $_SESSION['hospital_name'];
     }
 
-    $refer_to = 'Limay Medical Center';
-    
     // echo $user_name;
     // $sql = "SELECT username FROM sdn_users WHERE user_isActive=1 AND hospital_code=9312";
     // $stmt = $pdo->prepare($sql);

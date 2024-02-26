@@ -14,19 +14,34 @@
      $OPD_secondary  = 0;
      $OPD_tertiary  = 0;
 
+    // $from_date = new DateTime('2024-02-01');
+    // $to_date = new DateTime('2024-02-18');
 
-     $dateTime = new DateTime($_POST['from_date']);
-     // Format the DateTime object to get the year, month, and day
-     $formattedDate = $dateTime->format('Y-m-d') . '%';
-     // echo $formattedDate;
+    $from_date = new DateTime($_POST['from_date']);
+    $to_date = new DateTime($_POST['to_date']);
 
-     $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $formattedFromDate = $from_date->format('Y-m-d') . '%';
+    $formattedToDate = $to_date->format('Y-m-d') . '%';
+
+    $sql = "";
+    if($_POST['where'] === 'incoming'){
+        $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE status='Approved' AND approved_time BETWEEN :start_date AND :end_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+
+    }else{
+        $sql = "SELECT pat_class, type, refer_to FROM incoming_referrals WHERE status='Approved' AND approved_time BETWEEN :start_date AND :end_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
+
+    }
+
+    $sql = "SELECT pat_class, type, referred_by, hpercode FROM incoming_referrals WHERE status='Approved' AND approved_time BETWEEN :start_date AND :end_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
      $stmt = $pdo->prepare($sql);
-     $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
+     $stmt->bindParam(':start_date', $formattedFromDate, PDO::PARAM_STR);
+     $stmt->bindParam(':end_date', $formattedToDate, PDO::PARAM_STR);
      $stmt->execute();
      $tr_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-     // echo '<pre>'; print_r($tr_data); echo '</pre>';
+    //  echo '<pre>'; print_r($tr_data); echo '</pre>';
 
+     $refer_destination = "";     
+     
      for($i = 0; $i < count($tr_data); $i++){
          echo '<input type="hidden" class="referred-by-class" value="' . $tr_data[$i]["referred_by"] . '">';
      }

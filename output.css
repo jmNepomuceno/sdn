@@ -1116,6 +1116,10 @@ video {
   margin-top: 35px;
 }
 
+.mt-\[4\%\] {
+  margin-top: 4%;
+}
+
 .mt-\[40\%\] {
   margin-top: 40%;
 }
@@ -1130,10 +1134,6 @@ video {
 
 .mt-\[70\%\] {
   margin-top: 70%;
-}
-
-.mt-\[4\%\] {
-  margin-top: 4%;
 }
 
 .box-border {
@@ -4136,10 +4136,6 @@ video {
 body{
   height: screen;
   overflow: hidden;
-}
-
-.custom-box-shadow {
-  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
 }
 
 @media (min-width: 640px) {

@@ -15,11 +15,115 @@
     $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    // echo '<pre>'; print_r($data); echo '</pre>';
 
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
     }else{
         $user_name = $_SESSION['hospital_name'];
+    }
+
+    $averageDuration_reception = "00:00:00";
+    $averageDuration_approval  = "00:00:00";
+    $averageDuration_total  = "00:00:00";
+    $fastest_response_final  = "00:00:00";
+    $slowest_response_final  = "00:00:00";
+    
+    // echo $data['COUNT(*)'];
+
+    if($data['COUNT(*)'] > 0){
+        $currentDateTime = date('Y-m-d');
+        // echo $currentDateTime;
+        $sql = "SELECT reception_time, date_time, final_progressed_timer FROM incoming_referrals WHERE referred_by = :hospital_name AND reception_time LIKE :current_date";
+        // $sql = "SELECT reception_time, date_time, final_progressed_timer FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE '%2024-02-08%'";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
+        $currentDateTime_param = "%$currentDateTime%";
+        $stmt->bindParam(':current_date', $currentDateTime_param, PDO::PARAM_STR); 
+        $stmt->execute();
+        $dataRecep = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+
+        $recep_arr = array();
+        for($i = 0; $i < count($dataRecep); $i++){
+            // Given dates
+            $date1 = new DateTime($dataRecep[$i]['reception_time']);
+            $date2 = new DateTime($dataRecep[$i]['date_time']);
+
+            // Calculate the difference
+            $interval = $date1->diff($date2);
+
+            // Format the difference as hh:mm:ss
+            $formattedDifference = sprintf(
+                '%02d:%02d:%02d',
+                $interval->h,
+                $interval->i,
+                $interval->s
+            );
+
+            array_push($recep_arr, $formattedDifference);
+        }
+
+        // print_r($recep_arr);
+
+        $fastest_recep_secs = array();
+        // Function to convert duration to seconds
+        function durationToSeconds($duration) {
+            list($hours, $minutes, $seconds) = explode(':', $duration);
+            return $hours * 3600 + $minutes * 60 + $seconds;
+        }
+
+        // Function to convert seconds to duration
+        function secondsToDuration($seconds) {
+            $hours = floor($seconds / 3600);
+            $minutes = floor(($seconds % 3600) / 60);
+            $seconds = $seconds % 60;
+
+            return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+        }
+
+        // for average reception time
+        $averageSeconds_reception = 0;
+        for($i = 0; $i < count($recep_arr); $i++){
+            $averageSeconds_reception += durationToSeconds($recep_arr[$i]);
+        }
+
+        // for approval time
+        $averageSeconds_approval = 0;
+        for($i = 0; $i < count($dataRecep); $i++){
+            $averageSeconds_approval += durationToSeconds($dataRecep[$i]['final_progressed_timer']);
+        }
+
+        // for total time
+        $averageSeconds_total = 0;
+        for($i = 0; $i < count($dataRecep); $i++){
+            $averageSeconds_total += (durationToSeconds($dataRecep[$i]['final_progressed_timer']) + durationToSeconds($recep_arr[$i]));
+        }
+
+        // echo $averageSeconds_total;
+
+
+        for($i = 0; $i < count($recep_arr); $i++){
+            durationToSeconds($recep_arr[$i]);
+            array_push($fastest_recep_secs, (durationToSeconds($recep_arr[$i]) + durationToSeconds($dataRecep[$i]['final_progressed_timer'])));
+        }
+
+        
+        // print_r($fastest_recep_secs);
+
+        $averageSeconds_reception = (int) round($averageSeconds_reception / $data['COUNT(*)']);
+        $averageDuration_reception = secondsToDuration($averageSeconds_reception);  
+
+        $averageSeconds_approval = (int) round($averageSeconds_approval / $data['COUNT(*)']);
+        $averageDuration_approval = secondsToDuration($averageSeconds_approval);
+
+        $averageSeconds_total = (int) round($averageSeconds_total / $data['COUNT(*)']);
+        $averageDuration_total = secondsToDuration($averageSeconds_total);
+
+        $fastest_response_final = secondsToDuration(min($fastest_recep_secs));
+        $slowest_response_final = secondsToDuration(max($fastest_recep_secs));
+        // echo $slowest_response_final;
+
     }
 ?>
 <!DOCTYPE html>
@@ -56,12 +160,20 @@
                     <h1 class="text-center w-full rounded-full p-1 bg-yellow-500 font-bold">6</h1>
                 </div> -->
                 
-                    <div id="notif-div" class="w-[20px] h-full flex flex-col justify-center items-center cursor-pointer">
+                    <div id="notif-div" class="w-[20px] h-full flex flex-col justify-center items-center cursor-pointer relative">
                         <h1 id="notif-circle" class="absolute top-2 text-center w-[17px] h-[17px] rounded-full bg-red-600 ml-5 text-white text-xs "><span id="notif-span"></span></h1>
                         <i class="fa-solid fa-bell text-white text-xl"></i>
                         <audio id="notif-sound" preload='auto' muted loop>
                             <source src="../assets/sound/water_droplet.mp3" type="audio/mpeg">
                         </audio>
+
+                        <div id="notif-sub-div" class="hidden absolute top-[85%] w-[200px] h-[90px] bg-[#1f292e] border-4 border-[#7694a2] rounded-sm overflow-y-scroll scrollbar-hidden flex flex-col justify-start items-center">
+                            <!-- <div class="h-[30px] w-full border border-black flex flex-row justify-evenly items-center">
+                                <h4 class="font-bold text-lg">3</h4>
+                                <h4 class="font-bold text-lg">OB</h4>
+                            </div> -->
+                            <!-- b3b3b3 -->
+                        </div>
                     </div>
 
                     <div class="w-[20px] h-full flex flex-col justify-center items-center">
@@ -183,68 +295,66 @@
                 <label class="text-xl mt-2 mb-4">Filter</label>
 
                 <div class="flex flex-row">
-                    <label>From <input type="date"class="w-[200px] border border-slate-700 rounded-md"> to <input type="date" class=" w-[200px] border border-slate-700 rounded-md"></label>
-                    <button id="butbut" class="w-[50px] h-[25px] bg-green-600 rounded-md ml-[10px] mt-[1px]">Go</button>
+                    <label>From <input type="date"class="w-[200px] border border-slate-700 rounded-md" id='from-date-inp'> to <input type="date" class=" w-[200px] border border-slate-700 rounded-md" id='to-date-inp'></label>
+                    <button id="filter-date-btn" class="w-[50px] h-[25px] bg-green-600 rounded-md ml-[10px] mt-[1px]">Go</button>
                 </div>
 
                 
             </div>
 
 
-            <div class="flex flex-row justify-evenly items-center  w-[93%] h-[15%] ml-[3%] mt-[1%]">
+            <div class="flex flex-row justify-evenly items-center  w-[93%] h-[15%] ml-[3%]">
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
                     <label class="font-semibold text-3xl" id="total-processed-refer">18</label>
                     <label>Total Processed Referrals</label>
                 </div>
-
-                
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label id="average-reception-id" class="average-reception-lbl font-semibold text-3xl"><?php echo $averageDuration_reception ?></label>
                     <label>Average Reception Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label id="average-approve-id" class="font-semibold text-3xl"><?php echo $averageDuration_approval ?></label>
                     <label>Average Approval Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label id="average-total-id" class="font-semibold text-3xl"><?php echo $averageDuration_total ?></label>
                     <label>Average Total Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label id="fastest-id" class="font-semibold text-3xl"><?php echo $fastest_response_final ?></label>
                     <label>Fastest Response Time</label>
                 </div>
 
                 <div class=" w-[12%] h-full flex flex-col justify-center items-center ml-[2%] bg-[#1f292e] text-white rounded-lg">
-                    <label class="font-semibold text-3xl">00:00:00</label>
+                    <label id="slowest-id" class="font-semibold text-3xl"><?php echo $slowest_response_final ?></label>
                     <label>Slowest Response Time</label>
                 </div>
-                
+
 
             </div>
 
 
-            <div class="flex flex-row justify-between items-center w-[93%] h-[25%]  ml-[3%] mt-[3%] ">
+            <div class="flex flex-row justify-between items-center w-[93%] h-[20%]  ml-[3%] mt-[4%]">
             
-                <div class="w-[20%] h-[110%] ml-[2%]  flex flex-col  justify-center">
-                    <label class="ml-[5.5%] font-semibold text-xl">Case Category</label>
-                    <canvas id="myPieChart" class="w-full  "></canvas>
+                <div class="w-[20%] h-full flex flex-col justify-center items-center">
+                    <label class="font-semibold text-xl ">Case Category</label>
+                    <canvas id="myPieChart"></canvas>
                     
                 </div>
 
-                <div class="w-[20%] h-[98%] ml-[2%] mb-[1.5%]  flex flex-col ">
-                    <label class="ml-[9.5%] font-semibold text-xl">Case Type</label>
-                    <canvas id="myPieChart2" class="w-full  "></canvas>
+                <div class="w-[20%] h-full flex flex-col justify-center items-center">
+                    <label class="font-semibold text-xl">Case Type</label>
+                    <canvas id="myPieChart2"></canvas>
                 </div>
 
 
-                <div class="w-[20%] h-[130%] ml-[2%] mt-[1.7%]  flex flex-col  ">
-                    <label class="-ml-[1%] mt-[0.5%] absolute font-semibold text-xl">Referral Health Facility</label>
-                    <canvas id="myPieChart3" class="w-full"></canvas>
+                <div class="w-[20%] h-full flex flex-col justify-center items-center">
+                    <label class="font-semibold text-xl">Referring Health Facility</label>
+                    <canvas id="myPieChart3"></canvas>
                 </div>
             </div>
 
@@ -314,7 +424,7 @@
                         </tr> 
                     </thead> 
                 
-                    <tbody class="w-full">
+                    <tbody  id="tbody-class" class="w-full">
                             <!-- <tr class="tr-div text-center">
                                 <td class="border-2 border-slate-700 col-span-3">CENTRO MEDICO DE SANTISIMO ROSARIO</td>
 

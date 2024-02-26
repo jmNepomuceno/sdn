@@ -36,11 +36,11 @@ $(document).ready(function(){
 
     let intervalIDs = {};
     let length_curr_table = document.querySelectorAll('.hpercode').length;
-    let add_minutes = 0;
     let toggle_accordion_obj = {}
     for(let i = 0; i < length_curr_table; i++){
         toggle_accordion_obj[i] = true
     }
+
     // ---------------------------------------------------------------------------------------------------------
     let inactivityTimer;
     let userIsActive = true;
@@ -66,6 +66,7 @@ $(document).ready(function(){
 
                 populateTbody(response)
 
+                // console.log(response)
                 const pencil_elements = document.querySelectorAll('.pencil-btn');
                     pencil_elements.forEach(function(element, index) {
                     element.addEventListener('click', function() {
@@ -81,7 +82,7 @@ $(document).ready(function(){
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 42000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 20000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -104,10 +105,10 @@ $(document).ready(function(){
     //start - open modal 
     const ajax_method = (index, event) => {
         global_single_hpercode = document.querySelectorAll('.hpercode')[index].value
-
         const data = {
             hpercode: document.querySelectorAll('.hpercode')[index].value
         }
+        console.log(data)
         $.ajax({
             url: './php/process_pending.php',
             method: "POST",
@@ -212,28 +213,6 @@ $(document).ready(function(){
     const pendingFunction = (response) =>{
         console.log(response)
         $('#pat-status-form').text(response[0].status)
-
-        // if(response[0].status === 'Pending'){
-        //     $('#pat-status-form').addClass('text-gray-500')
-        //     $('#pat-status-form').removeClass('text-cyan-500')
-        //     $('#pat-status-form').removeClass('text-green-500')
-
-
-        //     $('#status-bg-div').addClass('bg-gray-600')
-        //     $('#status-bg-div').removeClass('bg-cyan-500')
-        //     $('#status-bg-div').removeClass('bg-green-500')
-
-
-        //     $('#approval-form').addClass('hidden')
-        //     $('#arrival-form').addClass('hidden')
-        //     $('#approval-details').addClass('hidden')
-        //     $('#cancel-form').addClass('hidden')
-        //     $('#checked-form').addClass('hidden')
-        //     $('#discharged-form').addClass('hidden')
-
-        //     $('#pending-start-div').removeClass('hidden')
-
-        // }
 
         if(response[0].status === 'On-Process'){
             $('#pat-status-form').removeClass('text-gray-500')
@@ -479,7 +458,7 @@ $(document).ready(function(){
                 type_color = 'bg-green-500';
             }else if(response[i]['type'] == 'ER'){
                 type_color = 'bg-sky-700';
-            }else if(response[i]['type'] == 'PCR'){
+            }else if(response[i]['type'] == 'PCR' || response[i]['type'] == 'Toxicology'){
                 type_color = 'bg-red-600';
             }
 
@@ -555,7 +534,7 @@ $(document).ready(function(){
                 }
             }
 
-            console.log(`Difference: ${hours_bd}:${minutes_bd}:${seconds_bd}`);
+            // console.log(`Difference: ${hours_bd}:${minutes_bd}:${seconds_bd}`);
 
             const td_time_div_label_1_1 = document.createElement('label')
             td_time_div_label_1_1.textContent = (response[i]['reception_time'] !== "") ? `Queue Time: ${hours_bd}:${minutes_bd}:${seconds_bd}` : 'Queue Time: 00:00:00'
@@ -713,6 +692,8 @@ $(document).ready(function(){
             td_status.appendChild(td_status_div)
             // end
 
+            // console.log(data_arr)
+            
             td_time.appendChild(fa_plus)
             td_time.appendChild(td_time_div_label_1)
             td_time.appendChild(td_time_div_label_1_1)
@@ -763,14 +744,13 @@ $(document).ready(function(){
             // }
         }
 
-        console.log(document.querySelectorAll('.accordion-btn').length)
+        // console.log(document.querySelectorAll('.accordion-btn').length)
     }
 
     // MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
     $('#pending-start-btn').on('click' , function(event){
         $('#approval-form').removeClass('hidden')
         $('#pat-status-form').text('On-Process')
-
         $.ajax({
             url: './php/fetch_onProcess.php',
             method: "POST",
@@ -1348,6 +1328,12 @@ $(document).ready(function(){
         }
     })
 
+    $(document).on('keypress', function(event) {
+        if (event.which === 13 || event.keyCode === 13) {
+            $('#incoming-search-btn').trigger('click');
+        }
+    });
+
     // SEARCHING FUNCTIONALITIES
     $('#incoming-search-btn').on('click' , function(event){        
         $('#incoming-clear-search-btn').removeClass('opacity-30 pointer-events-none')
@@ -1456,7 +1442,7 @@ $(document).ready(function(){
 
     $(window).on('load' , function(event){
         event.preventDefault();
-        // clearInterval(inactivityTimer);
+        clearInterval(inactivityTimer);
     })
 
     $('#sdn-title-h1').on('click' , function(event){
@@ -1481,10 +1467,17 @@ $(document).ready(function(){
             document.querySelectorAll('.tr-incoming')[global_breakdown_index].style.height = "300px"
             document.querySelectorAll('.breakdown-div')[global_breakdown_index].style.display = 'block'
             toggle_accordion_obj[global_breakdown_index] = false
+
+            // fa-solid fa-plus
+            $('.accordion-btn').eq(global_breakdown_index).removeClass('fa-plus')
+            $('.accordion-btn').eq(global_breakdown_index).addClass('fa-minus')
         }else{
             document.querySelectorAll('.tr-incoming')[global_breakdown_index].style.height = "61px"
             document.querySelectorAll('.breakdown-div')[global_breakdown_index].style.display = 'none'
             toggle_accordion_obj[global_breakdown_index] = true
+
+            $('.accordion-btn').eq(global_breakdown_index).addClass('fa-plus')
+            $('.accordion-btn').eq(global_breakdown_index).removeClass('fa-minus')
         }
     })
 })

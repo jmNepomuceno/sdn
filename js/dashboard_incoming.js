@@ -532,6 +532,7 @@ date.textContent = "As of " + formattedDate_word;
 //  ME ME ME ME ME ME ME
 $(document).ready(function(){
   $('#total-processed-refer').text($('#total-processed-refer-inp').val())
+  
   const playAudio = () =>{
     let audio = document.getElementById("notif-sound")
     audio.muted = false;
@@ -539,6 +540,29 @@ $(document).ready(function(){
         'Error playing audio: ' , error
     })
   }
+
+  $('#notif-div').on('click' , function(event){
+    if ($('#notif-sub-div').hasClass('hidden')) {
+      $('#notif-sub-div').removeClass('hidden');
+  } else {
+      $('#notif-sub-div').addClass('hidden');
+  }
+})
+
+$('#notif-sub-div').on('click' , function(event){
+    if($('#notif-span').val() === 0){
+        $('#notif-circle').addClass('hidden')
+        document.getElementById("notif-sound").pause();
+        document.getElementById("notif-sound").currentTime = 0;
+    }else{
+        window.location.href = "http://192.168.42.222:8035/main.php?loadContent=php/incoming_form.php"
+
+        // window.location.pathname = "/newpage.html";
+        current_page = "incoming_page"
+        $('#current-page-input').val(current_page)
+        $('#notif-sub-div').addClass('hidden')
+    }
+})
 
   $('#history-log-btn').on('click' , function(event){
     event.preventDefault();
@@ -559,24 +583,63 @@ $(document).ready(function(){
   
   function fetchMySQLData() {
     $.ajax({
-        url: '../php/fetch_interval.php',
-        method: "POST",
-        data : {
-            from_where : 'bell'
-        },
-        success: function(data) {
-            $('#notif-span').text(data);
-            if (parseInt(data) >= 1) {
-                $('#notif-circle').removeClass('hidden');
-                
-                playAudio();
-            } else {
-                $('#notif-circle').addClass('hidden');
-            }
-            
-            setTimeout(fetchMySQLData, 5000);
-        }
-    });
+      url: '../php/fetch_interval.php',
+      method: "POST",
+      data : {
+          from_where : 'bell'
+      },
+      success: function(response) {
+          response = JSON.parse(response);  
+          // console.log(response);
+          // console.log('pot')
+
+          $('#notif-span').text(response.length);
+          $('#notif-circle').removeClass('hidden');
+              
+              // populate notif-sub-div
+              // document.querySelector('.notif-sub-div').innerHTML = 
+
+              let type_counter = []
+              for(let i = 0; i < response.length; i++){
+
+                  if(!type_counter.includes(response[i]['type'])){
+                      type_counter.push(response[i]['type'])
+                  }
+              }
+
+              // console.log(type_counter)
+              
+              document.getElementById('notif-sub-div').innerHTML = '';
+              for(let i = 0; i < type_counter.length; i++){
+                  let type_var  = type_counter[i]
+                  let type_counts  = 0
+
+                  for(let j = 0; j < response.length; j++){
+                      if(type_counter[i] ===  response[j]['type']){
+                          type_counts += 1
+                      }
+                  }
+
+                  if(i % 2 === 0){
+                      document.getElementById('notif-sub-div').innerHTML += '\
+                      <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-transparent text-white opacity-30 hover:opacity-100">\
+                      <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                          <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                      </div>\
+                  ';
+                  }else{
+                      document.getElementById('notif-sub-div').innerHTML += '\
+                      <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-white opacity-30 hover:opacity-100">\
+                      <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                          <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                      </div>\
+                  ';
+                  }
+              }
+          
+          fetch_timer = setTimeout(fetchMySQLData, 5000);
+      }
+  });
   }
 
   fetchMySQLData(); 
@@ -658,10 +721,12 @@ $(document).ready(function(){
 
   $('#filter-date-btn').on('click' , function(event){
     event.preventDefault();
+    console.log('here')
 
     const data = {
       from_date : $('#from-date-inp').val(),
-      to_date : $('#to-date-inp').val()
+      to_date : $('#to-date-inp').val(),
+      where : 'incoming'
     }
 
     console.log(data)

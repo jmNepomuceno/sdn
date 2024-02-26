@@ -532,7 +532,7 @@ $.ajax({
 4. enter keybutton
 5. minus sa dropdown
 6. mute sound pa asa incoming table
-
+7. traversal from dashboards
 
 (
     [0] => Array

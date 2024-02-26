@@ -29,6 +29,21 @@
             $jsonString = json_encode($data);
 
             echo $jsonString;
+            // echo "incoming";
+        }catch(PDOException $e){
+            echo $notif_value;
+        }
+    }else if($_POST['from_where'] == 'outgoing'){
+        try{
+            $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND referred_by='". $_SESSION["hospital_name"] ."' ORDER BY date_time ASC";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $jsonString = json_encode($data);
+
+            echo $jsonString;
+            // echo "outgoing";
             
         }catch(PDOException $e){
             echo $notif_value;

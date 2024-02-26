@@ -248,6 +248,12 @@ $(document).ready(function(){
         });
     }
 
+    $(document).on('keypress', function(event) {
+        if (event.which === 13 || event.keyCode === 13) {
+            $('#search-patient-btn').trigger('click');
+        }
+    });
+
     $('#search-patient-btn').on('click' , function(event){
         event.preventDefault();
 

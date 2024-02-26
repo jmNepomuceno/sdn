@@ -28,9 +28,14 @@ $(document).ready(function(){
     let global_hpercode_all = document.querySelectorAll('.hpercode')
     let global_stopwatch_all = document.querySelectorAll('.stopwatch')
     let global_pat_status = document.querySelectorAll('.pat-status-incoming')
+    let global_breakdown_index = 0;
 
     let intervalIDs = {};
     let length_curr_table = document.querySelectorAll('.hpercode').length;
+    let toggle_accordion_obj = {}
+    for(let i = 0; i < length_curr_table; i++){
+        toggle_accordion_obj[i] = true
+    }
     let inactivityTimer;
 
     // ---------------------------------------------------------------------------------------------------------
@@ -46,34 +51,35 @@ $(document).ready(function(){
         // console.log('inactive')
         userIsActive = false;
         // Additional code to handle user inactivity if needed
-        $.ajax({
-            url: 'php/fetch_interval.php',
-            method: "POST",
-            data : {
-                from_where : 'incoming'
-            },
-            success: function(response) {
-                global_stopwatch_all = []
-                global_hpercode_all = []
+        // $.ajax({
+        //     url: 'php/fetch_interval.php',
+        //     method: "POST",
+        //     data : {
+        //         from_where : 'outgoing'
+        //     },
+        //     success: function(response) {
+        //         global_stopwatch_all = []
+        //         global_hpercode_all = []
 
-                populateTbody(response)
+        //         populateTbody(response)
+        //         console.log('den')
 
-                const pencil_elements = document.querySelectorAll('.pencil-btn');
-                    pencil_elements.forEach(function(element, index) {
-                    element.addEventListener('click', function() {
-                        console.log('den')
-                        ajax_method(index)
-                    });
-                });
-            }
-        });
+        //         const pencil_elements = document.querySelectorAll('.pencil-btn');
+        //             pencil_elements.forEach(function(element, index) {
+        //             element.addEventListener('click', function() {
+        //                 console.log('den')
+        //                 ajax_method(index)
+        //             });
+        //         });
+        //     }
+        // });
     }
 
     // Attach event listeners
     document.addEventListener('mousemove', handleUserActivity);
 
     // Set up a timer to check user inactivity periodically
-    const inactivityInterval = 52000; // Execute every 5 seconds (adjust as needed)
+    const inactivityInterval = 1000; // Execute every 5 seconds (adjust as needed)
 
     function startInactivityTimer() {
         inactivityTimer = setInterval(() => {
@@ -109,6 +115,85 @@ $(document).ready(function(){
                 pendingFunction(response)
             }
         })
+
+        console.log(data_arr , global_single_hpercode)
+        if(data_arr[global_single_hpercode].status === 'Pending'){
+            // console.log('here')
+            $('#approval-form').removeClass('hidden')
+            // $('#pat-status-form').text('On-Process')
+            // console.log($('#pat-status-form').text())
+            $.ajax({
+                url: './php/fetch_onProcess.php',
+                data : {
+                    hpercode : global_single_hpercode
+                },
+                method: "POST",
+                success: function(response){     
+                    response = JSON.parse(response);           
+
+                    let hpercode_index = 0;
+                    for(let i = 0; i < document.querySelectorAll('.hpercode').length; i++){
+                        if( document.querySelectorAll('.hpercode')[i].value === global_single_hpercode){
+                            hpercode_index = i;
+                        }
+                    } 
+
+                    console.log(hpercode_index)
+                }
+            })
+
+            // run_timers[pencil_index_clicked]['func'](pencil_index_clicked , "0" , pat_clicked_code);
+
+            // starting the timer // current_time parameter = 0 it is for whenever there is a patient data processing
+            data_arr[global_single_hpercode]['func'](global_single_hpercode , "0") // calling the run_timer function
+            // {hpercode : {time: 0 , func : run_timer},
+            // {hpercode : { time: 0 , func : run_timer},
+            // {hpercode : { time: 0 , func : run_timer}
+            
+            let index_pat_status = 0
+            for(let i = 0; i < global_pat_status.length; i++){
+                if(global_hpercode_all[i].value === global_single_hpercode){
+                    index_pat_status = i
+                    break
+                }
+            }
+
+            console.log("roflmao: " + index_pat_status)
+            // getting current date for reception time
+            var currentDate = new Date();
+
+            // Get the current date components
+            var currentYear = currentDate.getFullYear();
+            var currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-indexed
+            var currentDay = currentDate.getDate().toString().padStart(2, '0');
+
+            // Get the current time components
+            var currentHours = currentDate.getHours().toString().padStart(2, '0');
+            var currentMinutes = currentDate.getMinutes().toString().padStart(2, '0');
+            var currentSeconds = currentDate.getSeconds().toString().padStart(2, '0');
+
+            // Format the date and time as a string
+            var formattedDateTime = `${currentYear}-${currentMonth}-${currentDay} ${currentHours}:${currentMinutes}:${currentSeconds}`;
+
+            //getting the difference between reception time and initial referred time to get the value of queue time
+            const date1 = new Date(global_init_referred_lbl[index_pat_status].textContent);
+            const date2 = new Date(formattedDateTime);
+
+            
+            // Calculate the difference in milliseconds
+            const differenceInMilliseconds = Math.abs(date1 - date2);
+
+            // Convert the difference to hours, minutes, and seconds
+            let hours_bd = Math.floor(differenceInMilliseconds / 3600000);
+            let minutes_bd = Math.floor((differenceInMilliseconds % 3600000) / 60000);
+            let seconds_bd = Math.floor((differenceInMilliseconds % 60000) / 1000);
+
+            global_pat_status[index_pat_status].textContent = "On-Process"
+            global_reception_lbl[index_pat_status].textContent  = "Reception: " + formattedDateTime
+            global_queue_lbl[index_pat_status].textContent  = `Queue Time: ${hours_bd}:${minutes_bd}:${seconds_bd}`
+            data_arr[global_single_hpercode].status = "On-Process"
+
+        }
         
     }
 
@@ -278,12 +363,13 @@ $(document).ready(function(){
          }
          
  
-        
-
-        
         // need to update the laman of all global variables on every populate of tbody.
         // update the global_hpercode_all based on the current laman of the table
         length_curr_table = response.length
+
+        for(let i = 0; i < length_curr_table; i++){
+            toggle_accordion_obj[i] = true
+        }
 
         const incoming_tbody = document.querySelector('#incoming-tbody')
         // console.log(incoming_tbody.hasChildNodes())
@@ -313,11 +399,11 @@ $(document).ready(function(){
             }
 
             const tr = document.createElement('tr')
-            tr.className = 'h-[61px]'
+            tr.className = 'tr-incoming h-[61px]'
 
             const td_name = document.createElement('td')
             td_name.textContent = response[i]['reference_num'] + " - " + index
-
+            td_name.className = 'text-xs'
             const td_reference_num = document.createElement('td')
             td_reference_num.textContent = response[i]['patlast'] + ", " + response[i]['patfirst'] + " " + response[i]['patmiddle']
 
@@ -332,7 +418,7 @@ $(document).ready(function(){
             td_referr_label.className = `text-xs ml-1`
 
             const td_referr_div = document.createElement('div')
-            td_referr_div.className = 'flex flex-row justify-start items-center'
+            td_referr_div.className = 'flex flex-row justify-start items-center relative'
 
             const td_referr_label_1 = document.createElement('label')
             td_referr_label_1.textContent = "Landline: " + response[i]['landline_no']
@@ -341,16 +427,106 @@ $(document).ready(function(){
             const td_referr_label_2 = document.createElement('label')
             td_referr_label_2.textContent = "Mobile: " + response[i]['mobile_no']
             td_referr_label_2.className = `text-[7.7pt] ml-1`
-
+            //09683084673
             const td_time = document.createElement('td')
-
+            td_time.className = 'relative'
+            const fa_plus = document.createElement('i')
+            fa_plus.className = "accordion-btn absolute bottom-0 right-0 fa-solid fa-plus border-2 border-[#a4b7c1] p-1 text-xs rounded bg-[#d1dbe0] opacity-40 cursor-pointer hover:opacity-100"
+            
             const td_time_div_label_1 = document.createElement('label')
             td_time_div_label_1.textContent = " Referred: " + response[i]['date_time']
-            td_time_div_label_1.className = `text-md`
+            td_time_div_label_1.className = `text-sm`
 
-            const td_time_div_label_2 = document.createElement('label')
-            td_time_div_label_2.textContent = (response[i]['approved_time']) ?  " Processed: " + response[i]['approved_time'] : " Processed: 00:00:00"
-            td_time_div_label_2.className = `text-md`
+            let hours_bd = ""
+            let minutes_bd = ""
+            let seconds_bd = ""
+
+            if(response[i]['reception_time'] !== null){
+                //calculate the difference between initial Referred to Reception time
+                const date1 = new Date(response[i]['date_time']);
+                const date2 = new Date(response[i]['reception_time']);
+
+                
+                // Calculate the difference in milliseconds
+                const differenceInMilliseconds = Math.abs(date1 - date2);
+                
+                // Convert the difference to hours, minutes, and seconds
+                hours_bd = Math.floor(differenceInMilliseconds / 3600000);
+                minutes_bd = Math.floor((differenceInMilliseconds % 3600000) / 60000);
+                seconds_bd = Math.floor((differenceInMilliseconds % 60000) / 1000);
+
+                if(seconds_bd < 10){
+                    seconds_bd = seconds_bd.toString()
+                    seconds_bd = "0" + seconds_bd;
+                }
+                if(minutes_bd < 10){
+                    minutes_bd = minutes_bd.toString()
+                    minutes_bd = "0" + minutes_bd;
+                }
+            }
+
+            // console.log(response)
+
+            const td_time_div_label_1_1 = document.createElement('label')
+            td_time_div_label_1_1.textContent = (response[i]['reception_time'] !== "" || response[i]['reception_time'] != null) ? `Queue Time: ${hours_bd}:${minutes_bd}:${seconds_bd}` : 'Queue Time: 00:00:00'
+            td_time_div_label_1_1.className = `text-sm w-[95%] border-b border-[#bfbfbf] mt-1`
+
+            if(response[i]['reception_time'] === null){
+                td_time_div_label_1_1.textContent = 'Queue Time: 00:00:00'
+            }else{
+                td_time_div_label_1_1.textContent = `Queue Time: ${hours_bd}:${minutes_bd}:${seconds_bd}`
+            }
+
+            const td_time_div_label_2 = document.createElement('label') 
+            td_time_div_label_2.textContent = (response[i]['status'] !== 'Pending') ?  "Reception: " + response[i]['reception_time'] : " Reception: 00:00:00"
+            td_time_div_label_2.className = `text-sm w-[95%] border-b border-[#bfbfbf] mt-1`
+
+            const td_time_div_label_3 = document.createElement('label')
+            td_time_div_label_3.textContent = " Deferred: " + "00:00:00"
+            td_time_div_label_3.className = `text-sm mt-1`
+
+            const breakdown_div = document.createElement('div')
+            breakdown_div.className = "breakdown-div hidden"
+
+            const processed_lbl_bd = document.createElement('label')
+            processed_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            processed_lbl_bd.textContent = "Processed: " + (response[i]['final_progressed_timer'])
+
+            const approval_lbl_bd = document.createElement('label')
+            approval_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            approval_lbl_bd.textContent = "Approval: " + response[i]['approved_time']
+
+            const deferral_lbl_bd = document.createElement('label')
+            deferral_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            deferral_lbl_bd.textContent = "Deferral: 0000-00-00 00:00:00"
+
+            const cancelled_lbl_bd = document.createElement('label')
+            cancelled_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            cancelled_lbl_bd.textContent = "Cancelled: 0000-00-00 00:00:00"
+
+            const arrived_lbl_bd = document.createElement('label')
+            arrived_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            arrived_lbl_bd.textContent = "Arrived: 0000-00-00 00:00:00"
+
+            const checked_lbl_bd = document.createElement('label')
+            checked_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            checked_lbl_bd.textContent = "Checked: 0000-00-00 00:00:00"
+
+            const admitted_lbl_bd = document.createElement('label')
+            admitted_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            admitted_lbl_bd.textContent = "Admitted: 0000-00-00 00:00:00"
+
+            const discharged_lbl_bd = document.createElement('label')
+            discharged_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            discharged_lbl_bd.textContent = "Discharged: 0000-00-00 00:00:00"
+
+            const follow_lbl_bd = document.createElement('label')
+            follow_lbl_bd.className = "text-sm w-full border-b border-[#bfbfbf] mt-1"
+            follow_lbl_bd.textContent = "Follow Up: 0000-00-00 00:00:00"
+
+            const referred_lbl_bd = document.createElement('label')
+            referred_lbl_bd.className = "text-xs w-full border-b border-[#bfbfbf] mt-1"
+            referred_lbl_bd.textContent = "Referred Back: 0000-00-00 00:00:00"
 
             if(response[i]['final_progressed_timer'] !== null){
                 // Input time duration in "hh:mm:ss" format
@@ -372,6 +548,9 @@ $(document).ready(function(){
             td_processing_div.className = 'flex flex-row justify-around items-center'
             
             const td_processing_div_2 = document.createElement('div')
+
+            // console.log(data_arr)
+
 
             global_stopwatch_all.push(td_processing_div_2)
 
@@ -417,8 +596,30 @@ $(document).ready(function(){
             td_status.appendChild(td_status_div)
             // end
 
+            // console.log(data_arr)
+            
+            td_time.appendChild(fa_plus)
             td_time.appendChild(td_time_div_label_1)
+            td_time.appendChild(td_time_div_label_1_1)
             td_time.appendChild(td_time_div_label_2)
+
+            // if (data_arr[response[i]['hpercode']].status === 'Deferred'){
+            //     console.log('asdf')
+            //     td_time.appendChild(td_time_div_label_3)
+            // }
+
+            breakdown_div.appendChild(processed_lbl_bd)
+            breakdown_div.appendChild(approval_lbl_bd)
+            breakdown_div.appendChild(deferral_lbl_bd)
+            breakdown_div.appendChild(cancelled_lbl_bd)
+            breakdown_div.appendChild(arrived_lbl_bd)
+            breakdown_div.appendChild(checked_lbl_bd)   
+            breakdown_div.appendChild(admitted_lbl_bd)
+            breakdown_div.appendChild(discharged_lbl_bd)
+            breakdown_div.appendChild(follow_lbl_bd)
+            breakdown_div.appendChild(referred_lbl_bd)
+
+            td_time.appendChild(breakdown_div)
 
             td_referr_div.appendChild(td_referr_label_1)
             td_referr_div.appendChild(td_referr_label_2)
@@ -690,6 +891,12 @@ $(document).ready(function(){
     })
 
     // END MAIN BUTTON FUNCTIONALITIES - START - APPROVED - CLOSED - N
+
+    $(document).on('keypress', function(event) {
+        if (event.which === 13 || event.keyCode === 13) {
+            $('#incoming-search-btn').trigger('click');
+        }
+    });
  
     // SEARCHING FUNCTIONALITIES
     $('#incoming-search-btn').on('click' , function(event){        
@@ -720,11 +927,18 @@ $(document).ready(function(){
                     populateTbody(response)
 
                     const pencil_elements = document.querySelectorAll('.pencil-btn');
-                    pencil_elements.forEach(function(element, index) {
-                    element.addEventListener('click', function() {
-                        console.log('den')
-                        ajax_method(index)
+                        pencil_elements.forEach(function(element, index) {
+                        element.addEventListener('click', function() {
+                            console.log('den')
+                            ajax_method(index)
+                        });
                     });
+
+                    const expand_elements = document.querySelectorAll('.accordion-btn');
+                        expand_elements.forEach(function(element, index) {
+                        element.addEventListener('click', function() {
+                            global_breakdown_index = index;
+                        });
                     });
                 }
             })   
@@ -790,6 +1004,26 @@ $(document).ready(function(){
     $('#patient-reg-form-sub-side-bar').on('click' , function(event){
         event.preventDefault();
         clearInterval(inactivityTimer);
+    })
+
+    $(document).on('click' , '.accordion-btn' , function(event){
+        console.log(toggle_accordion_obj)
+        if(toggle_accordion_obj[global_breakdown_index]){
+            document.querySelectorAll('.tr-incoming')[global_breakdown_index].style.height = "300px"
+            document.querySelectorAll('.breakdown-div')[global_breakdown_index].style.display = 'block'
+            toggle_accordion_obj[global_breakdown_index] = false
+
+            // fa-solid fa-plus
+            $('.accordion-btn').eq(global_breakdown_index).removeClass('fa-plus')
+            $('.accordion-btn').eq(global_breakdown_index).addClass('fa-minus')
+        }else{
+            document.querySelectorAll('.tr-incoming')[global_breakdown_index].style.height = "61px"
+            document.querySelectorAll('.breakdown-div')[global_breakdown_index].style.display = 'none'
+            toggle_accordion_obj[global_breakdown_index] = true
+
+            $('.accordion-btn').eq(global_breakdown_index).addClass('fa-plus')
+            $('.accordion-btn').eq(global_breakdown_index).removeClass('fa-minus')
+        }
     })
     
 })

@@ -110,7 +110,7 @@
     <!-- <input id="timer-running-input" type="hidden" name="timer-running-input" value="false"> -->
 
     <div class="w-full h-full flex flex-col justify-start items-center bg-white">
-        <div class="w-full h-[5%] flex flex-row justify-around items-center mt-4">
+        <div class="w-full h-[10%] flex flex-row justify-around items-center mt-8 ">
 
             <div class="w-[10%] h-[100%] flex flex-col justify-center items-left">
                 <label class="ml-1 font-bold">Referral No.</label>
@@ -181,8 +181,8 @@
             </div>
 
             <div class="w-[15%] h-full flex flex-row justify-around items-center font-bold text-white">
-                <button id='incoming-clear-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46] opacity-30 pointer-events-none">Clear</button>
-                <button id='incoming-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46]">Search</button>
+                <button id='incoming-clear-search-btn' class="w-[100px] h-[50%] rounded bg-[#2f3e46] opacity-30 pointer-events-none">Clear</button>
+                <button id='incoming-search-btn' class="w-[100px] h-[50%] rounded bg-[#2f3e46]">Search</button>
             </div>
         </div>
 
@@ -226,7 +226,7 @@
                                         $type_color = 'bg-green-500';
                                     }else if($row['type'] == 'ER'){
                                         $type_color = 'bg-sky-700';
-                                    }else if($row['type'] == 'PCR'){
+                                    }else if($row['type'] == 'PCR' || $row['type'] == 'Toxicology'){
                                         $type_color = 'bg-red-600';
                                     }
 

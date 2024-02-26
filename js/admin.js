@@ -205,30 +205,7 @@ $(document).ready(function(){
         window.location.href = "../php/history_log.php";
     })
 
-
-    // add new classification
-    $('#add-classification-btn').on('click' , function(event){
-      console.log($('#add-classification-input').val())
-      $.ajax({
-          url: '../php/add_classification.php',
-          data : {  
-              classification : $('#add-classification-input').val(),
-              what : 'add'
-          },
-          method: "POST",
-          success: function(response) {
-              // response = JSON.parse(response); 
-              console.log(response)
-              $('#add-classification-icon').removeClass('hidden')
-            $('#add-classification-input').addClass('hidden')
-          }
-      });
-  })
-
-  $('#add-classification-icon').on('click' , function(event){
-    $('#add-classification-icon').addClass('hidden')
-    $('#add-classification-input').removeClass('hidden')
-  })
+  
 
   let toggle_accordion_obj = {}
   let global_breakdown_index = 0
@@ -258,17 +235,96 @@ $(document).ready(function(){
   }
 
   function attachClassifications() {
-    const classification_div_elements = document.querySelectorAll('.classification-sub-div');
-      classification_div_elements.forEach(function(element, index) {
-        element.addEventListener('click', function() {
-          global_classification_divs_index = index;
-        });
-    });
-  }
+    $('#populate-patclass-div').on('click', '.classification-sub-div', function() {
+      global_classification_divs_index = $(this).index();
+      console.log(global_classification_divs_index);
+  });
+}
 
   attachClassifications()
   attachSeeMoreBtn();
   attachInfoBtn();
+
+  $('#add-classification-lbl').on('click' , function(event){
+      $.ajax({
+        url: '../php/populate_pat_class.php',
+        method: "POST",
+        success: function(response) {
+            // response = JSON.parse(response); 
+            console.log(response)
+            document.getElementById('populate-patclass-div').innerHTML = ''
+            document.getElementById('populate-patclass-div').innerHTML = response
+        }
+    });
+  })
+ 
+  $(document).on('click', '.classification-sub-div', function(event){
+    // set the input fields to unclickabl
+    $('#delete-classification-btn').removeClass('opacity-50 pointer-events-none')
+    single_classification_clicked = $('.classification-sub-div').eq(global_classification_divs_index).text()
+  })
+
+  // add new classification
+  $('#add-classification-btn').on('click' , function(event){
+    console.log($('#add-classification-input').val())
+    $.ajax({
+        url: '../php/add_classification.php',
+        data : {  
+            classification : $('#add-classification-input').val(),
+            what : 'add'
+        },
+        method: "POST",
+        success: function(response) {
+            // response = JSON.parse(response); 
+            console.log(response)
+            $('#add-classification-icon').removeClass('hidden')
+            $('#add-classification-input').addClass('hidden')
+
+            $('#modal-body-incoming-success').text('Added Successfully')
+            $('#myModal-success').modal('show');
+        }
+    });
+  })
+
+
+  $(document).on('click', '#add-classification-icon', function(event){
+    $('#add-classification-icon').addClass('hidden')
+    $('#add-classification-input').removeClass('hidden')
+    $('#add-classification-btn').removeClass('opacity-50 pointer-events-none')
+
+    // Get the elements
+    const dynamicWidthDiv = document.getElementById('dynamic-width-div');
+    const inputField = document.getElementById('add-classification-input');
+
+    // Listen for input events on the input field
+    inputField.addEventListener('input', function(event) {
+        if (event.inputType === 'deleteContentBackward') {
+          dynamicWidthDiv.style.width = inputField.scrollWidth - 8 + 'px';
+          inputField.style.width = inputField.scrollWidth - 8 + 'px';
+        }else{
+          dynamicWidthDiv.style.width = inputField.scrollWidth + 'px';
+          inputField.style.width = inputField.scrollWidth + 'px';
+        }
+    });
+  })
+
+  $(document).on('click', '#delete-classification-btn', function(event){
+    console.log('"' + single_classification_clicked + '"')
+    $.ajax({
+      url: '../php/add_classification.php',
+      method: "POST",
+      data : {
+        classification : single_classification_clicked,
+        what : 'delete'
+      },
+      success: function(response) {
+          console.log(response)
+          $('#modal-body-incoming-success').text('Deleted Successfully')
+          $('#myModal-success').modal('show');
+        }
+    });
+  })
+
 
   $(document).on('click', '.see-more-btn', function(event){
     // console.log(document.querySelectorAll('.number_users')[global_breakdown_index])
@@ -298,7 +354,6 @@ $(document).ready(function(){
       
   })
 
-  
   let prev_info_arr = []
   $(document).on('click', '.edit-info-btn', function(event){
     console.log('here')
@@ -452,10 +507,7 @@ $(document).ready(function(){
         }
     });
   })
-
-
-  $('#myModal-add-classification').modal('show');
-
+  
   $(document).on('click', '.cancel-info-btn', function(event){
     // set the input fields to unclickable
     for(let i = 0; i <= (global_breakdown_index * 5) + 4; i++){
@@ -481,85 +533,4 @@ $(document).ready(function(){
     }
   })
 
-  $(document).on('click', '.classification-sub-div', function(event){
-    // set the input fields to unclickabl
-    $('#delete-classification-btn').removeClass('opacity-50 pointer-events-none')
-    single_classification_clicked = $('.classification-sub-div').eq(global_classification_divs_index).text()
-    // $.ajax({
-    //   url: '../php/add_classification.php',
-    //   method: "POST",
-    //   data : {
-    //     classification : $('.classification-sub-div').eq(global_classification_divs_index).text(),
-    //     what : 'delete'
-    //   },
-    //   success: function(response) {
-    //       // console.log(response)
-    //       div.innerHTML += response
-    //       attachSeeMoreBtn();
-    //       attachInfoBtn();
-    //     }
-    // });
-  })
-
-  $(document).on('click', '#delete-classification-btn', function(event){
-    console.log('here')
-    $.ajax({
-      url: '../php/add_classification.php',
-      method: "POST",
-      data : {
-        classification : single_classification_clicked,
-        what : 'delete'
-      },
-      success: function(response) {
-          console.log(response)
-          // response = JSON.parse(response); 
-          // console.log(response)
-          // $('#add-classification-icon').removeClass('hidden')
-          // $('#add-classification-input').addClass('hidden')
-        }
-    });
-  })
-
 })
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Get the elements
-const dynamicWidthDiv = document.getElementById('dynamic-width-div');
-const inputField = document.getElementById('add-classification-input');
-
-// Listen for input events on the input field
-inputField.addEventListener('input', function(event) {
-    if (event.inputType === 'deleteContentBackward') {
-      dynamicWidthDiv.style.width = inputField.scrollWidth - 8 + 'px';
-      inputField.style.width = inputField.scrollWidth - 8 + 'px';
-    }else{
-      dynamicWidthDiv.style.width = inputField.scrollWidth + 'px';
-      inputField.style.width = inputField.scrollWidth + 'px';
-    }
-});
-
-// di nag babago yung edit ng name sa database

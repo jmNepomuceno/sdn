@@ -1,5 +1,13 @@
 $(document).ready(function(){
-
+    const loadContent = (url) => {
+        $.ajax({
+            url:url,
+            success: function(response){
+                // console.log(response)
+                $('#container').html(response);
+            }
+        })
+    }
     $('#submit-referral-btn-id').on('click' , function(event){
         var selectedValue = $('input[name="sensitive"]:checked').val();
         console.log(selectedValue)
@@ -25,6 +33,7 @@ $(document).ready(function(){
 
         //     $('#myModal').modal('show');
         // } 
+        
         if(sensitive_selected) {
             const data = {
                 type : $('#type-input').val(),

@@ -245,17 +245,8 @@
 
                     <h2 class="w-full h-[40px] flex flex-row justify-start items-center ml-4 font-bold text-lg border-none">Current Patient's Classifications</h2>
                     <div class="w-full flex flex-col justify-start items-center">
-                        <div class="w-full h-auto flex flex-wrap justify-center items-center">
-                            <?php for($i = 0; $i < count($classification_arr) + 1; $i++) { ?>
-                                <?php if($i < count($classification_arr)) {?> 
-                                    <div class="classification-sub-div w-auto h-[40px] p-2 m-2 rounded-xl font-bold text-white bg-[#1f292e] tracking-widest cursor-pointer hover:border-4 border-red-600"><?php echo $classification_arr[$i] ?></div>
-                                <?php }else{ ?>   
-                                    <div id="dynamic-width-div" class="h-[40px] p-2 m-2 rounded-xl font-bold text-white bg-[#1f292e] flex flex-row justify-center items-center overflow-hidden">
-                                        <i id="add-classification-icon" class="fa-solid fa-circle-plus text-lg cursor-pointer"></i> 
-                                        <input type="text" id="add-classification-input" class="hidden p-2 w-[90px] bg-transparent outline-none" placeholder="Input text" autocomplete="off" />
-                                    </div>
-                                <?php } ?>
-                            <?php } ?>
+                        <div id="populate-patclass-div" class="w-full h-auto flex flex-wrap justify-center items-center">
+                            
                         </div>
                     </div>
                 </div>
@@ -466,6 +457,29 @@
             </div>
             <div class="modal-footer">
                 <button id="ok-modal-btn-incoming" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-toggle="modal" data-bs-target="#myModal-prompt">OK</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Modal -->
+     <div class="modal fade" id="myModal-success" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header flex flex-row justify-between items-center">
+                <div class="flex flex-row justify-between items-center">
+                    <h5 id="modal-title-incoming" class="modal-title-incoming" id="exampleModalLabel">Successed</h5>
+                    <i id="modal-icon" class="fa-solid fa-circle-check ml-2"></i>
+                    <!-- <i class="fa-solid fa-circle-check"></i> -->
+                </div>
+                <button type="button" class="close text-3xl" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modal-body-incoming-success" class="modal-body-incoming ml-2">
+            </div>
+            <div class="modal-footer">
+                <button id="ok-modal-btn-incoming" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-toggle="modal" data-bs-target="#myModal-success">OK</button>
             </div>
             </div>
         </div>

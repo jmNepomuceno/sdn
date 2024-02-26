@@ -31,7 +31,7 @@
 </head>
 <body>
     <div class="w-full h-full flex flex-col justify-start items-center bg-white">
-        <div class="w-full h-[5%] flex flex-row justify-around items-center mt-4">
+        <div class="w-full h-[10%] flex flex-row justify-around items-center mt-8">
 
             <div class="w-[10%] h-[100%] flex flex-col justify-center items-left">
                 <label class="ml-1 font-bold">Referral No.</label>
@@ -102,8 +102,8 @@
             </div>
 
             <div class="w-[15%] h-full flex flex-row justify-around items-center font-bold text-white">
-                <button id='incoming-clear-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46] opacity-30 pointer-events-none">Clear</button>
-                <button id='incoming-search-btn' class="w-[100px] h-[90%] rounded bg-[#2f3e46]">Search</button>
+                <button id='incoming-clear-search-btn' class="w-[100px] h-[50%] rounded bg-[#2f3e46] opacity-30 pointer-events-none">Clear</button>
+                <button id='incoming-search-btn' class="w-[100px] h-[50%] rounded bg-[#2f3e46]">Search</button>
             </div>
         </div>
         
@@ -133,6 +133,7 @@
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->execute();
                                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                // echo '<pre>'; print_r($data); echo '</pre>';
 
                                 // echo count($data);
                                 $jsonData = json_encode($data);
@@ -161,8 +162,30 @@
                                             $index = 1;
                                         }  
                                     }
-                                    echo '<tr class="h-[61px]">
-                                            <td> ' . $row['reference_num'] . ' - '.$index.' </td>
+
+                                    // $waiting_time = "--:--:--";
+                                    $date1 = new DateTime($row['date_time']);
+                                    $waiting_time_bd = "";
+                                    if($row['reception_time'] != null){
+                                        $date2 = new DateTime($row['reception_time']);
+                                        $waiting_time = $date1->diff($date2);
+
+                                        // if ($waiting_time->days > 0) {
+                                        //     $differenceString .= $waiting_time->days . ' days ';
+                                        // }
+
+                                        $waiting_time_bd .= sprintf('%02d:%02d:%02d', $waiting_time->h, $waiting_time->i, $waiting_time->s);
+
+                                    }else{
+                                        $waiting_time_bd = "00:00:00";
+                                    }
+
+                                    if($row['reception_time'] == ""){
+                                        $row['reception_time'] = "00:00:00";
+                                    }
+                                    
+                                    echo '<tr class="tr-incoming ">
+                                            <td class="text-xs"> ' . $row['reference_num'] . ' - '.$index.' </td>
                                             <td>' . $row['patlast'] , ", " , $row['patfirst'] , " " , $row['patmiddle']  . '</td>
                                             <td class="h-full font-bold text-center ' . $type_color . ' ">' . $row['type'] . '</td>
                                             <td>
@@ -172,9 +195,25 @@
                                                     <label class="text-[7.7pt] ml-1"> Mobile: ' . $row['mobile_no'] . ' </label>
                                                 </div>
                                             </td>
-                                            <td> 
-                                                <label class="text-md"> Referred: ' . $row['date_time'] . ' </label>
-                                                <label class="text-md"> Processed: </label>
+                                            <td class="flex flex-col justify-center items-left relative"> 
+                                                <i class="absolute bottom-0 right-0 accordion-btn fa-solid fa-plus border-2 border-[#a4b7c1] p-1 text-xs rounded bg-[#d1dbe0] opacity-40 cursor-pointer hover:opacity-100"></i>
+
+                                                <label class="referred-time-lbl text-sm w-[95%] border-b border-[#bfbfbf]"> Referred: ' . $row['date_time'] . ' </label>
+                                                <label class="referred-time-lbl text-sm w-[95%] border-b border-[#bf r-[#bfbfbf] mt-1"> Queue Time: ' . $waiting_time_bd . ' </label>
+                                                <label class="reception-time-lbl text-sm w-[95%] border-b border-[#bfbfbf] mt-1"> Reception: '. $row['reception_time'] .'</label>
+                                                
+                                                <div class="breakdown-div hidden">
+                                                    <label class="processed-time-lbl text-sm w-full border-b border-[#bfbfbf] mt-1"> Processed: 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Approval: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Deferral: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Cancelled: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Arrived: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Checked: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Admitted: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Discharged: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Follow up: 0000-00-00 00:00:00  </label>  
+                                                    <label class="text-sm w-full border-b border-[#bfbfbf] mt-1"> Ref. Back: 0000-00-00 00:00:00  </label>  
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="flex flex-row justify-around items-center">
@@ -188,14 +227,14 @@
                                             <td class=" font-bold text-center bg-gray-500">
                                                 <div class=" flex flex-row justify-around items-center"> 
                                                     
-                                                    <label class="pat-status-incoming"> ' . $row['status'] . ' </label>
+                                                    <label class="pat-status-incoming">' . $row['status'] . '</label>
                                                     <i class="pencil-btn fa-solid fa-pencil cursor-pointer hover:text-white"></i>
                                                     <input class="hpercode" type="hidden" name="hpercode" value= ' . $row['hpercode'] . '>
 
                                                 </div>
                                             </td>
                                         </tr>';
-
+                                        
                                     $previous = $row['reference_num'];
                                 }
 

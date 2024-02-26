@@ -1,4 +1,13 @@
 $(document).ready(function(){
+    const loadContent = (url) => {
+        $.ajax({
+            url:url,
+            success: function(response){
+                // console.log(response)
+                $('#container').html(response);
+            }
+        })
+    }
     
     $('#check-if-registered-btn').on('click' , function(event){
         // console.log("asdf")
