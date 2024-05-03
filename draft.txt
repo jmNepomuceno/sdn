@@ -543,3 +543,67 @@ $.ajax({
         )
 
 )
+
+631
+fetch_update_interdept.php
+stat_interdept == approve{
+    echo approve
+}
+
+incoming_pat.js
+review_id.textContent('Confirm Approval')
+cancel_id.css('display', 'none')
+
+0: {status_interdept: 'Approved', currentDateTime: '2024-03-25 14:24:47'}
+1: {curr_time: '00:29:30', department: 'surgery'}
+
+later-ru
+<label>
+    Username: <input type="text" id="username">
+</label>
+<label for="username">Username:</label>
+<input type="text" id="username">
+
+//040824
+//https://chat.openai.com/c/ec84b2e5-a31c-4b7c-9559-08df6536ae9a
+
+041224
+automatic lagay ng seen_by and seen_date kapag nirektang click sa mismong sdn itnerdept referral
+reset the value of the Case Category Select, and eraa
+
+
+main2.php = 116
+
+041624
+interdept fetch updated table after the Approval //
+automatic on process for some reason
+dashboard incoming
+
+error in searching //
+add toxicology sa dashboard table
+
+on-process status, pag ka final approved sa pang unang referral. check the On-Process
+nawawala sa datatable yung na approved na referral after galing sa interdept.
+incoming_form 237
+
+Referred: 2024-02-20 15:00:02
+Reception: 2024-04-15 10:41:16
+SDN Processed: 00:00:00
+Interdept Processed: 00:00:40 
+Total Processed: 00:00:00 
+Approval: 0000-00-00 00:00:00 
+Deferral: 0000-00-00 00:00:00
+
+https://onlinetools.com/time/calculate-average-clock-time
+
+for($i = 0; $i < count($class_code); $i++){
+    echo '
+        <td class="add border-2 border-slate-700">'. $class_code['ER_primary'] .'</td>
+    ';
+}
+
+[0] => 01:47:44
+[1] => 01:40:18
+[2] => 01:30:34
+[3] => 01:29:31
+01:37:22

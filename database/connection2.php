@@ -1,17 +1,17 @@
 <?php
 
-$dbHost = "localhost";
-$dbUser = "root";
-$dbPassword = "S3rv3r";
-$dbName = "bghmc";
+  $dbHost = "localhost";
+  $dbUser = "root";
+  $dbPassword = "S3rv3r";
+  $dbName = "bghmc";
 
-try {
-  $dsn = "mysql:host=" . $dbHost . ";dbname=" . $dbName;
-  $pdo = new PDO($dsn, $dbUser, $dbPassword);
-} catch(PDOException $e) {
-  echo "DB Connection Failed: " . $e->getMessage();
-}
+  try {
+    $dsn = "mysql:host=" . $dbHost . ";dbname=" . $dbName;
+    $pdo = new PDO($dsn, $dbUser, $dbPassword);
+    echo "connected";
+  } catch(PDOException $e) {
+    echo "DB Connection Failed: " . $e->getMessage();
+  }
 
-$status = "connected";
-
+  $status = "connected";
 ?>

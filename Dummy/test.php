@@ -1,25 +1,44 @@
-<?php 
-    // session_start();
-    // include('../database/connection2.php');
-    // // fetch sdn hospitals and sdn users
-    // $sql = "SELECT * FROM sdn_hospital";
+<?php
+    session_start();
+    include('../database/connection2.php');
+
+    // $sql = "SELECT * FROM incoming_referrals WHERE refer_to='Bataan General Hospital and Medical Center' AND hpercode='BGHMC-0049'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
-    // $data_sdn_hospitals = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // // echo '<pre>'; print_r($data_sdn_hospitals); echo '</pre>';
+    // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // echo '<pre>'; print_r($data); echo '</pre>';
 
-    // $sql = "SELECT * FROM sdn_users";
+    // $sql = "SELECT department FROM incoming_interdept WHERE hpercode='BGHMC-0049'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
-    // $data_sdn_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // // echo '<pre>'; print_r($data_sdn_users); echo '</pre>';
+    // $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    // echo '<pre>'; print_r($data); echo '</pre>';
 
-    // $sql = "SELECT hospital_code FROM sdn_users WHERE user_count=2";
+    // $sql = "SELECT * FROM incoming_referrals WHERE refer_to='Bataan General Hospital and Medical Center' AND hpercode='BGHMC-0050'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
-    // $data_sdn_users_count2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // echo '<pre>'; print_r($data_sdn_users_count2); echo '</pre>';
+    // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // echo '<pre>'; print_r($data); echo '</pre>';
 
+    $start_date = '2024-04-20';
+    $end_date = '2024-04-26';
+    $end_date_adjusted = date('Y-m-d', strtotime($end_date . ' +1 day'));
+
+    $sql = "SELECT  * FROM sdn_hospital";
+    $sql = "SELECT  * FROM sdn_users";
+    // $sql = "SELECT hpercode, final_progress_time FROM incoming_interdept WHERE final_progress_date >= '$start_date' AND final_progress_date < '$end_date_adjusted'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(); 
+    $pat_class_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo '<pre>'; print_r($pat_class_data); echo '</pre>';
+
+    // $sql = "DELETE FROM sdn_hospital WHERE hospital_ID=196";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute(); 
+
+    // $sql = "DELETE FROM incoming_referrals WHERE hpercode='BGHMC-0077'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute(); 
 ?>
 
 <!DOCTYPE html>
@@ -27,17 +46,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    
+    <title>Timer Example</title>
+
+    <style>
+        body{
+            background: black;
+            color:white;
+            font-size: 1.3rem;
+        }
+    </style>
 </head>
 <body>
-    <div id="particles-js"></div> 
-    <div class="count-particles"> <span class="js-count-particles">--</span> particles </div> <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> 
-    <script src="http://threejs.org/examples/js/libs/stats.min.js"></script>
+    
+    <script>
+        var dataArray = ['Limay Medical Center', 'Limay Medical Center', 'Morong Bataan RHU', 'Morong Bataan RHU'];
 
-    <script type="text/javascript">
-        particlesJS("particles-js", {"particles":{"number":{"value":6,"density":{"enable":true,"value_area":800}},"color":{"value":"#1b1e34"},"shape":{"type":"polygon","stroke":{"width":0,"color":"#000"},"polygon":{"nb_sides":6},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.3,"random":true,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":160,"random":false,"anim":{"enable":true,"speed":10,"size_min":40,"sync":false}},"line_linked":{"enable":false,"distance":200,"color":"#ffffff","opacity":1,"width":2},"move":{"enable":true,"speed":8,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":false,"mode":"grab"},"onclick":{"enable":false,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});var count_particles, stats, update; stats = new Stats; stats.setMode(0); stats.domElement.style.position = 'absolute'; stats.domElement.style.left = '0px'; stats.domElement.style.top = '0px'; document.body.appendChild(stats.domElement); count_particles = document.querySelector('.js-count-particles'); update = function() { stats.begin(); stats.end(); if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) { count_particles.innerText = window.pJSDom[0].pJS.particles.array.length; } requestAnimationFrame(update); }; requestAnimationFrame(update);;
+        // Object to store counts of each element
+        var counts = {};
+
+        // Iterate over the array to count occurrences
+        dataArray.forEach(function(item) {
+            // Count occurrences of each element
+            counts[item] = (counts[item] || 0) + 1;
+        });
+
+        // Array to store the unique elements
+        var uniqueArray = Object.keys(counts);
+
+        // Array to store the counts, matching length of uniqueArray
+        var duplicatesCount = uniqueArray.map(function(item) {
+            // Return count of each element
+            return counts[item];
+        });
+
+        console.log("Unique array:", uniqueArray);
+        console.log("Duplicates count:", duplicatesCount);
     </script>
 </body>
 </html>
