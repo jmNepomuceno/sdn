@@ -20,17 +20,17 @@
     // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // echo '<pre>'; print_r($data); echo '</pre>';
 
-    $start_date = '2024-04-20';
-    $end_date = '2024-04-26';
-    $end_date_adjusted = date('Y-m-d', strtotime($end_date . ' +1 day'));
+    // $start_date = '2024-04-20';
+    // $end_date = '2024-04-26';
+    // $end_date_adjusted = date('Y-m-d', strtotime($end_date . ' +1 day'));
 
-    $sql = "SELECT  * FROM sdn_hospital";
-    $sql = "SELECT  * FROM sdn_users";
-    // $sql = "SELECT hpercode, final_progress_time FROM incoming_interdept WHERE final_progress_date >= '$start_date' AND final_progress_date < '$end_date_adjusted'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(); 
-    $pat_class_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo '<pre>'; print_r($pat_class_data); echo '</pre>';
+    // $sql = "SELECT  * FROM sdn_hospital";
+    // $sql = "SELECT  * FROM sdn_users";
+    // // $sql = "SELECT hpercode, final_progress_time FROM incoming_interdept WHERE final_progress_date >= '$start_date' AND final_progress_date < '$end_date_adjusted'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute(); 
+    // $pat_class_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // echo '<pre>'; print_r($pat_class_data); echo '</pre>';
 
     // $sql = "DELETE FROM sdn_hospital WHERE hospital_ID=196";
     // $stmt = $pdo->prepare($sql);
