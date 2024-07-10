@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     function validateElement(element) { 
         var isValid = true;
 
@@ -27,7 +28,15 @@ $(document).ready(function(){
         event.preventDefault();
         $('.main-content').css('display', 'none');
         $('.sub-content').css('display', 'flex');
-    })
+
+        // if(tutorialMode_on){
+        //     tutorial_modal.show()
+        //     $('#tutorial_title').text("Registration of your RHUs")
+        //     $('#tutorial_body').text("All field must be filled")
+        //     $('#tutorial_dialog').removeClass('modal-lg')
+        //     $('#tutorial_dialog').addClass('modal-md')
+        // }
+    })  
 
     $('.return').on('click' , function(event){
         event.preventDefault();
@@ -209,97 +218,18 @@ $(document).ready(function(){
         }
     }
     
-    $('#sdn-email-address').blur(function() {
-        validateEmail($(this));
-    });
+    // tutorial_modal.show()
+    
+    $('#tutorial-btn').mouseenter(function(){
+        $('#tutorial-btn').removeClass('fa-regular fa-circle-question');
+        $('#tutorial-btn').addClass('fa-solid fa-circle-question');
+    }).mouseout(function(){
+        $('#tutorial-btn').removeClass('fa-solid fa-circle-question');
+        $('#tutorial-btn').addClass('fa-regular fa-circle-question');
+    })
 
-    $('#sdn-hospital-name').blur(function() {
-        validateElement($(this));
-    });
+    $('#tutorial-btn').on('click' , function(){
+        console.log('here')
+    })
 
-    $('#sdn-hospital-code').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-region-select').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-province-select').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-city-select').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-brgy-select').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-zip-code').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-landline-no').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-hospital-mobile-no').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-hospital-director').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-hospital-director-mobile-no').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-point-person').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-point-person-mobile-no').blur(function() {
-        validateElement($(this));
-    });
-
-    // **************************************
-
-    $('#sdn-autho-hospital-code-id').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-autho-cipher-key-id').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-autho-last-name-id').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-autho-first-name-id').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-autho-middle-name-id').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-autho-ext-name-id').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-autho-password').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#sdn-autho-confirm-password').blur(function() {
-        validateElement($(this));
-    });
-
-    $('#authorization-confirm-btn').blur(function() {
-        validateElement($(this));
-    });
 })

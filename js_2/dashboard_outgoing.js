@@ -1,6 +1,12 @@
 // ************************************************************************** 
 //  ME ME ME ME ME ME ME
 $(document).ready(function(){
+  const myModal = new bootstrap.Modal(document.getElementById('myModal-dashboardIncoming'));
+  
+  if(number_of_referrals === 0){
+    myModal.show()
+  }
+
   $('#total-processed-refer').text($('#total-processed-refer-inp').val())
 
   const playAudio = () =>{
@@ -10,60 +16,98 @@ $(document).ready(function(){
         'Error playing audio: ' , error
     }) 
   }
-  console.log(dataReferFrom)
-function renderPieChart(chart, dataArray){
-  // console.log(dataArray)
-  let xValues = []
-  for(let i=0; i < dataArray.length; i++){
-    switch(chart){
-      case "case_type" : xValues.push(dataArray[i]['type']); break;
-      case "rhu" : xValues.push(dataArray[i]['refer_to']); break;
-      case "case_category" : xValues.push(dataArray[i]['pat_class']); break;
+
+  function renderPieChart(chart, dataArray) {
+    let xValues = [];
+    for (let i = 0; i < dataArray.length; i++) {
+        switch (chart) {
+            case "case_type": xValues.push(dataArray[i]['type']); break;
+            case "rhu": xValues.push(dataArray[i]['referred_by']); break;
+            case "case_category": xValues.push(dataArray[i]['pat_class']); break;
+        }
     }
-    
-  }
-  xValues.sort()
-  // console.log(xValues)
+    xValues.sort();
 
-  var counts = {};
+    var counts = {};
 
-  xValues.forEach(function(item) {
-      counts[item] = (counts[item] || 0) + 1;
-  });
+    xValues.forEach(function(item) {
+        counts[item] = (counts[item] || 0) + 1;
+    });
 
-  var uniqueArray = Object.keys(counts);
+    var uniqueArray = Object.keys(counts);
+    var duplicatesCount = uniqueArray.map(function(item) {
+        return counts[item];
+    });
 
-  var duplicatesCount = uniqueArray.map(function(item) {
-      return counts[item];
-  });
+    xValues = uniqueArray;
+    const yValues = duplicatesCount;
+    const barColors = [
+        "#b91d47",
+        "#00aba9",
+        "#2b5797",
+        "#e8c3b9",
+        "#1e7145"
+    ];
 
-  xValues = uniqueArray
-  const yValues = duplicatesCount
-  const barColors = [
-    "#b91d47",
-    "#00aba9",
-    "#2b5797",
-    "#e8c3b9",
-    "#1e7145"
-  ];
-  
-  let what_chart = ""
-  switch(chart){
-    case "case_type" : what_chart = "myChart-2"; break;
-    case "rhu" : what_chart = "myChart-3"; break;
-    case "case_category" : what_chart = "myChart-1"; break;
-  }
-  new Chart(what_chart, {
-    type: "pie",
-    data: {
-      labels: xValues,
-      datasets: [{
-        backgroundColor: barColors,
-        data: yValues
-      }]
+    let what_chart = "";
+    switch (chart) {
+        case "case_type": what_chart = "myChart-2"; break;
+        case "rhu": what_chart = "myChart-3"; break;
+        case "case_category": what_chart = "myChart-1"; break;
     }
-  });
+
+    new Chart(document.getElementById(what_chart), {
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues,
+                label: "Data"
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    align: 'center',
+                    labels: {
+                        font: {
+                            size: 13, // Set the font size for legend labels
+                            weight: 'bold' // Make legend labels bold
+                        },
+                        boxWidth: 15,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    bodyFont: {
+                        size: 12, // Set the font size for tooltips
+                        weight: 'bold' // Make tooltips font bold
+                    }
+                },
+                datalabels: {
+                    color: '#000',
+                    font: {
+                        weight: 'bold', // Make data labels bold
+                        size: 14 // Font size for data labels
+                    }
+                }
+            },
+            layout: {
+                padding: {
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0
+                }
+            }
+        }
+    });
 }
+
 
 renderPieChart("rhu" , dataReferFrom)
 renderPieChart("case_type" , dataPatType)
@@ -95,7 +139,7 @@ $('#notif-sub-div').on('click' , function(event){
   $('#history-log-btn').on('click' , function(event){
     event.preventDefault();
     console.log('here')
-    window.location.href = "../php/history_log.php";
+    window.location.href = "../php_2/history_log.php";
   })
 
   const loadContent = (url) => {
@@ -111,7 +155,7 @@ $('#notif-sub-div').on('click' , function(event){
   
   function fetchMySQLData() {
     $.ajax({
-      url: '../php/fetch_interval.php',
+      url: '../php_2/fetch_interval.php',
       method: "POST",
       data : {
           from_where : 'bell'
@@ -217,7 +261,8 @@ $('#notif-sub-div').on('click' , function(event){
         success: function(response) {
             // response = JSON.parse(response);  
             console.log(response , " here")
-            window.location.href = "http://192.168.42.222:8035/index.php" 
+            // window.location.href = "http://192.168.42.222:8035/index.php" 
+            window.location.href = "http://10.10.90.14:8079/index.php" 
         }
     });
 })
@@ -273,6 +318,8 @@ $('#notif-sub-div').on('click' , function(event){
 
         $('#total-processed-refer').text(response.totalReferrals)
         $('#average-reception-id').text(response.averageDuration_reception)
+        $('#average-sdn-approve-id').text(response.average_sdn_average)
+        $('#average-interdept-approve-id').text(response.averageTime_interdept)
         $('#average-approve-id').text(response.averageDuration_approval)
         $('#average-total-id').text(response.averageDuration_total)
         $('#fastest-id').text(response.fastest_response_final)
@@ -409,5 +456,4 @@ $('#notif-sub-div').on('click' , function(event){
   }
 
 })
-
 

@@ -4,18 +4,15 @@
     date_default_timezone_set('Asia/Manila');
 
     $hpercode = $_POST['hpercode'];
-    $sql = "SELECT * FROM incoming_referrals WHERE hpercode='". $hpercode ."' ";
+    $incoming_referrals_data = [];
+    $sql = "SELECT * FROM incoming_referrals WHERE hpercode='". $hpercode ."' ORDER BY date_time DESC LIMIT 1";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  
     $jsonString = $data;
 
-    // echo '<pre>'; print_r($data); echo '</pre>';
-    //if(count($data) === 1){
-        // $jsonString = json_encode($data);
-        // echo $jsonString;
-    //}
+    $incoming_referrals_data = $data;
 
     $sql = "SELECT * FROM hperson WHERE hpercode='". $hpercode ."' ";
 
@@ -106,6 +103,11 @@
     // print mo lang lahat ng need i print sa incoming_form.js bukas. gege
     // gl hf tomorrow! :)))))) <333333
 
+    $sql = "UPDATE hperson SET status='On-Process' WHERE hpercode=:hpercode";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
+    $stmt->execute();
+
 
     echo '<ul class="referred-details-ul">';
         echo '<li><label>Referring Agency:</label><span id="refer-agency"> '. $response[0]['referred_by'].'</span></li>';
@@ -166,11 +168,12 @@
 
 
     // update the date of the reception time or, when did the user click the pencil or open the referral form
-    $reception_time = date('Y-m-d H:i:s');
-    $sql = "UPDATE incoming_referrals SET reception_time=:reception_time WHERE hpercode=:hpercode ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':reception_time', $reception_time, PDO::PARAM_STR);
-    $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
-    $stmt->execute();
-    
+    if($incoming_referrals_data[0]['reception_time'] == null || $incoming_referrals_data[0]['reception_time'] == ""){
+        $reception_time = date('Y-m-d H:i:s');
+        $sql = "UPDATE incoming_referrals SET reception_time=:reception_time WHERE hpercode=:hpercode ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':reception_time', $reception_time, PDO::PARAM_STR);
+        $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
+        $stmt->execute();
+    }
 ?>

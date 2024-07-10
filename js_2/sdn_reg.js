@@ -1,9 +1,9 @@
+var timerInterval, timerElement;
 $(document).ready(function(){ //sdn-register-btn
     $('#register-confirm-btn').on('click' , function(event){
     // $('#register-confirm-btn').on('click' , function(event){
         event.preventDefault();
-
-        const reg_inputs = [$('#sdn-hospital-name') , $('#sdn-hospital-code'),  $('#sdn-city-select'), $('#sdn-brgy-select'),  $('#sdn-zip-code'), $('#sdn-email-address'), 
+        const reg_inputs = [$('#sdn-hospital-name') , $('#sdn-hospital-code'), $('#sdn-region-select'), $('#sdn-province-select'), $('#sdn-city-select'), $('#sdn-brgy-select'),  $('#sdn-zip-code'), $('#sdn-email-address'), 
                             $('#sdn-landline-no'), $('#sdn-hospital-mobile-no'), $('#sdn-hospital-director'), $('#sdn-hospital-director-mobile-no'), $('#sdn-point-person'), $('#sdn-point-person-mobile-no')]
         let filled_inputs = false
 
@@ -12,8 +12,8 @@ $(document).ready(function(){ //sdn-register-btn
                 filled_inputs = true
             }
         })
-
-        if(true){
+        
+        if(filled_inputs){
             const data = {
                 hospital_name : $('#sdn-hospital-name').val(),
                 hospital_code : $('#sdn-hospital-code').val(),
@@ -36,8 +36,8 @@ $(document).ready(function(){ //sdn-register-btn
             }
 
             // const data = {
-            //     hospital_name : "Test",
-            //     hospital_code : "0000",
+            //     hospital_name : "Test 0507B",
+            //     hospital_code : "2507",
 
             //     region : "3",
             //     province : "308",
@@ -96,41 +96,45 @@ $(document).ready(function(){ //sdn-register-btn
                         const countdownDuration = 300;
                         
                         // Get the timer element
-                        const timerElement = document.getElementById('resend-otp-timer');
+                        timerElement = document.getElementById('resend-otp-timer');
 
                         // Initialize the countdown value
                         let countdown = countdownDuration;
 
                         // Update the timer display function
                         function updateTimer() {
-                        const minutes = Math.floor(countdown / 60);
-                        const seconds = countdown % 60;
+                            const minutes = Math.floor(countdown / 60);
+                            const seconds = countdown % 60;
 
-                        // Display minutes and seconds
-                        timerElement.textContent = `Resend OTP after: ${minutes}m ${seconds}s`;
+                            // Display minutes and seconds
+                            timerElement.textContent = `Resend OTP after: ${minutes}m ${seconds}s`;
 
-                        // Check if the countdown has reached zero
-                        if (countdown === 0) {
-                            clearInterval(timerInterval); // Stop the timer
-                            timerElement.textContent = '00:00';
-                            // $('#resend-otp-btn').removeClass('opacity-50 pointer-events-none')
-                            const resend_otp_btn = document.querySelector('#resend-otp-btn')
-                            resend_otp_btn.style.opacity = '1'
-                            resend_otp_btn.style.pointerEvents = 'auto'
-                        } else {
-                            countdown--; // Decrement the countdown
-                        }
+                            // Check if the countdown has reached zero
+                            if (countdown === 0) {
+                                clearInterval(timerInterval); // Stop the timer
+                                timerElement.textContent = '00:00';
+                                // $('#resend-otp-btn').removeClass('opacity-50 pointer-events-none')
+                                const resend_otp_btn = document.querySelector('#resend-otp-btn')
+                                resend_otp_btn.style.opacity = '1'
+                                resend_otp_btn.style.pointerEvents = 'auto'
+                            } else {
+                                countdown--; // Decrement the countdown
+                            }
                         }
 
                         // Set up the timer to update every second
-                        const timerInterval = setInterval(updateTimer, 1000);
-
+                        timerInterval = setInterval(updateTimer, 1000);
                     }
                     
                 }
             })
 
+        }else{
+            for(let i = 0; i < reg_inputs.length; i++){
+                reg_inputs[i].addClass('is-invalid').removeClass('is-valid');
+            }
         }
+
     
     })
     //get the user typed OTP

@@ -14,7 +14,7 @@
     $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    // echo $data['COUNT(*)'];
+    $number_of_referrals = $data['COUNT(*)'];
 
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
@@ -35,7 +35,7 @@
     if($data['COUNT(*)'] > 0){
         
         // echo $currentDateTime;
-        $sql = "SELECT hpercode, reception_time, date_time, final_progressed_timer, sent_interdept_time FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE :current_date";
+        $sql = "SELECT hpercode, reception_time, date_time, final_progressed_timer, sent_interdept_time FROM incoming_referrals WHERE status='Approved' AND refer_to = :hospital_name AND reception_time LIKE :current_date";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
         $currentDateTime_param = "%$currentDateTime%";
@@ -44,7 +44,7 @@
         $dataRecep = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // INTERDEPARTAMENTAL REFERRAL 
-        $sql = "SELECT hpercode, final_progress_time FROM incoming_interdept WHERE final_progress_date LIKE :current_date";
+        $sql = "SELECT hpercode, final_progress_time FROM incoming_interdept WHERE interdept_status='Approved' AND final_progress_date LIKE :current_date";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':current_date', $currentDateTime_param, PDO::PARAM_STR); 
         $stmt->execute();
@@ -92,18 +92,22 @@
         }
 
         // Calculate the average in seconds
-        $averageSeconds_interdept = (int) ($totalSeconds_interdept / count($dataRecep_interdept));
+        $averageSeconds_interdept = (int) ($totalSeconds_interdept / (count($dataRecep_interdept) === 0) ? 1 : count($dataRecep_interdept));
 
         // Optionally, convert the average back to hh:mm:ss format
         $averageTime_interdept = gmdate("H:i:s", $averageSeconds_interdept);
 
-        // echo "Average final_progress_time: $averageTime_interdept";
 
         // SDN REFERRAL AVERAGE
         $sum_sdn_average = 0;
 
         foreach ($dataRecep as $item) {
-            $sum_sdn_average += strtotime($item['sent_interdept_time']) - strtotime('00:00:00');
+            // echo '<pre>'; print_r($item); echo '</pre>';
+            if($item['sent_interdept_time'] === NULL || $item['sent_interdept_time'] === ""){
+                $sum_sdn_average += strtotime($item['final_progressed_timer']) - strtotime('00:00:00');
+            }else{
+                $sum_sdn_average += strtotime($item['sent_interdept_time']) - strtotime('00:00:00');
+            }
         }
 
         $count_sdn_average = count($dataRecep);
@@ -222,15 +226,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- <link rel="stylesheet" href="../output.css"> -->
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    
+    <?php require "../header_link.php" ?>
     <link rel="stylesheet" href="../css/dashboard_incoming.css">
 </head>
 <body class="h-screen">
@@ -419,7 +416,6 @@
                     </tr>   
 
                     <tr>
-                        
                         <?php 
                             for($i = 0; $i < count($pat_class_data); $i++){
                                 echo '
@@ -435,7 +431,6 @@
                                 <th>
                                     <label>Tertiary</label>
                                 </th>
-    
                                 ';
                             }
                         ?>
@@ -540,11 +535,11 @@
                 </div>
                 <!-- <div id="modal-body-main" class="modal-body-main"> -->
                 <div id="modal-body" class="logout-modal">
-                        Are you sure you want to logout?
+                    No incoming referrals for today yet.
                 </div>
                 <div class="modal-footer">
                     <button id="ok-modal-btn-main" type="button" data-bs-dismiss="modal">OK</button>
-                    <button id="yes-modal-btn-main" type="button" data-bs-dismiss="modal">Yes</button>
+                    <button id="yes-modal-btn-main" type="button" data-bs-dismiss="modal" style="display:none">Yes</button>
                 </div>
             </div>
         </div>
@@ -554,6 +549,7 @@
         var dataReferFrom = <?php echo $dataReferFrom_json; ?>;
         var dataPatClass = <?php echo $dataPatClass_json; ?>;
         var dataPatType = <?php echo $dataPatType_json; ?>;
+        var number_of_referrals = <?php echo $number_of_referrals ?>
     </script>
     <script type="text/javascript" src="../js_2/dashboard_incoming.js?v=<?php echo time(); ?>"></script>
 </body>

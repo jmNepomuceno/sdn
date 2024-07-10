@@ -18,6 +18,21 @@
         $sdn_password = $_POST['sdn_password'];
         $account_validity = false;
 
+        $timezone = new DateTimeZone('Asia/Manila'); // Replace 'Your/Timezone' with your actual time zone
+        $currentDateTime = new DateTime("",$timezone);
+
+        // Format date components
+        $year = $currentDateTime->format('Y');
+        $month = $currentDateTime->format('m');
+        $day = $currentDateTime->format('d');
+
+        $hours = $currentDateTime->format('H');
+        $minutes = $currentDateTime->format('i');
+        $seconds = $currentDateTime->format('s');
+
+        $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
+        $normal_date = $year . "-" . $month . "-" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
+
         // login verifaction for the outside users
         if($sdn_username != "admin" && $sdn_password != "admin"){
             try{
@@ -52,27 +67,16 @@
                     $_SESSION['post_value_reload'] = 'false';
                     $_SESSION["sub_what"] = "";
 
+                    $_SESSION['datatable_index'] = 0;
+
+                    $_SESSION['running_bool'] = false;
+                    $_SESSION['running_startTime'] = "";
                     $_SESSION['running_timer'] = "";
                     $_SESSION['fifo_hpercode'] = "asdf";
                     $_SESSION['running_hpercode'] = "";
-
-                    // Get the current date and time
-                    $timezone = new DateTimeZone('Asia/Manila'); // Replace 'Your/Timezone' with your actual time zone
-                    $currentDateTime = new DateTime("",$timezone);
-
-                    // Format date components
-                    $year = $currentDateTime->format('Y');
-                    $month = $currentDateTime->format('m');
-                    $day = $currentDateTime->format('d');
-
-                    $hours = $currentDateTime->format('H');
-                    $minutes = $currentDateTime->format('i');
-                    $seconds = $currentDateTime->format('s');
-
-                    $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
-                    $normal_date = $year . "-" . $month . "-" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
-
                     $_SESSION['login_time'] = $final_date;
+
+                    $_SESSION['current_content'] = "";
 
                     $sql = "UPDATE incoming_referrals SET login_time = '". $final_date ."' , login_user='". $sdn_username ."' ";
                     $stmt = $pdo->prepare($sql);
@@ -127,24 +131,27 @@
         
         //verification for admin user logged in
         else if($sdn_username == "admin" && $sdn_password == "admin"){
-            // $_SESSION['user_name'] = "Bataan General Hospital and Medical Center";
             $_SESSION['hospital_code'] = '1437';
             $_SESSION['hospital_name'] = "Bataan General Hospital and Medical Center";
             $_SESSION['hospital_landline'] = '333-3333';
             $_SESSION['hospital_mobile'] = '3333-3333-333';
-            // $_SESSION['user_name'] = "Administrator";
-            // $_SESSION['user_password'] = $sdn_password;
-
+            
             $_SESSION['user_name'] = 'admin';
             $_SESSION['user_password'] = 'admin';
             $_SESSION['last_name'] = 'Administrator';
             $_SESSION['first_name'] = '';
             $_SESSION['middle_name'] = '';
             $_SESSION['user_type'] = 'admin';
-            // $_SESSION["process_timer"] = [];
             $_SESSION['post_value_reload'] = 'false';
             $_SESSION["sub_what"] = "";
+
+            $_SESSION['mcc_passwords'] = [
+                "Lacsamana" => "123",
+                "Baltazar" => "1"
+            ];
             
+            $_SESSION['running_bool'] = false;
+            $_SESSION['running_startTime'] = "";
             $_SESSION['running_timer'] = "";
             $_SESSION['running_hpercode'] = "";
             $_SESSION['running_index'] = "";
@@ -152,22 +159,12 @@
             $_SESSION['update_current_date'] = "";
             $_SESSION['patient_status'] = "";
             $_SESSION['approval_details_arr'] = array();
+
+            $_SESSION['datatable_index'] = 0;
             
-            // Get the current date and time
-            $timezone = new DateTimeZone('Asia/Manila'); // Replace 'Your/Timezone' with your actual time zone
-            $currentDateTime = new DateTime("",$timezone);
+            $_SESSION['current_content'] = "";
 
-            // Format date components
-            $year = $currentDateTime->format('Y');
-            $month = $currentDateTime->format('m');
-            $day = $currentDateTime->format('d');
-
-            $hours = $currentDateTime->format('H');
-            $minutes = $currentDateTime->format('i');
-            $seconds = $currentDateTime->format('s');
-
-            $final_date = $year . "/" . $month . "/" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
-            $temp_date = $year . "-" . $month . "-" . $day . " " . $hours . ":" . $minutes . ":" . $seconds;
+            $temp_date = $normal_date;
             
             $_SESSION['login_time'] = $final_date;
 
@@ -231,9 +228,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Delivery Network</title>
 
-    <link rel="icon" href="/assets/main_imgs/favicon/favicon.ico" type="image/x-icon"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <?php require "./header_link.php" ?>
     <link rel="stylesheet" href="index.css" />
 
     <style>
@@ -270,7 +265,7 @@
 <body>
         <!-- aesthetic hospital website background -->
         <div id="particles-js"></div> 
-        <div class="count-particles"> <span class="js-count-particles">--</span> particles </div> <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> 
+        <div class="count-particles"> <span class="js-count-particles">--</span> particles </div> <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> 
         
     <div class="container">
         
@@ -297,11 +292,11 @@
                         <input type="password" name="sdn_password" id="password-inp" placeholder="Password" required autocomplete="off">
                     </div>
 
-                    <button id="login-btn">Login</button>
+                    <button id="login-btn">Sign In</button>
                 </form>
                 
                 <div class="query-signin-div">
-                    <label for="" id="query-signin-txt">Don't have an account yet? Sign in</label>
+                    <label for="" id="query-signin-txt">No account yet? <span>Sign up</span></label>
                 </div>
             </div>
         </div>
@@ -309,8 +304,8 @@
         <div class="sub-content">
             <!-- <i class="fa-solid fa-arrow-left"></i> -->
             <div class="sub-content-header-div">
-                <div class="sub-content-header">SERVICE DELIVERY NETWORK</div>
                 <i class="return fa-solid fa-arrow-left"></i>
+                <div class="sub-content-header">SERVICE DELIVERY NETWORK</div>
             </div>
 
             <div class="sub-nav-btns">
@@ -324,22 +319,20 @@
             </div>
 
             <form class="sub-content-registration-form">
-                
-
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Name</label>
-                    <input id="sdn-hospital-name" type="text" class="reg-inputs" required autocomplete="off">
+                    <label for="" class="reg-labels">Hospital Name<span>*</span></label>
+                    <input id="sdn-hospital-name" type="text" class="reg-inputs form-control" required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Code</label>
-                    <input id="sdn-hospital-code" type="number" class="reg-inputs" required autocomplete="off">
+                    <label for="" class="reg-labels">Hospital Code<span>*</span></label>
+                    <input id="sdn-hospital-code" type="number" class="reg-inputs form-control" required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Region</label>
-                    <select id="sdn-region-select" class="reg-inputs" name="region" required autocomplete="off" style="cursor:pointer;" onchange="getLocations('region' , 'sdn-region')">
-                        <option value="" class="">Choose a Region</option>
+                    <label for="" class="reg-labels">Address: Region<span>*</span></label>
+                    <select id="sdn-region-select" class="reg-inputs form-control" name="region" required autocomplete="off" style="cursor:pointer;" onchange="getLocations('region' , 'sdn-region')">
+                        <option value="" class="">Select</option>
                         <?php 
                             $stmt = $pdo->query('SELECT region_code, region_description from region');
                             while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -350,64 +343,64 @@
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Province</label>
-                    <select id="sdn-province-select" class="reg-inputs" name="province" required autocomplete="off" onchange="getLocations('province' , 'sdn-province')">
-                        <option value="" class="">Choose a Province</option>
+                    <label for="" class="reg-labels">Address: Province<span>*</span></label>
+                    <select id="sdn-province-select" class="reg-inputs form-control" name="province" required autocomplete="off" onchange="getLocations('province' , 'sdn-province')">
+                        <option value="" class="">Select</option>
                     </select>
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Municipality</label>
-                    <select id="sdn-city-select" class="reg-inputs" name="city" required autocomplete="off" onchange="getLocations('city', 'sdn-city')">
-                        <option value="" class="">Choose a Municipality</option>
+                    <label for="" class="reg-labels">Address: Municipality<span>*</span></label>
+                    <select id="sdn-city-select" class="reg-inputs form-control" name="city" required autocomplete="off" onchange="getLocations('city', 'sdn-city')">
+                        <option value="" class="">Select</option>
                     </select>
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Barangay</label>
-                    <select id="sdn-brgy-select" class="reg-inputs" name="brgy" required autocomplete="off">
-                        <option value="" class="">Choose a Barangay</option>
+                    <label for="" class="reg-labels">Address: Barangay<span>*</span></label>
+                    <select id="sdn-brgy-select" class="reg-inputs form-control" name="brgy" required autocomplete="off">
+                        <option value="" class="">Select</option>
                     </select>
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Zip Code</label>
-                    <input id="sdn-zip-code" type="number" class="reg-inputs" required autocomplete="off">
+                    <label for="" class="reg-labels">Zip Code<span>*</span></label>
+                    <input id="sdn-zip-code" type="number" class="reg-inputs form-control" required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Email Address</label>
-                    <input id="sdn-email-address" type="email" class="reg-inputs"  required autocomplete="off">
+                    <label for="" class="reg-labels">Email Address<span>*</span></label>
+                    <input id="sdn-email-address" type="email" class="reg-inputs form-control"  required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Landline No.</label>
-                    <input id="sdn-landline-no" type="text" class="reg-inputs" required autocomplete="off">
+                    <label for="" class="reg-labels">Hospital Landline No.<span>*</span></label>
+                    <input id="sdn-landline-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="999-9999">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Mobile No.</label>
-                    <input id="sdn-hospital-mobile-no" type="text" class="reg-inputs" required autocomplete="off">
+                    <label for="" class="reg-labels">Hospital Mobile No.<span>*</span></label>
+                    <input id="sdn-hospital-mobile-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="9999-999-9999">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Director</label>
-                    <input id="sdn-hospital-director" type="text" class="reg-inputs" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
+                    <label for="" class="reg-labels">Hospital Director<span>*</span></label>
+                    <input id="sdn-hospital-director" type="text" class="reg-inputs form-control" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Director Mobile No.</label>
-                    <input id="sdn-hospital-director-mobile-no" type="text" class="reg-inputs" required autocomplete="off">
+                    <label for="" class="reg-labels">Hospital Director Mobile No.<span>*</span></label>
+                    <input id="sdn-hospital-director-mobile-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="9999-999-9999">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Point Person</label>
-                    <input id="sdn-point-person" type="text" class="reg-inputs" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
+                    <label for="" class="reg-labels">Point Person<span>*</span></label>
+                    <input id="sdn-point-person" type="text" class="reg-inputs form-control" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Point Person Mobile No.</label>
-                    <input id="sdn-point-person-mobile-no" type="text" class="reg-inputs" required autocomplete="off">
+                    <label for="" class="reg-labels">Point Person Mobile No.<span>*</span></label>
+                    <input id="sdn-point-person-mobile-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="9999-999-9999">
                 </div>
 
                 <!-- <button id="register-confirm-btn" type="button" class="btn btn-success">Success</button> -->
@@ -420,48 +413,48 @@
                 
                             
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Hospital Code</label>
-                    <input id="sdn-autho-hospital-code-id" type="number" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">Hospital Code<span>*</span></label>
+                    <input id="sdn-autho-hospital-code-id" type="number" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Cipher Key</label>
-                    <input id="sdn-autho-cipher-key-id" type="text" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">Cipher Key<span>*</span></label>
+                    <input id="sdn-autho-cipher-key-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Last Name</label>
-                    <input id="sdn-autho-last-name-id" type="text" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">Last Name<span>*</span></label>
+                    <input id="sdn-autho-last-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">First Name</label>
-                    <input id="sdn-autho-first-name-id" type="text" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">First Name<span>*</span></label>
+                    <input id="sdn-autho-first-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Middle Name</label>
-                    <input id="sdn-autho-middle-name-id" type="text" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">Middle Name<span>*</span></label>
+                    <input id="sdn-autho-middle-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
                     <label for="" class="reg-labels">Extension Name</label>
-                    <input id="sdn-autho-ext-name-id" type="text" class="reg-inputs" autocomplete="off">
+                    <input id="sdn-autho-ext-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Username</label>
-                    <input id="sdn-autho-username" type="text" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">Username<span>*</span></label>
+                    <input id="sdn-autho-username" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Password</label>
-                    <input id="sdn-autho-password" type="password" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">Password<span>*</span></label>
+                    <input id="sdn-autho-password" type="password" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Confirm Password</label>
-                    <input id="sdn-autho-confirm-password" type="password" class="reg-inputs" autocomplete="off">
+                    <label for="" class="reg-labels">Confirm Password<span>*</span></label>
+                    <input id="sdn-autho-confirm-password" type="password" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <!-- <button id="register-confirm-btn" type="button" class="btn btn-success">Success</button> -->
@@ -546,8 +539,56 @@
                 </div>
             </div>
         </div>
-                            
     </div>
+
+    <div id="overlay"></div>
+    <i id="tutorial-btn" class="fa-regular fa-circle-question"></i>
+
+    <!-- <div class="modal fade" id="tutorial-modal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div id="tutorial_dialog" class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 id="tutorial_title" class="modal-title fs-5">Welcome to BataanGHMC Service Delivery Network Tutorial</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="tutorial_body">
+                First, click sign in to register your RHU
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+        </div>
+    </div> -->
+
+    <div id="tutorial-carousel" class="carousel slide">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#tutorial-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#tutorial-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#tutorial-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="./assets/tutorial_images/login_imgs/login_tutorial_1.png" class="d-block w-100" alt="image">
+            </div>
+            <div class="carousel-item">
+                <img src="./assets/tutorial_images/login_imgs/login_tutorial_2.png" class="d-block w-100" alt="image">
+            </div>
+            <div class="carousel-item">
+                <img src="./assets/tutorial_images/login_imgs/login_tutorial_4.png" class="d-block w-100" alt="image">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#tutorial-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#tutorial-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -556,6 +597,7 @@
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
 
 
     <script src="./index.js?v=<?php echo time(); ?>"></script>

@@ -8,13 +8,13 @@
     // Format the DateTime object to get the year, month, and day
     $formattedDate = $dateTime->format('Y-m-d') . '%';
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     // $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE '2024-02-08%' AND refer_to = '" . $_SESSION["hospital_name"] . "'";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    // echo $data['COUNT(*)'];
+    $number_of_referrals = $data['COUNT(*)'];
 
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
@@ -29,16 +29,27 @@
     $slowest_response_final  = "00:00:00";
     
     $currentDateTime = date('Y-m-d');
+    $formatted_average_sdn_average = "00:00:00";
+    $averageTime_interdept = "00:00:00";
 
     if($data['COUNT(*)'] > 0){
+        
         // echo $currentDateTime;
-        $sql = "SELECT hpercode, reception_time, date_time, final_progressed_timer, sent_interdept_time FROM incoming_referrals WHERE referred_by = :hospital_name AND reception_time LIKE :current_date";
+        $sql = "SELECT hpercode, reception_time, date_time, final_progressed_timer, sent_interdept_time FROM incoming_referrals WHERE status='Approved' AND refer_to = :hospital_name AND reception_time LIKE :current_date";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
         $currentDateTime_param = "%$currentDateTime%";
         $stmt->bindParam(':current_date', $currentDateTime_param, PDO::PARAM_STR); 
         $stmt->execute();
         $dataRecep = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // INTERDEPARTAMENTAL REFERRAL 
+        $sql = "SELECT hpercode, final_progress_time FROM incoming_interdept WHERE interdept_status='Approved' AND final_progress_date LIKE :current_date";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':current_date', $currentDateTime_param, PDO::PARAM_STR); 
+        $stmt->execute();
+        $dataRecep_interdept = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
         // echo '<pre>'; print_r($dataRecep); echo '</pre>';
         // echo '<pre>'; print_r($dataRecep_interdept); echo '</pre>';
@@ -70,6 +81,42 @@
 
             array_push($recep_arr, $formattedDifference);
         }
+        
+        // INTERDEPT REFERRAL AVERAGE
+        $totalSeconds_interdept = 0;
+        foreach ($dataRecep_interdept as $item) {
+            // Extract hours, minutes, and seconds from final_progress_time
+            list($hours, $minutes, $seconds) = explode(':', $item['final_progress_time']);
+            // Convert hours and minutes to seconds and add to total
+            $totalSeconds_interdept += $hours * 3600 + $minutes * 60 + $seconds;
+        }
+
+        // Calculate the average in seconds
+        $averageSeconds_interdept = (int) ($totalSeconds_interdept / count($dataRecep_interdept));
+
+        // Optionally, convert the average back to hh:mm:ss format
+        $averageTime_interdept = gmdate("H:i:s", $averageSeconds_interdept);
+
+
+        // SDN REFERRAL AVERAGE
+        $sum_sdn_average = 0;
+
+        foreach ($dataRecep as $item) {
+            // echo '<pre>'; print_r($item); echo '</pre>';
+            if($item['sent_interdept_time'] === NULL || $item['sent_interdept_time'] === ""){
+                $sum_sdn_average += strtotime($item['final_progressed_timer']) - strtotime('00:00:00');
+            }else{
+                $sum_sdn_average += strtotime($item['sent_interdept_time']) - strtotime('00:00:00');
+            }
+        }
+
+        $count_sdn_average = count($dataRecep);
+        $average_sdn_average = $sum_sdn_average / $count_sdn_average;
+        $average_seconds_sdn_average = (int)$average_sdn_average;
+        $formatted_average_sdn_average = gmdate("H:i:s", $average_seconds_sdn_average);
+
+        // print_r($recep_arr);
+        // echo '<pre>'; print_r($recep_arr); echo '</pre>';
 
         $fastest_recep_secs = array();
         // Function to convert duration to seconds
@@ -146,7 +193,7 @@
     $current_date_2 = date("F j, Y - h:ia");
 
     // get all the refer from hospitals
-    $sql = "SELECT refer_to FROM incoming_referrals WHERE referred_by = :hospital_name AND reception_time LIKE :current_date";
+    $sql = "SELECT referred_by FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE :current_date";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
     $currentDateTime_param = "%$currentDateTime%";
@@ -155,7 +202,7 @@
     $dataReferFrom = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dataReferFrom_json = json_encode($dataReferFrom);
 
-    $sql = "SELECT pat_class FROM incoming_referrals WHERE referred_by = :hospital_name AND reception_time LIKE :current_date";
+    $sql = "SELECT pat_class FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE :current_date";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
     $currentDateTime_param = "%$currentDateTime%";
@@ -164,7 +211,7 @@
     $dataPatClass = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dataPatClass_json = json_encode($dataPatClass);
 
-    $sql = "SELECT type FROM incoming_referrals WHERE referred_by = :hospital_name AND reception_time LIKE :current_date";
+    $sql = "SELECT type FROM incoming_referrals WHERE refer_to = :hospital_name AND reception_time LIKE :current_date";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
     $currentDateTime_param = "%$currentDateTime%";
@@ -179,15 +226,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- <link rel="stylesheet" href="../output.css"> -->
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    
+    <?php require "../header_link.php" ?>
     <link rel="stylesheet" href="../css/dashboard_outgoing.css">
 </head>
 <body class="h-screen">
@@ -308,6 +348,17 @@
             </div>
 
             <div>
+                <label id="average-sdn-approve-id"><?php echo $formatted_average_sdn_average ?></label>
+                <label>Average SDN Approval Time</label>
+            </div>
+
+            <div>
+                <label id="average-interdept-approve-id"><?php echo $averageTime_interdept ?></label>
+                <label id="average-interdept-approve-lbl">Average Interdepartamental Approval Time</label>
+            </div>
+
+
+            <div>
                 <label id="average-approve-id"><?php echo $averageDuration_approval ?></label>
                 <label>Average Approval Time</label>
             </div>
@@ -413,8 +464,8 @@
                         $formattedDate = $dateTime->format('Y-m-d') . '%';
                         // echo $formattedDate;
 
-                        $sql = "SELECT pat_class, type, refer_to FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
-                        // $sql = "SELECT pat_class, type, refer_to FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+                        $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :proc_date AND referred_by = '" . $_SESSION["hospital_name"] . "'";
+                        // $sql = "SELECT pat_class, type, referred_by FROM incoming_referrals WHERE (status='Approved' OR status='Checked' OR status='Arrived') AND refer_to = '" . $_SESSION["hospital_name"] . "'";
                         $stmt = $pdo->prepare($sql);
                         $stmt->bindParam(':proc_date', $formattedDate, PDO::PARAM_STR);
                         $stmt->execute();
@@ -422,7 +473,7 @@
                         // echo '<pre>'; print_r($tr_data); echo '</pre>';
 
                         for($i = 0; $i < count($tr_data); $i++){
-                            echo '<input type="hidden" class="referred-by-class" value="' . $tr_data[$i]["refer_to"] . '">';
+                            echo '<input type="hidden" class="referred-by-class" value="' . $tr_data[$i]["referred_by"] . '">';
                         }
 
                         $in_table = [];
@@ -486,11 +537,11 @@
                 </div>
                 <!-- <div id="modal-body-main" class="modal-body-main"> -->
                 <div id="modal-body" class="logout-modal">
-                        Are you sure you want to logout?
+                    No outgoing referrals for today yet.
                 </div>
                 <div class="modal-footer">
                     <button id="ok-modal-btn-main" type="button" data-bs-dismiss="modal">OK</button>
-                    <button id="yes-modal-btn-main" type="button" data-bs-dismiss="modal">Yes</button>
+                    <button id="yes-modal-btn-main" type="button" data-bs-dismiss="modal" style="display:none">Yes</button>
                 </div>
             </div>
         </div>
@@ -500,6 +551,7 @@
         var dataReferFrom = <?php echo $dataReferFrom_json; ?>;
         var dataPatClass = <?php echo $dataPatClass_json; ?>;
         var dataPatType = <?php echo $dataPatType_json; ?>;
+        var number_of_referrals = <?php echo $number_of_referrals ?>
     </script>
     <script type="text/javascript" src="../js_2/dashboard_outgoing.js?v=<?php echo time(); ?>"></script>
 </body>

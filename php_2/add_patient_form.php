@@ -4,29 +4,39 @@
 
     //PERSONAL INFORMATIONS // 16
 
+    // generation for hpercode or referral patient code
     // get the last value of hpercode from the database
     $sql = "SELECT hpercode FROM hperson ORDER BY hpercode DESC LIMIT 1";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    $last_number = substr($data['hpercode'], 6);
 
-    $hpercodePrefix = "BGHMC-"; // Set the prefix
-    $new_number = $last_number + 1; // Increment the last number
+    if($data == "" || $data == null ){
+        $hpercode = "PAT000001";
+    }else{
+        $last_number = substr($data['hpercode'], 3);
 
-    $zeros = "0";
+        $hpercodePrefix = "PAT"; // Set the prefix
+        $new_number = $last_number + 1; // Increment the last number
 
-    if($new_number <= 9){
-        $zeros = "000";
-    }else if($new_number <= 99){
-        $zeros = "00";
-    }else if($new_number <= 999){
         $zeros = "0";
-    }else if($new_number <= 9999){
-        $zeros = "";
-    }
 
-    $hpercode = $hpercodePrefix . $zeros . $new_number;
+        if($new_number <= 9){
+            $zeros = "00000";
+        }else if($new_number <= 99){
+            $zeros = "0000";
+        }else if($new_number <= 999){
+            $zeros = "000";
+        }else if($new_number <= 9999){
+            $zeros = "00";
+        }else if($new_number <= 99999){
+            $zeros = "0";
+        }else if($new_number <= 999999){
+            $zeros = "";
+        }
+
+        $hpercode = $hpercodePrefix . $zeros . $new_number;
+    }
 
     $hpatcode = $_POST['hpatcode']; //2
     $patlast = $_POST['patlast']; //3
@@ -163,7 +173,7 @@
     $stmt->bindParam(31, $pat_barangay_ca, PDO::PARAM_STR);
     $stmt->bindParam(32, $pat_email_ca, PDO::PARAM_STR);
     $stmt->bindParam(33, $pat_homephone_no_ca, PDO::PARAM_STR);
-    $stmt->bindParam(34, $pat_mobile_no_ca, PDO::PARAM_INT);
+    $stmt->bindParam(34, $pat_mobile_no_ca, PDO::PARAM_STR);
 
     $stmt->bindParam(35, $pat_bldg_cwa, PDO::PARAM_STR);
     $stmt->bindParam(36, $hperson_street_block_pa_cwa, PDO::PARAM_STR);
@@ -172,7 +182,7 @@
     $stmt->bindParam(39, $pat_municipality_cwa, PDO::PARAM_STR);
     $stmt->bindParam(40, $pat_barangay_cwa, PDO::PARAM_STR);
     $stmt->bindParam(41, $pat_namework_place, PDO::PARAM_STR);
-    $stmt->bindParam(42, $pat_landline_no, PDO::PARAM_INT);
+    $stmt->bindParam(42, $pat_landline_no, PDO::PARAM_STR);
     $stmt->bindParam(43, $pat_email_ca, PDO::PARAM_STR);
 
     $stmt->bindParam(44, $pat_emp_name, PDO::PARAM_STR);

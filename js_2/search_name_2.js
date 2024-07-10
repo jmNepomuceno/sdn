@@ -30,6 +30,7 @@ $(document).ready(function(){
 
     let if_clicked_same_perma = false;
     let global_breakdown_index = 0;
+    const patHistoryModal = new bootstrap.Modal(document.getElementById('patHistoryModal'));
 
     function searchSubDiv() {
         const search_Sub_Div_elements = document.querySelectorAll('.search-sub-div');
@@ -230,21 +231,30 @@ $(document).ready(function(){
                             $(all_input_arr[j]).css('background' , '#cccccc')
                             // $(all_input_arr[j]).css('border' , '2px solid red')
                         }
-                        
-                        if(response[0].status === null){
-                            $("#classification-dropdown").removeClass('hidden')
 
+                        if(response[0].status === null || response[0].status === "Discharged"){
+                            $("#classification-dropdown").css('display' , 'block')   
                         }else{
-                            $('#add-patform-btn-id').removeClass('bg-cyan-600 hover:bg-cyan-700')
-                            $('#add-patform-btn-id').addClass('bg-green-600 hover:bg-green-700')
-                            $('#add-patform-btn-id').addClass('pointer-events-none opacity-20')
-                            $("#classification-dropdown").addClass('hidden')
+                            // #0991b3 // #0e7590
+                            // #17a44f // #178140
+                            console.log('pending')
+                            $("#add-patform-btn-id").css('background-color' , '#17a44f')
+                            $("#add-patform-btn-id").hover(
+                                function() {
+                                  $(this).css('background-color', '#178140');
+                                },
+                                function() {
+                                  // Mouse leaves the element
+                                  $(this).css('background-color', '#17a44f'); // Reset to original color or specify a color
+                                }
+                            );
 
+                            $("#add-patform-btn-id").css('pointer-events' , 'none')
+                            $("#classification-dropdown").css('display' , 'none')
                         }
 
                         $('#clear-patform-btn-id').text('Cancel')
                         $('#clear-patform-btn-id').css('width' , '90px')
-                        $('#classification-dropdown').css('display', 'flex')
                         $('#add-patform-btn-id').css('margin-left', '5%')
                         $('#add-patform-btn-id').css('pointer-events', 'none')
                         $('#add-patform-btn-id').css('opacity', '0.3')
@@ -320,12 +330,167 @@ $(document).ready(function(){
                     }
 
                     search_query_result.innerHTML += response;
-
+                    search_query_result.style.color = 'white'
+                    search_query_result.style.fontWeight = 'bold'
+                    
                     searchSubDiv();
                 }
             })
         }
-        
-
     })
+
+    function onClickReferralCase(index, response, newTemp_response){
+        // css toggle for referral case buttons
+        console.log('here')
+        $('.ref-counter').eq(index - 1).css('opacity', '1')
+        for(let i = 0; i < $('.ref-counter').length; i++){
+            if(i != index - 1){
+                $('.ref-counter').eq(i).css('opacity', '0.3')
+            }
+        }
+        
+        index = index - 1
+
+        $('#info-input-lname').text(response[1].patlast)
+        $('#info-input-fname').text(response[1].patfirst)
+        $('#info-input-mname').text(response[1].patmiddle)
+        $('#info-input-sname').text(response[1].patsuffix)
+        $('#info-input-bdate').text(response[0].patbdate)
+        $('#info-input-age').text(response[0].pat_age)
+        $('#info-input-sex').text(response[0].patsex)
+        $('#info-input-brgy').text(response[0].pat_curr_barangay)
+        $('#info-input-city').text(response[0].pat_curr_municipality)
+        $('#info-input-prov').text(response[0].pat_curr_province)
+        $('#info-input-region').text(response[0].pat_curr_region)
+        $('#info-input-email').text(response[0].pat_email)
+        $('#info-input-mobile').text("0" + response[0].pat_mobile_no)
+        $('#info-input-telephone').text(response[0].pat_homephone_no)
+        $('#info-input-rec_at').text(response[0].created_at)
+        $('#info-input-reg_at').text(response[0].hpatcode)
+
+        $('#info-input-pat-type').text(newTemp_response[index].type)
+        $('#info-input-pat-class').text(newTemp_response[index].pat_class)
+        $('#info-input-ref-date').text(newTemp_response[index].date_time)
+        $('#info-input-ref-by').text(newTemp_response[index].referred_by)
+        $('#info-input-ref-to').text(newTemp_response[index].refer_to)
+        $('#info-input-approve-time').text(newTemp_response[index].approved_time)
+        $('#info-input-reason-ref').text(newTemp_response[index].reason)
+        $('#info-input-approve-details').text(newTemp_response[index].approval_details)
+
+        // #6aa37d
+        $('#pat-ref-status-span').css('color' , '#619e75')
+        $('#pat-ref-status-span').text(newTemp_response[index].status)
+    }
+
+    $(document).on('click', '#pat-history', function() {
+        const data = {
+            hpercode : $('.search-sub-code').eq(global_breakdown_index).text()
+        }
+        console.log(data)
+
+        $.ajax({
+            url: '../php_2/fetch_pat_history.php',
+            method: "POST",
+            data:data,
+            dataType: 'JSON',
+            success: function(response){
+                console.log(response)
+                let referral_counter = response[response.length - 1].length
+                
+                patHistoryModal.show()
+
+                // initial data, but with the first referral case
+                $('#info-input-lname').text(response[1].patlast)
+                $('#info-input-fname').text(response[1].patfirst)
+                $('#info-input-mname').text(response[1].patmiddle)
+                $('#info-input-sname').text(response[1].patsuffix)
+                $('#info-input-bdate').text(response[0].patbdate)
+                $('#info-input-age').text(response[0].pat_age)
+                $('#info-input-sex').text(response[0].patsex)
+                $('#info-input-brgy').text(response[0].pat_curr_barangay)
+                $('#info-input-city').text(response[0].pat_curr_municipality)
+                $('#info-input-prov').text(response[0].pat_curr_province)
+                $('#info-input-region').text(response[0].pat_curr_region)
+                $('#info-input-email').text(response[0].pat_email)
+                $('#info-input-mobile').text("0" + response[0].pat_mobile_no)
+                $('#info-input-telephone').text(response[0].pat_homephone_no)
+                $('#info-input-rec_at').text(response[0].created_at)
+                $('#info-input-reg_at').text(response[0].hpatcode)
+
+                $('#info-input-pat-type').text(response[1].type)
+                $('#info-input-pat-class').text(response[1].pat_class)
+                $('#info-input-ref-date').text(response[1].date_time)
+                $('#info-input-ref-by').text(response[1].referred_by)
+                $('#info-input-ref-to').text(response[1].refer_to)
+                $('#info-input-approve-time').text(response[1].approved_time)
+                $('#info-input-reason-ref').text(response[1].reason)
+                $('#info-input-approve-details').text(response[1].approval_details)
+
+                $('#pat-ref-status-span').css('color' , '#619e75')
+                $('#pat-ref-status-span').text(response[1].status)
+
+                $('#info-input-pat-discharge').text((response[1].discharged_time) ? response[1].discharged_time : "N/A")
+
+                // generate the number of referral case
+                let temp_response = response;
+                const [, ...newTemp_response] = temp_response; // Skip the first element and collect the rest
+                newTemp_response.pop()
+
+                console.log(newTemp_response);
+
+                // remove all the current buttons elements
+                const parentElement = document.querySelector('.num-refer-div');
+                Array.from(parentElement.querySelectorAll('.ref-counter')).forEach(button => button.remove());
+
+                for(let i = 1; i <= referral_counter; i++){
+                    let elem = document.createElement('button')
+                    elem.className = 'ref-counter'
+
+                    const dateTimeString = newTemp_response[i - 1]['date_time'];
+                    const datePart = dateTimeString.split(' ')[0];
+                    const formattedDate = datePart.split('-').join('/');
+                    elem.textContent = `#${i}. ${formattedDate}`
+
+                    if(i === 1){
+                        elem.style.opacity = '1'
+                    }else{
+                        elem.style.opacity = '0.5'
+                    }
+                    document.querySelector('.num-refer-div').appendChild(elem)
+                    elem.addEventListener('click' , () => onClickReferralCase(i, response, newTemp_response))
+                }
+
+                // pat-ref-sub-div
+ 
+                // if(response[1].status === 'Discharged'){
+                //     const containerDiv = document.createElement('div');
+                //     containerDiv.className = 'input-div';
+
+                //     const label = document.createElement('label');
+                //     label.className = 'input-title-lbl';
+                //     label.textContent = 'Discharged Time';
+
+                //     const input = document.createElement('input');
+                //     input.type = 'text';
+                //     input.className = 'info-inputs';
+                //     input.id = 'info-input-discharged-time';
+                //     input.value = 'ER';
+
+                //     containerDiv.appendChild(label);
+                //     containerDiv.appendChild(input);
+
+                //     const motherDiv = document.querySelector('.pat-ref-sub-div');
+                //     motherDiv.appendChild(containerDiv);
+
+                //     $('#info-input-discharged-time').val(response[1].discharged_time)
+                // }else{
+                //     const motherDiv = document.querySelector('.pat-ref-sub-div');
+                //     const inputToRemove = document.getElementById('info-input-discharged-time');
+                //     if (inputToRemove) {
+                //         motherDiv.removeChild(inputToRemove.parentNode); // Remove the parent container div
+                //     }
+                // }
+            }
+        })
+    });
 })

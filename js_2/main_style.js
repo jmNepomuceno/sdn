@@ -1,25 +1,34 @@
 $(document).ready(function(){
+    // window height
+    const height = window.innerHeight;
+
+    // window width
+    const width = window.innerWidth;
+
+    console.log(height, width);
     // load the 4 web pages
     const loadContent = (url) => {
         $.ajax({
-            url:url,
+            url:url, 
             success: function(response){
                 $('#container').html(response);
             }
         })
     }
 
+    const myModal_main = new bootstrap.Modal(document.getElementById('myModal-main'));
+
     // BGHMC adheres to all satutatory mandatory and regulatory requirements to ensure standard implementation
-    loadContent('../php_2/default_view2.php')
+    // loadContent('../php_2/default_view2.php')
     // loadContent('../php_2/patient_register_form2.php')
     // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
-    // loadContent('../php_2/incoming_form2.php')
+    loadContent('../php_2/incoming_form2.php')
     // loadContent('../php_2/bucas_queue.php')
     // loadContent('../php_2/bucas_history.php')
     // loadContent('../php_2/outgoing_form2.php')
     // loadContent('../php_2/interdept_form.php')
 
-    // Function to parse query parameters from URL
+    // Function to parse query parameters from URL  
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
         var vars = query.split("&");
@@ -146,7 +155,6 @@ $(document).ready(function(){
             $('#sdn-title-h1').removeClass('hidden')
             side_bar_btn_counter = 0;
         }
-        
     })
 
     
@@ -186,7 +194,9 @@ $(document).ready(function(){
             success: function(response) {
                 // response = JSON.parse(response);
                 console.log(response , " here")
-                window.location.href = "http://192.168.42.222:8035/index.php" 
+                // window.location.href = "http://192.168.42.222:8035/index.php" 
+                // window.location.href = "http://10.10.90.14:8079/index.php" 
+                window.location.href = "https://sdnplus.bataanghmc.net/" 
             }
         });
     })
@@ -330,7 +340,6 @@ $(document).ready(function(){
 
     $('#outgoing-sub-div-id').on('click' , function(event){
         event.preventDefault();
-
         loadContent('../php_2/outgoing_form2.php')
     })
 
@@ -342,6 +351,7 @@ $(document).ready(function(){
 
     $('#patient-reg-form-sub-side-bar').on('click' , function(event){
         event.preventDefault();
+        $(document).trigger('saveTimeSession');
 
         loadContent('../php_2/patient_register_form2.php')
     })

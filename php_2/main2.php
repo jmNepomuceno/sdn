@@ -15,7 +15,7 @@
         }
     }
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to='Bataan General Hospital and Medical Center'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to='". $_SESSION['hospital_name'] ."'";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $incoming_num = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,14 +27,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SDN</title>
-    <link rel="icon" href="../assets/main_imgs/favicon/favicon.ico" type="image/x-icon"/>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <?php require "../header_link.php" ?>
 
     <link rel="stylesheet" href="../css/main_style.css" />
     <style>
@@ -276,6 +270,36 @@
             </div>
         </div>
     </div>
+
+    <div id="overlay"></div>
+
+    <div id="tutorial-carousel" class="carousel slide">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#tutorial-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#tutorial-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#tutorial-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="../assets/tutorial_images/login_imgs/login_tutorial_1.png" class="d-block w-100" alt="image">
+            </div>
+            <div class="carousel-item">
+                <img src="../assets/tutorial_images/login_imgs/login_tutorial_2.png" class="d-block w-100" alt="image">
+            </div>
+            <div class="carousel-item">
+                <img src="../assets/tutorial_images/login_imgs/login_tutorial_4.png" class="d-block w-100" alt="image">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#tutorial-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#tutorial-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <!-- <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script> -->

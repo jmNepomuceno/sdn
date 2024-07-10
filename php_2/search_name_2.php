@@ -27,15 +27,15 @@
         $conditions[] = "patmiddle LIKE :search_mname";
     }
 
-    $sql = "SELECT patfirst, patlast, patmiddle, hpercode, patbdate, status FROM hperson";
+    $sql = "SELECT patfirst, patlast, patmiddle, hpercode, patbdate, hpatcode, status FROM hperson";
 
     if (!empty($conditions)) {
         $sql .= " WHERE " . implode(" AND ", $conditions);
     }
 
-    if($hpatcode != '1437'){
-        $sql .= " AND hpatcode=:hpatcode;";
-    }
+    // if($hpatcode != '1437'){
+    //     $sql .= " AND hpatcode=:hpatcode;";
+    // }
     $stmt = $pdo->prepare($sql);
 
     if (!empty($search_lname)) {
@@ -54,15 +54,16 @@
     }
 
     
-    if($hpatcode != '1437'){
-        $stmt->bindParam(':hpatcode', $hpatcode, PDO::PARAM_STR);   
-    }
+    // if($hpatcode != '1437'){
+    //     $stmt->bindParam(':hpatcode', $hpatcode, PDO::PARAM_STR);   
+    // }
     
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // $finalJsonString = json_encode($data);
     // echo $finalJsonString;
+    // echo json_encode($data);
     
     if(count($data) >= 1){
         for($i = 0; $i < count($data); $i++){
@@ -72,18 +73,34 @@
                 $bg_color = "transparent";
             }
 
+            $history_style = "none";
+            $text_color = "white";
+            if (isset($data[$i]['status'])) {
+                $text_color =  "#99ff99";
+                $history_style = "block";
+            }
+
+            $sql = "SELECT hospital_name FROM sdn_hospital WHERE hospital_code=?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$data[$i]['hpatcode']]);
+            $hpatcode_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
             echo '<div id="search-sub-div" class="search-sub-div" style="background: '. $bg_color .'">';
             echo ' <div id="upper-part-sub-div">';
             echo    '<h1 id="pat-id-h1" class="search-sub-code">'. $data[$i]['hpercode'] .'</h1>';
             echo      '<div>';
-            echo          '<h1">'. $data[$i]['patbdate'] .'</h1>';
+            echo          '<h1>'. $data[$i]['patbdate'] .'</h1>';
             echo           '<span class="fa-solid fa-user"></span>';
             echo     ' </div>';
-            echo    '</div>';
+            echo '</div>';
             echo ' <div id="lower-part-sub-div">';
             echo     ' <h3 id="pat-name">'. $data[$i]['patlast'] . ", " . $data[$i]['patfirst'] . " " . $data[$i]['patmiddle'] .'</h3>';
-            echo      '<h3 id="pat-stat">' . (isset($data[$i]['status']) ? "Status: Referred-" . $data[$i]['status'] : "Status: Not yet referred") . '</h3>';
+            echo      '<div>';
+            echo        '<h3 class="pat-history-class" id="pat-history" style="display:'.$history_style.';"> <i class="fa-solid fa-clock-rotate-left"></i> </h3>';
+            echo        '<h3 id="pat-stat" style="color: '.$text_color.';">' . (isset($data[$i]['status']) ? "Status: Referred-" . $data[$i]['status'] : "Status: Not yet referred") . '</h3>';
+            echo      '</div>';
             echo  '</div>';
+            echo '<label id="reg-at-lbl">Registered at: '. $hpatcode_data['hospital_name'] .'</label>';
             echo'</div>';
         }
     }else{

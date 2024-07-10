@@ -21,16 +21,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-QLqnKz6C9OrRGIWwA6Hph2JVBA5Mz0lU4AJU5dzXXCfb7XvqTtW84i1z7MigkdZ0" crossorigin="anonymous"> -->
+    <?php require "../header_link.php" ?>
     
-    <link rel="stylesheet" href="../output.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="h-screen overflow-hidden">
@@ -44,7 +37,6 @@
             <h1 id="sdn-title-h1" class="text-white text-2xl ml-2 cursor-pointer"> Service Delivery Network</h1>
         </div>
         <div class="account-header-div w-[35%] h-full flex flex-row justify-end items-center mr-2">
-
             <div class="w-auto h-5/6 flex flex-row justify-end items-center mr-2">
                 <!-- <div class="w-[33.3%] h-full   flex flex-row justify-end items-center -mr-1">
                     <h1 class="text-center w-full rounded-full p-1 bg-yellow-500 font-bold">6</h1>
@@ -154,8 +146,8 @@
 
     <main class="custom-box-shadow w-full h-full flex flex-row justify-center items-center bg-[#ededf2]">
         <div class="w-[70%] h-[80%] bg-white rounded-3xl flex flex-col justify-start items-center">
-            <div class="w-full h-[8%] border-b-2 border-[#bfbfbf]  flex flex-row justify-start items-center rounded-t-3xl">
-                <h1 class="text-xl font-bold ml-4">Account History Log</h1>
+            <div class="w-full h-[8%] border-b-2 border-[#bfbfbf]  flex flex-row justify-start items-center rounded-t-3xl bg-[#1f292e]">
+                <h1 class="text-xl font-bold ml-4 text-white">Account History Log</h1>
             </div> 
 
            <div class="w-full h-[12%] border-b-2 border-[#bfbfbf] flex flex-row justify-between items-center">
@@ -165,8 +157,8 @@
                 </div>
 
                 <div class="w-[30%] h-[50%] mr-4 border-2 rounded-lg border-[#bfbfbf] flex flex-row justify-between items-center">
-                    <h1 class="w-[40%] h-full text-center flex flex-col justify-center items-center">Activity Type</h1>
-                    <select id="history-select" type="text" class="ml-2 w-[90%] h-[90%] outline-none text-xl text-center cursor-pointer border-x-2 border-l-[#bfbfbf]">
+                    <h1 class="w-[40%] h-full text-center flex flex-col justify-center items-center bg-[#1f292e] text-white">Activity Type</h1>
+                    <select id="history-select" type="text" class="w-[90%] h-[90%] outline-none text-xl text-center cursor-pointer border-x-2 border-l-[#bfbfbf]">
                         <option value="">All Logs</option>
                         <option value="login">Login</option>
                         <option value="register">Register</option>
@@ -223,11 +215,16 @@
                             $temp_2 = $data[$i]['action'] . ' ' . $data[$i]['pat_name'];
                             $temp_3 = $name;
                         }
-                        
-                        
+
+                        $style_color = "#ffffff";
+                        $text_color = "#1f292e";
+                        if($i % 2 == 1){
+                            $style_color = "#1f292e"; 
+                            $text_color = "#ffffff";
+                        }
 
                         echo '
-                            <div class="history-div w-full h-[10%] border-b-2 border-[#bfbfbf] flex flex-row justify-between items-center">
+                            <div class="history-div w-full h-[10%] border-b-2 border-[#bfbfbf] flex flex-row justify-between items-center bg-['.$style_color.'] text-['.$text_color.']">
                                 <div class="w-[20%] h-full flex flex-row justify-around items-center ml-4">
                                     <i class="fa-regular fa-calendar-days text-2xl "></i>
                                     <h3>'. $temp_1 .'</h3>

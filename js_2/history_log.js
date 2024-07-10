@@ -189,7 +189,8 @@ $(document).ready(function(){
         success: function(response) {
             // response = JSON.parse(response);  
             console.log(response , " here")
-            window.location.href = "http://192.168.42.222:8035/index.php" 
+            // window.location.href = "http://192.168.42.222:8035/index.php" 
+            window.location.href = "http://10.10.90.14:8079/index.php" 
         }
     });
 })
@@ -217,6 +218,16 @@ $(document).ready(function(){
   $('#incoming-sub-div-id').on('click' , function(event){
     event.preventDefault();
     window.location.href = "../main.php";
+  })
+
+  $('#history-log-btn').on('click' , function(event){
+    event.preventDefault();
+    window.location.href = "../php_2/history_log.php";
+  })
+
+  $('#admin-module-id').on('click' , function(event){
+    event.preventDefault();
+    window.location.href = "../php_2/admin.php";
   })
     
 })
