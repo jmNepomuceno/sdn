@@ -15,7 +15,7 @@ $(document).ready(function(){
     const myModal = new bootstrap.Modal(document.getElementById('pendingModal'));
     const defaultMyModal = new bootstrap.Modal(document.getElementById('myModal-incoming'));
     // myModal.show()
-``
+
     let global_index = 0, global_paging = 1, global_timer = "", global_breakdown_index = 0;
     let final_time_total = ""
     let next_referral_index_table;
@@ -496,66 +496,60 @@ $(document).ready(function(){
 
     function saveTimeSession(){
         // look only for the status that is On-Process
-        if(document.querySelectorAll('.hpercode').length > 0){
-            console.log('here')
-            
-            let curr_index = 0;
-            let interdept_status
-            // check if theres a pending status currently on the interdepartamental referral
-            for(let i = 0; i < status_interdept_arr.length; i++){
-                if(status_interdept_arr[i].status_interdept != null){
-                    console.log('here')
-                    interdept_status = i
-                }
+        let curr_index = 0;
+        let interdept_status
+        // check if theres a pending status currently on the interdepartamental referral
+        for(let i = 0; i < status_interdept_arr.length; i++){
+            if(status_interdept_arr[i].status_interdept != null){
+                console.log('here')
+                interdept_status = i
             }
-
-            if(interdept_status != null || interdept_status != "" || interdept_status != undefined){
-                curr_index = interdept_status + 1
-            }else{
-                for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
-                    if(document.querySelectorAll('.pat-status-incoming')[i].textContent === "On-Process"){
-                        curr_index = i;
-                    }
-                }
-            }
-        
-            $.ajax({
-                url: '../php_2/fetch_onProcess.php',
-                method: "POST", 
-                data:{
-                    // timer: document.querySelectorAll('.stopwatch')[curr_index].textContent,
-                    timer : elapsedTime / 1000,
-                    running_bool : running,
-                    startTime : running ? performance.now() : startTime,
-                    hpercode: document.querySelectorAll('.hpercode')[curr_index].value,
-                    index: curr_index // questionable
-                },
-                success: function(response){
-                    // console.log(response)
-                }
-            })
         }
+
+        if(interdept_status != null || interdept_status != "" || interdept_status != undefined){
+            curr_index = interdept_status + 1
+        }else{
+            for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
+                if(document.querySelectorAll('.pat-status-incoming')[i].textContent === "On-Process"){
+                    curr_index = i;
+                }
+            }
+        }
+        
+        $.ajax({
+            url: '../php_2/fetch_onProcess.php',
+            method: "POST", 
+            data:{
+                // timer: document.querySelectorAll('.stopwatch')[curr_index].textContent,
+                timer : elapsedTime / 1000,
+                running_bool : running,
+                startTime : running ? performance.now() : startTime,
+                hpercode: document.querySelectorAll('.hpercode')[curr_index].value,
+                index: curr_index // questionable
+            },
+            success: function(response){
+                // console.log(response)
+            }
+        })
+
     }
         
     window.addEventListener('beforeunload', function(event) {
         saveTimeSession()
-
-        // var message = "You have unsaved changes. Are you sure you want to leave?";
-        // event.returnValue = message;
-        // return message;
-
     });
 
-    $(document).on('saveTimeSession', saveTimeSession);
-
-
-
-
-
-
-
-
-
+    $.ajax({
+        url: '../php_2/session_navigation.php',
+        method: "POST", 
+        data : {
+            nav_path : ""
+        },
+        success: function(response){
+            if(response === '"true"'){
+                $(document).on('saveTimeSession', saveTimeSession);
+            }
+        }
+    })
 
     // search incoming patients
     $('#incoming-search-btn').on('click' , function(event){        

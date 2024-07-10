@@ -8,6 +8,24 @@ $(document).ready(function(){
     console.log(height, width);
     // load the 4 web pages
     const loadContent = (url) => {
+        let nav_path = false;
+        if (url.includes('incoming_form2')) {
+            nav_path = true
+        } else {
+            nav_path = false
+        }
+
+        $.ajax({
+            url: '../php_2/session_navigation.php',
+            method: "POST",
+            data : {
+                nav_path : nav_path
+            },
+            success: function(response) {
+                console.log(response, typeof response)
+            }
+        });
+
         $.ajax({
             url:url, 
             success: function(response){
@@ -16,13 +34,14 @@ $(document).ready(function(){
         })
     }
 
+
     const myModal_main = new bootstrap.Modal(document.getElementById('myModal-main'));
 
     // BGHMC adheres to all satutatory mandatory and regulatory requirements to ensure standard implementation
     // loadContent('../php_2/default_view2.php')
-    // loadContent('../php_2/patient_register_form2.php')
+    loadContent('../php_2/patient_register_form2.php')
     // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
-    loadContent('../php_2/incoming_form2.php')
+    // loadContent('../php_2/incoming_form2.php')
     // loadContent('../php_2/bucas_queue.php')
     // loadContent('../php_2/bucas_history.php')
     // loadContent('../php_2/outgoing_form2.php')
@@ -54,7 +73,7 @@ $(document).ready(function(){
     jQuery.noConflict();
     let current_page = ""
     let fetch_timer = 0
-
+    
     const playAudio = () =>{
         let audio = document.getElementById("notif-sound")
         audio.muted = false;
@@ -345,7 +364,7 @@ $(document).ready(function(){
 
     $('#incoming-sub-div-id').on('click' , function(event){
         event.preventDefault();
-
+        
         loadContent('../php_2/incoming_form2.php')
     })
 

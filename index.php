@@ -77,6 +77,7 @@
                     $_SESSION['login_time'] = $final_date;
 
                     $_SESSION['current_content'] = "";
+                    $_SESSION['session_navigation'] = "";
 
                     $sql = "UPDATE incoming_referrals SET login_time = '". $final_date ."' , login_user='". $sdn_username ."' ";
                     $stmt = $pdo->prepare($sql);
@@ -163,6 +164,7 @@
             $_SESSION['datatable_index'] = 0;
             
             $_SESSION['current_content'] = "";
+            $_SESSION['session_navigation'] = "";
 
             $temp_date = $normal_date;
             
