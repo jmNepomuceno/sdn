@@ -6,13 +6,11 @@ $(document).ready(function(){
   function handleUserActivity() {
       userIsActive = true;
       // Additional code to handle user activity if needed
-      console.log('active')
       clearInterval(intervalHistoryLog)
 
   }
 
   function handleUserInactivity() {
-      console.log('inactive')
       userIsActive = false;
       // Additional code to handle user inactivity if needed
       intervalHistoryLog = setInterval(fetchHistoryLog, 10000);
@@ -103,25 +101,63 @@ $(document).ready(function(){
   
   function fetchMySQLData() {
     $.ajax({
-        url: '../php_2/fetch_interval.php',
-        method: "POST",
-        data : {
-            from_where : 'bell'
-        },
-        success: function(data) {
-            console.log(data);
-            $('#notif-span').text(data);
-            if (parseInt(data) >= 1) {
-                $('#notif-circle').removeClass('hidden');
-                
-                playAudio();
-            } else {
-                $('#notif-circle').addClass('hidden');
-            }
-            
-            setTimeout(fetchMySQLData, 10000);
-        }
-    });
+      url: '../php_2/fetch_interval.php',
+      method: "POST",
+      data : {
+          from_where : 'bell'
+      },
+      success: function(response) {
+          response = JSON.parse(response);  
+          // console.log(response);
+          // console.log('pot')
+
+          $('#notif-span').text(response.length);
+          $('#notif-circle').removeClass('hidden');
+              
+              // populate notif-sub-div
+              // document.querySelector('.notif-sub-div').innerHTML = 
+
+              let type_counter = []
+              for(let i = 0; i < response.length; i++){
+
+                  if(!type_counter.includes(response[i]['type'])){
+                      type_counter.push(response[i]['type'])
+                  }
+              }
+
+              // console.log(type_counter)
+              
+              document.getElementById('notif-sub-div').innerHTML = '';
+              for(let i = 0; i < type_counter.length; i++){
+                  let type_var  = type_counter[i]
+                  let type_counts  = 0
+
+                  for(let j = 0; j < response.length; j++){
+                      if(type_counter[i] ===  response[j]['type']){
+                          type_counts += 1
+                      }
+                  }
+
+                  if(i % 2 === 0){
+                      document.getElementById('notif-sub-div').innerHTML += '\
+                      <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-transparent text-white opacity-30 hover:opacity-100">\
+                      <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                          <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                      </div>\
+                  ';
+                  }else{
+                      document.getElementById('notif-sub-div').innerHTML += '\
+                      <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-white opacity-30 hover:opacity-100">\
+                      <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                          <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                      </div>\
+                  ';
+                  }
+              }
+          
+          fetch_timer = setTimeout(fetchMySQLData, 5000);
+      }
+  });
   }
 
   fetchMySQLData(); 
@@ -135,7 +171,7 @@ $(document).ready(function(){
             from_where : 'history_log'
         },
         success: function(data) {
-            document.querySelector('.history-container').innerHTML = data
+            // document.querySelector('.history-container').innerHTML = data
         }
     });
   }
@@ -148,56 +184,82 @@ $(document).ready(function(){
       document.querySelector('#side-bar-div').classList.toggle('hidden');
     })
 
-  $('#logout-btn').on('click' , function(event){
-    event.preventDefault(); // Prevent the default behavior (navigating to the link)
-    console.log('den')
-
-    $('#modal-title-main').text('Warning')
-    // $('#modal-body').text('Are you sure you want to logout?')
-    $('#ok-modal-btn-main').text('No')
-
-    $('#yes-modal-btn-main').text('Yes');
-    $('#yes-modal-btn-main').removeClass('hidden')
-
-    $('#myModal-main').modal('show');
+    $('#logout-btn').on('click' , function(event){
+      event.preventDefault(); 
+      $('#myModal-prompt #modal-title-incoming').text('Warning')
+      $('#myModal-prompt #ok-modal-btn-incoming').text('No')
+  
+      $('#myModal-prompt #yes-modal-btn-incoming').text('Yes');
+      $("#myModal-prompt #yes-modal-btn-incoming").css("display", "flex")
+  
+      // Are you sure you want to logout?
+      $('#myModal-prompt #modal-body-incoming').text('Are you sure you want to logout?');
+  })
+  
+  $('#yes-modal-btn-incoming').on('click' , function(event){
+      document.querySelector('#nav-drop-account-div').classList.toggle('hidden');
+  
+      let currentDate = new Date();
+  
+      let year = currentDate.getFullYear();
+      let month = currentDate.getMonth() + 1;
+      let day = currentDate.getDate();
+  
+      let hours = currentDate.getHours();
+      let minutes = currentDate.getMinutes();
+      let seconds = currentDate.getSeconds();
+  
+      let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
+      $.ajax({
+          url: '../php_2/save_process_time.php',
+          data : {
+              what: 'save',
+              date : final_date,
+              sub_what: 'logout'
+          },                        
+          method: "POST",
+          success: function(response) {
+              // response = JSON.parse(response);
+              console.log(response , " here")
+              // window.location.href = "http://192.168.42.222:8035/index.php" 
+              // window.location.href = "http://10.10.90.14:8079/index.php" 
+              window.location.href = "https://sdnplus.bataanghmc.net/" 
+          }
+      });
   })
 
-  $('#yes-modal-btn-main').on('click' , function(event){
-    console.log('here')
-    document.querySelector('#nav-drop-account-div').classList.toggle('hidden');
+$('#notif-sub-div').on('click' , function(event){
+  if($('#notif-span').val() === 0){
+      $('#notif-circle').addClass('hidden')
+      document.getElementById("notif-sound").pause();
+      document.getElementById("notif-sound").currentTime = 0;
+  }else{
+      window.location.href = "http://192.168.42.222:8035/main.php?loadContent=php/incoming_form.php"
 
-    let currentDate = new Date();
-
-    let year = currentDate.getFullYear();
-    let month = currentDate.getMonth() + 1; // Adding 1 to get the month in the human-readable format
-    let day = currentDate.getDate();
-
-    let hours = currentDate.getHours();
-    let minutes = currentDate.getMinutes();
-    let seconds = currentDate.getSeconds();
-
-    let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
-
-    $.ajax({
-        url: '../php_2/save_process_time.php',
-        data : {  
-            what: 'save',
-            date : final_date,
-            sub_what: 'history_log'
-        },
-        method: "POST",
-        success: function(response) {
-            // response = JSON.parse(response);  
-            console.log(response , " here")
-            // window.location.href = "http://192.168.42.222:8035/index.php" 
-            window.location.href = "http://10.10.90.14:8079/index.php" 
-        }
-    });
+      // window.location.pathname = "/newpage.html";
+      current_page = "incoming_page"
+      $('#current-page-input').val(current_page)
+      $('#notif-sub-div').addClass('hidden')
+  }
 })
 
   $('#nav-account-div').on('click' , function(event){
     event.preventDefault();
+    if($("#nav-drop-account-div").css("display") === "none"){
+      $("#nav-drop-account-div").css("display", "flex")
+    }else{
+        $("#nav-drop-account-div").css("display", "none")
+    }
+  })
+
+  $('#nav-account-div').on('click' , function(event){
+    event.preventDefault();
     document.querySelector('#nav-drop-account-div').classList.toggle('hidden');
+  })
+
+  $('#admin-module-btn').on('click' , function(event){
+    event.preventDefault();
+    window.location.href = "../php_2/admin.php";
   })
 
   $('#dashboard-incoming-btn').on('click' , function(event){

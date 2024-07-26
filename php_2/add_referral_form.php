@@ -115,6 +115,7 @@
     $complaint_history_input = $_POST['complaint_history_input'];
     $reason_referral_input = $_POST['reason_referral_input'];
     $diagnosis = $_POST['diagnosis'];
+    $remarks = $_POST['remarks'];
 
     $bp_input = $_POST['bp_input'];
     $hr_input = $_POST['hr_input'];
@@ -135,12 +136,12 @@
     $sql = "";
    if($type === "OB"){
         $sql = "INSERT INTO incoming_referrals (referral_id, hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, sensitive_case, parent_guardian , phic_member, transport,
-            referring_doctor, chief_complaint_history, reason, diagnosis, bp, hr, rr, temp, weight, pertinent_findings,
+            referring_doctor, chief_complaint_history, reason, diagnosis, remarks, bp, hr, rr, temp, weight, pertinent_findings,
             fetal_heart_tone, fundal_height, cervical_dilation, bag_water, presentation, others_ob)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?,?,?,?,?,?)";
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?,?,?,?,?,?)";
    }else{
-        $sql = "INSERT INTO incoming_referrals (referral_id, hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, sensitive_case, parent_guardian , phic_member, transport, referring_doctor, chief_complaint_history, reason, diagnosis, bp, hr, rr, temp, weight, pertinent_findings)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?)";
+        $sql = "INSERT INTO incoming_referrals (referral_id, hpercode, reference_num, patlast, patfirst, patmiddle, patsuffix, type, referred_by, landline_no, mobile_no, date_time, status, refer_to, sensitive_case, parent_guardian , phic_member, transport, referring_doctor, chief_complaint_history, reason, diagnosis, remarks, bp, hr, rr, temp, weight, pertinent_findings)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?)";
    }
 
     $stmt = $pdo->prepare($sql);
@@ -172,22 +173,23 @@
     $stmt->bindParam(20, $complaint_history_input, PDO::PARAM_STR);
     $stmt->bindParam(21, $reason_referral_input, PDO::PARAM_STR);
     $stmt->bindParam(22, $diagnosis, PDO::PARAM_STR);
+    $stmt->bindParam(23, $remarks, PDO::PARAM_STR);
 
-    $stmt->bindParam(23, $bp_input, PDO::PARAM_STR);
-    $stmt->bindParam(24, $hr_input, PDO::PARAM_STR);
-    $stmt->bindParam(25, $rr_input, PDO::PARAM_STR);
+    $stmt->bindParam(24, $bp_input, PDO::PARAM_STR);
+    $stmt->bindParam(25, $hr_input, PDO::PARAM_STR);
+    $stmt->bindParam(26, $rr_input, PDO::PARAM_STR);
 
-    $stmt->bindParam(26, $temp_input, PDO::PARAM_STR);
-    $stmt->bindParam(27, $weight_input, PDO::PARAM_STR);
-    $stmt->bindParam(28, $pe_findings_input, PDO::PARAM_STR);
+    $stmt->bindParam(27, $temp_input, PDO::PARAM_STR);
+    $stmt->bindParam(28, $weight_input, PDO::PARAM_STR);
+    $stmt->bindParam(29, $pe_findings_input, PDO::PARAM_STR);
 
     if($type === "OB"){
-        $stmt->bindParam(29, $fetal_heart_inp, PDO::PARAM_STR);
-        $stmt->bindParam(30, $fundal_height_inp, PDO::PARAM_STR);
-        $stmt->bindParam(31, $cervical_dilation_inp, PDO::PARAM_STR);
-        $stmt->bindParam(32, $bag_water_inp, PDO::PARAM_STR);
-        $stmt->bindParam(33, $presentation_ob_inp, PDO::PARAM_STR);
-        $stmt->bindParam(34, $others_ob_inp, PDO::PARAM_STR);
+        $stmt->bindParam(30, $fetal_heart_inp, PDO::PARAM_STR);
+        $stmt->bindParam(31, $fundal_height_inp, PDO::PARAM_STR);
+        $stmt->bindParam(32, $cervical_dilation_inp, PDO::PARAM_STR);
+        $stmt->bindParam(33, $bag_water_inp, PDO::PARAM_STR);
+        $stmt->bindParam(34, $presentation_ob_inp, PDO::PARAM_STR);
+        $stmt->bindParam(35, $others_ob_inp, PDO::PARAM_STR);
     }
 
     $stmt->execute();

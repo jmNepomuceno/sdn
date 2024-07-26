@@ -108,64 +108,135 @@
     $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
     $stmt->execute();
 
+    $left_html = '';
+    $right_html = '';
 
-    echo '<ul class="referred-details-ul">';
-        echo '<li><label>Referring Agency:</label><span id="refer-agency"> '. $response[0]['referred_by'].'</span></li>';
-        if($_POST['from'] === 'outgoing'){
-            echo '<li><label>Referring To:</label><span id="refer-agency"> '. $response[0]['refer_to'].'</span></li>';
-        }else{
-            
-        }
-        echo '<li><label>Reason for Referral:</label><span id="refer-reason"> '. $response[0]['reason'].'</span></li><br>';
+    // Left-side content
+    $left_html .= '<div class="left-sub-div"> <label>Patient ID:</label><span id="pat-id"> '. $response[1]['hpercode'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Referring Agency:</label><span id="refer-agency"> '. $response[0]['referred_by'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Last Name:</label><span id="pat-last"> '. $response[1]['patlast'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>First Name:</label><span id="pat-first"> '. $response[1]['patfirst'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Middle Name:</label><span id="pat-middle"> '. $response[1]['patmiddle'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Extension Name:</label><span id="pat-exten"> '. $response[1]['patsuffix'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Gender:</label><span id="pat-gender"> '. $response[1]['patsex'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Civil Status:</label><span id="pat-cstat"> '. $response[1]['patcstat'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Religion:</label><span id="pat-rel"> '. $response[1]['relcode'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Contanct No.:</label><span id="pat-phone-no"> '. $response[1]['pat_mobile_no'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Blood Pressure:</label><span id="pat-bp"> '. $response[0]['bp'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Heart Rate (HR):</label><span id="pat-hr"> '. $response[0]['hr'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Respiratory Rate (RR):</label><span id="pat-rr"> '. $response[0]['rr'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Body Temperature:</label><span id="pat-temp"> '. $response[0]['temp'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Weight:</label><span id="pat-weight"> '. $response[0]['weight'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Remarks:</label><span id="pat-remarks"> '. $response[0]['remarks'].' </span> </div>';
+    // $left_html .= '<div class="left-sub-div"> <label>Referred By:</label><span id="refer-agency"> '. $_SESSION['first_name'] . " " . $_SESSION['last_name'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Referred By:</label><span id="pat-refered-by"> Juan Dela Cruz</span> </div>';
 
-        echo '<li><label>Name:</label><span id="pending-name" > '. $response[0]['patlast'] . ", " . $response[0]['patfirst'] . " " . $response[0]['patmiddle'].' </span></li>';
-        echo '<li><label>Birthday:</label><span id="pending-bday"> '. $response[1]['patbdate'].' </span></li>';
-        echo '<li><label>Age:</label><span id="pending-age"> '. $response[1]['pat_age'].' years old </span></li>';
-        echo '<li><label>Sex:</label><span id="pending-sex"> '. $response[1]['patsex'].' </span></li>';
-        echo '<li><label>Civil Status:</label><span id="pending-civil"> '. $response[1]['patcstat'].' </span></li>';
-        echo '<li><label>Religion:</label><span id="pending-religion"> '. $response[1]['relcode'].' </span></li>';
-        echo '<li><label>Address:</label><span id="pending-address">
-         '. $response[1]['pat_bldg'] . " " . $response[1]['pat_street_block'] . " " . $response[1]['pat_barangay'] . " " . $response[1]['pat_municipality'] . " " . $response[1]['pat_province'] . " " . $response[1]['pat_region'].' 
-        </span></li><br>';
+    // Right-side content
+    $right_html .= '
+        <div id="right-sub-div-a">
+           <div id="right-sub-div-a-1"> 
+                <div class="right-sub-div"> <label>Case Number:</label><span id="case-no"> '. $response[0]['referral_id'].'</span> </div>
+                <div class="right-sub-div"> <label>Age:</label><span id="pat-age"> '. $response[1]['pat_age'].'</span> </div>
+           </div>
+           <div id="right-sub-div-a-2"> <label>ICD-10 Diagnosis:</label><textarea class="form-control" id="pat-icddiag"> </textarea> </div>
+        </div>
+    ';
+    // chief_complaint_history
+    $right_html .= '<div class="right-sub-div textarea-div" id="subjective-id"> <label>SUBJECTIVE:</label><textarea class="form-control" id="pat-subjective"> '. $response[0]['chief_complaint_history'].' </textarea> </div>';
+    $right_html .= '<div class="right-sub-div textarea-div" id="objective-id"> <label>OBJECTIVE:</label><textarea class="form-control" id="pat-objective"> '. $response[0]['pertinent_findings'].' </textarea> </div>';
+    $right_html .= '<div class="right-sub-div textarea-div" id="assessment-id"> <label>ASSESSMENT:</label><textarea class="form-control" id="pat-assessment"> '. $response[0]['diagnosis'].' </textarea> </div>';
+    $right_html .= '<div class="right-sub-div textarea-div" id="plan-id"> <label>PLAN:</label><textarea class="form-control" id="pat-plan"> '. $response[0]['reason'].' </textarea> </div>';
+ 
+    $right_html .= '
+        <div id="right-sub-div-b">
+            <div id="right-sub-div-b-1">
+                <div class="right-sub-div"> 
+                    <label>Select Response Status:</label>
+                    <select class="form-control" id="select-response-status">
+                        <option value="">Select</option>
+                        <option value="Approved">Approve</option>
+                        <option value="Deferred">Defer</option> 
+                        <option value="Interdepartamental">Interdepartamental Referral</option>
+                    </select>
+                </div>
 
-        echo '<li><label>Parent/Guardian:</label><span id="pending-parent"> '. $response[0]['parent_guardian'].' </span></li>';
-        echo '<li><label>PHIC Member:</label><span id="pending-phic"> '. $response[0]['phic_member'].' </span></li>';
-        echo '<li><label>Mode of Transport:</label><span id="pending-transport"> '. $response[0]['transport'].' </span></li>';
-        echo '<li><label>Date/Time Admitted:</label><span id="pending-admitted"> '. $response[1]['created_at'].' </span></li>';
-        echo '<li><label>Referring Doctor:</label><span id="pending-referring-doc"> '. $response[0]['referring_doctor'].' </span></li>';
-        echo '<li><label>Contact #:</label><span id="pending-contact-no"> '. $response[1]['pat_mobile_no'].' </span></li><br>';
+                <div class="right-sub-div"> <label>Process Date/Time:</label><span id="refer-agency"> '. $response[0]['reception_time'].'</span> </div>
+                <div class="right-sub-div"> <label>Processed By:</label><span id="refer-agency"> '. $_SESSION['last_name'] . ", " . $_SESSION['first_name'].'</span> </div>
+            </div>
+            <div id="right-sub-div-b-2"> <label>Deferred Reason:</label> <textarea class="form-control" id="defer-reason"></textarea> </div>
+        </div>
+    ';
 
-        if($response[0]['type'] == 'OB'){
-            echo '<li><label>OB-Gyne</label><span id="pending-ob"> '. $response[1]['created_at'].' </span></li>';
-            echo '<li><label>Last Menstrual Period:</label><span id="pending-last-mens"> '. $response[0]['referring_doctor'].' </span></li>';
-            echo '<li><label>Age of Gestation</label><span id="pending-gestation"> '. $response[0]['referred_by'].' </span></li><br>';
-        }
+    $right_html .= '
+    <div id="right-sub-div-c">
+        <div id="approval-form">
+            <label id="approval-title-div">Approval Form</label>
+                
+            <div class="approval-main-content"> 
+
+                <label id="case-cate-title">Case Category</label>
+                <select id="approve-classification-select">
+                    <option value="">Select</option>
+                    <option value="Primary">Primary</option>
+                    <option value="Secondary">Secondary</option> 
+                    <option value="Tertiary">Tertiary</option>
+                </select>
+
+                <label id="admin-action-title">Emergency Room Administrator Action</label>
+                <textarea id="eraa"></textarea>
+
+                <div id="pre-text">
+                    <label class="pre-emp-text">+ May transfer patient once stable.</label>
+                    <label class="pre-emp-text">+ Please attach imaging and laboratory results to the referral letter.</label>
+                    <label class="pre-emp-text">+ Hook to oxygen support and maintain saturation at >95%.</label>
+                    <label class="pre-emp-text">+ Start venoclysis with appropriate intravenous fluids.</label>
+                    <label class="pre-emp-text">+ Insert nasogastric tube(NGT).</label>
+                    <label class="pre-emp-text">+ Insert indwelling foley catheter(IFC).</label>
+                    <label class="pre-emp-text">+ Thank you for your referral.</label>
+                </div>
+
+                <!-- <label class="ml-[2%] font-semibold">Action</label>
+                <select id="approved-action-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
+                    <option value="">Pending</option>
+                    <option value="Approve">Approve</option>
+                    <option value="Defer">Defer</option>
+                </select> -->
+            </div> 
+
+            <div id="approval-form-btns">
+                <button id="inter-dept-referral-btn"> Interdepartamental Referral </button>
+                <button id="imme-approval-btn"> Immediate Approval </button>
+            </div>
+        </div>
+
+        <div class="interdept-div">
+            <div id="inter-dept-stat-form-div" class="status-form-div">
+                <label id="status-bg-div">Inter-Department Referral </label>
+            </div>
+            <label for="" id="inter-dept-lbl">Department: </label>
+            <select id="inter-depts-select" style="cursor:pointer;">
+                <option value="">Select</option>
+                <option value="SURGERY"> Surgery </option>
+                <option value="OB-GYNE"> OB-GYNE </option>
+                <option value="IM"> Internal Medicine </option>
+                <option value="FAMILY MEDICINE"> Family Medicine </option>
+                <option value="ANESTHESIA"> Anesthesia </option>
+                <option value="OTOLARYNGOLOGY"> Otolaryngology </option>
+                <option value="PEDIATRICS"> Pediatrics </option>
+                <option value="OPHTHALMOLOGY"> Ophthalmology </option>
+                <option value="PHYSICAL REHAB"> Physical Rehab </option>
+                <option value="IHOMP"> IHOMP </option>
+            </select>
+            <div class="int-dept-btn-div">
+                <button id="int-dept-btn-forward">Send / Forward</button>
+            </div>
+        </div>
         
-        echo '<li><label>Chief Complaint and History:</label><span id="pending-complaint-history"> '. $response[0]['chief_complaint_history'].' </span></li><br>';
+    </div>
 
-        echo '<li><label>Physical Examination</label><span id="pending-pe"> '. $response[0]['chief_complaint_history'].' </span></li>';
-        echo '<li><label>Blood Pressure:</label><span id="pending-bp"> '. $response[0]['bp'].' </span></li>';
-        echo '<li><label>Heart Rate:</label><span id="pending-hr"> '. $response[0]['hr'].' </span></li>';
-        echo '<li><label>Respiratory Rate:</label><span id="pending-rr"> '. $response[0]['rr'].' </span></li>';
-        echo '<li><label>Temperature:</label><span id="pending-temp"> '. $response[0]['temp'].' </span></li>';
-        echo '<li><label>Weight:</label><span id="pending-weight"> '. $response[0]['weight'].' </span></li><br>';
+    ';
 
-        if($response[0]['type'] == 'OB'){
-            echo '<li><label><label>Fetal Heart Tone:</label><span id="pending-heart-tone"> '. $response[0]['referred_by'].' </span></li>';
-            echo '<li><label><label>Fundal Height:</label><span id="pending-fundal-height"> '. $response[0]['referred_by'].' </span></li><br>';
-
-            echo '<li><label><label>Internal Examination</label><span id="pending-ie"> '. $response[0]['referred_by'].' </span></li>';
-            echo '<li><label><label>Cervical Dilatation:</label><span id="pending-cd"> '. $response[0]['referred_by'].' </span></li>';
-            echo '<li><label><label>Bag of Water:</label><span id="pending-bag-water"> '. $response[0]['referred_by'].' </span></li>';
-            echo '<li><label><label>Presentation:</label><span id="pending-presentation"> '. $response[0]['referred_by'].' </span></li>';
-            echo '<li><label><label>Others:</label><span id="pending-others"> '. $response[0]['referred_by'].' </span></li><br>';
-        }
-
-        echo '<li><label>Pertinent PE Findings:</label><span id="pending-p-pe-find"> '. $response[0]['pertinent_findings'].' </span></li><br>';
-
-        echo '<li><label>Impression / Diagnosis:</label><span id="pending-diagnosis"> '. $response[0]['diagnosis'].' </span></li>';
-    echo '</ul>';
-
+    echo json_encode(['left_html' => $left_html, 'right_html' => $right_html]);
 
     // update the date of the reception time or, when did the user click the pencil or open the referral form
     if($incoming_referrals_data[0]['reception_time'] == null || $incoming_referrals_data[0]['reception_time'] == ""){

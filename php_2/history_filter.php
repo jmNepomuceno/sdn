@@ -53,27 +53,26 @@
             $temp_3 = $name;
         }
         
-
         $style_color = "#ffffff";
         $text_color = "#1f292e";
         if($i % 2 == 1){
-            $style_color = "#1f292e"; 
+            $style_color = "#d3dbde"; 
             $text_color = "#ffffff";
         }
 
         echo '
-            <div class="history-div w-full h-[10%] border-b-2 border-[#bfbfbf] flex flex-row justify-between items-center bg-['.$style_color.'] text-['.$text_color.']">
-                <div class="w-[20%] h-full flex flex-row justify-around items-center ml-4">
-                    <i class="fa-regular fa-calendar-days text-2xl "></i>
+            <div class="history-div" style="background: '. $style_color .'">
+                <div>
+                    <i class="fa-regular fa-calendar-days"></i>
                     <h3>'. $temp_1 .'</h3>
                 </div>
 
-                <div class="w-[30%] h-full flex flex-row justify-around items-center">
+                <div>
                     <!-- <i class="fa-regular fa-calendar-days text-2xl "></i> -->
-                    <h3 class="text-base"<span id="status-login">'. $temp_2 .'</span></h3>
+                    <h3 class="text-base"> <span id="status-login">'. $temp_2 .'</span></h3>
                 </div>
 
-                <div class="w-[20%] h-full flex flex-row justify-evenly items-center mr-4">
+                <div>
                     <h3> '. $temp_3 .' </h3>
                     <i class="fa-solid fa-user text-2xl "></i>
 

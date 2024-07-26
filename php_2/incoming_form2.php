@@ -1,7 +1,6 @@
 <?php
     session_start();
     include('../database/connection2.php');
-
     if($_SESSION['hospital_code'] === '1437'){
         $mcc_passwords = json_encode($_SESSION['mcc_passwords']);
     }else{
@@ -60,49 +59,49 @@
 
     // ******************************************************************
 
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000023'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000023'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000024'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000024'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000025'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000025'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000026'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000026'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000027'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000027'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "DELETE FROM incoming_interdept";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "DELETE FROM incoming_interdept";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
     
     // echo $_SESSION['running_timer'] . "----";
     // echo $_SESSION['running_bool'] . "----";
@@ -222,7 +221,7 @@
 
         <section class="incoming-table">
 
-            <table id="myDataTable" class="display">
+            <table id="myDataTable" class="display table table-bordered custom-search-modal" style="width: 100%; border-spacing: -1px;">
                 <thead>
                     <tr class="text-center">
                         <th id="refer-no">Reference No. </th>
@@ -235,7 +234,7 @@
                     </tr>
                 </thead>
                 <tbody id="incoming-tbody">
-                    <?php
+                <?php
                         // get the classification names
                         $sql = "SELECT classifications FROM classifications";
                         $stmt = $pdo->prepare($sql);
@@ -391,9 +390,11 @@
                                         <td id="dt-patname">' . $pat_full_name . '</td>
                                         <td id="dt-type" style="background:' . $type_color . ' ">' . $row['type'] . '</td>
                                         <td id="dt-phone-no">
-                                            <label> Referred: ' . $row['referred_by'] . '  </label>
-                                            <label> Landline: ' . $row['landline_no'] . ' </label>
-                                            <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                                            <div class="">
+                                                <label> Referred by: ' . $row['referred_by'] . '  </label>
+                                                <label> Landline: ' . $row['landline_no'] . ' </label>
+                                                <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                                            </div>
                                         </td>
                                         <td id="dt-turnaround"> 
                                             <i class="accordion-btn fa-solid fa-plus"></i>
@@ -426,9 +427,9 @@
                                             <div> 
                                                 <label class="pat-status-incoming">' . $row['status'] . '</label>';
                                                 if ($row['sensitive_case'] === 'true') {
-                                                    echo '<i class="pencil-btn fa-solid fa-pencil" style="pointer-events:none; opacity:0.3"></i>';
+                                                    echo '<i class="pencil-btn fa-solid fa-pencil" style="pointer-events:none; opacity:0.3; color:#cc9900;"></i>';
                                                 }else{
-                                                    echo'<i class="pencil-btn fa-solid fa-pencil"></i>';
+                                                    echo'<i class="pencil-btn fa-solid fa-pencil" style="color:#cc9900;"></i>';
                                                 }
                                                 
                                                 echo '<input class="hpercode" type="hidden" name="hpercode" value= ' . $row['hpercode'] . '>
@@ -437,7 +438,8 @@
                                         </td>
                                     </tr>';
 
-                                $previous = $row['reference_num'];
+                               
+                                    $previous = $row['reference_num'];
                                 $loop += 1;
                             }
 
@@ -456,198 +458,30 @@
     <!-- MODAL -->
     
     <div class="modal fade" id="pendingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl pendingModalSize" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button>Print</button>
-                    <button id="close-pending-modal" data-bs-dismiss="modal">Close</button>
-                    <!-- <span aria-hidden="true">&times;</span> --> 
+                    <!-- <button>Print</button>
+                    <button id="close-pending-modal" data-bs-dismiss="modal">Close</button> -->
+                    PATIENT REFERRAL INFORMATION
                 </div>
-                <div  class="modal-body-incoming">
-                    <div class="status-form-div">
-                        <div id="left">
-                            <label id="status-bg-div">Status: </label>
-                            <label id="pat-status-form">Pending</label>
-                        </div>
-
-                        <div id="right">
-                            <button id="save-update">Update</button>
-                            <select id="update-stat-select" autocomplete="off" required>
-                                <option value="" disabled selected hidden>Update Status</option>
-                                <option class="custom-select" value="Cancelled"> Cancelled</option>
-                                <option class="custom-select" value="Arrived"> Arrived</option>
-                                <option class="custom-select" value="Checked"> Checked</option>
-                                <option class="custom-select" value="Admitted"> Admitted</option>
-                                <option class="custom-select" value="Discharged"> Discharged</option>
-                                <option class="custom-select" value="For follow"> For follow up</option>
-                                <option class="custom-select" value="Referred"> Referred Back</option>
-                            </select>
-                        </div>
-                        
-                    </div>
-                                
-                    <div id='approval-form'>
-                        <label id="approval-title-div">Approval Form</label>
-                            
-                        <div class="approval-main-content"> 
-
-                            <label id="case-cate-title">Case Category</label>
-                            <select id="approve-classification-select">
-                                <option value="">Select</option>
-                                <option value="Primary">Primary</option>
-                                <option value="Secondary">Secondary</option>
-                                <option value="Tertiary">Tertiary</option>
-                            </select>
-
-                            <label id="admin-action-title">Emergency Room Administrator Action</label>
-                            <textarea id="eraa"></textarea>
-
-                            <div id="pre-text">
-                                <label class="pre-emp-text">+ May transfer patient once stable.</label>
-                                <label class="pre-emp-text">+ Please attach imaging and laboratory results to the referral letter.</label>
-                                <label class="pre-emp-text">+ Hook to oxygen support and maintain saturation at >95%.</label>
-                                <label class="pre-emp-text">+ Start venoclysis with appropriate intravenous fluids.</label>
-                                <label class="pre-emp-text">+ Insert nasogastric tube(NGT).</label>
-                                <label class="pre-emp-text">+ Insert indwelling foley catheter(IFC).</label>
-                                <label class="pre-emp-text">+ Thank you for your referral.</label>
-                            </div>
-
-                            <!-- <label class="ml-[2%] font-semibold">Action</label>
-                            <select id="approved-action-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
-                                <option value="">Pending</option>
-                                <option value="Approve">Approve</option>
-                                <option value="Defer">Defer</option>
-                            </select> -->
-                        </div> 
-
-                        <div id="approval-form-btns">
-                            <button id="inter-dept-referral-btn"> Interdepartamental Referral </button>
-                            <button id="imme-approval-btn"> Immediate Approval </button>
-                        </div>
-                    </div>
-
-                    <div class="interdept-div">
-                        <div id="inter-dept-stat-form-div" class="status-form-div">
-                            <label id="status-bg-div">Inter-Department Referral </label>
-                        </div>
-                        <label for="" id="inter-dept-lbl">Department: </label>
-                        <select id="inter-depts-select" style="cursor:pointer;">
-                            <option value="">Select</option>
-                            <option value="SURGERY"> Surgery </option>
-                            <option value="OB-GYNE"> OB-GYNE </option>
-                            <option value="IM"> Internal Medicine </option>
-                            <option value="FAMILY MEDICINE"> Family Medicine </option>
-                            <option value="ANESTHESIA"> Anesthesia </option>
-                            <option value="OTOLARYNGOLOGY"> Otolaryngology </option>
-                            <option value="PEDIATRICS"> Pediatrics </option>
-                            <option value="OPHTHALMOLOGY"> Ophthalmology </option>
-                            <option value="PHYSICAL REHAB"> Physical Rehab </option>
-                            <option value="IHOMP"> IHOMP </option>
-                        </select>
-                        <div class="int-dept-btn-div">
-                            <button id="int-dept-btn-forward">Send / Forward</button>
-                        </div>
-                    </div>
-
-                    <div class="interdept-div-v2">
-                        <div id="inter-dept-stat-form-div" class="status-form-div">
-                            <label id="status-bg-div">Interdepartment: Surgery - Status </label>
-                        </div>
-                        <!-- <label for="" id="v2-stat"> <span id="span-dept">Surgery</span> - Processing - <span id="span-time">00:07:09</span></label> -->
-                        <label id="v2-stat"> <span id="span-dept">Surgery</span>  <span id="span-status">Pending</span> <span id="span-time">00:00:00</span></span></label>
-                        <label id="v2-update-stat">Updated 0 second(s) ago...</label>
-                        
-                        <!-- set to null -->
-                        <div class="seen-div">
-                            <label id="seen-by-lbl">Seened by: <span>John Marvin Nepomuceno</span> </label>
-                            <label id="seen-date-lbl">Seened date: <span>04/08/24 11:11:11</span> </label>
-                        </div>
-
-                        <div class="int-dept-btn-div-v2">
-                            <button id="cancel-btn" >Cancel</button>
-                            <button id="final-approve-btn">Proceed to Approval</button>
-                        </div>
-                    </div>
-
-                    <div id="approval-details">
-                        <div class="approval-main-content"> 
-                            <label id="case-cate-title">Case Category</label>
-                            <select id="approve-classification-select-details" style="pointer-events:none;">
-                                <option value="">Select</option>
-                                <option value="Primary">Primary</option>
-                                <option value="Secondary">Secondary</option>
-                                <option value="Tertiary">Tertiary</option>
-                            </select>
-
-                            <label id="admin-action-title">Emergency Room Administrator Action</label>
-                            <textarea id="eraa-details" style="pointer-events:none;"></textarea>
-                        </div> 
-                    </div>
-
-                    <div class="referral-details">
-                        <div id="inter-dept-stat-form-div" class="status-form-div">
-                            <label id="status-bg-div">Referral Details </label>
-                        </div>
-                        <div class="ul-div">
-                            
-                        </div>
-                        <!-- <ul class="list-none flex flex-col space-y-2">
-                            <li><label class="font-bold">Referring Agency:</label><span id="refer-agency" class="break-words"></span></li>
-                            <li><label class="font-bold">Reason for Referral:</label><span id="refer-reason" class="break-words"></span></li><br>
                 
-                            <li><label class="font-bold">Name:</label><span id="pending-name"  class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Birthday:</label><span id="pending-bday" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Age:</label><span id="pending-age" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Sex:</label><span id="pending-sex" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Civil Status:</label><span id="pending-civil" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Religion:</label><span id="pending-religion" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Address:</label><span id="pending-address" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Parent/Guardian:</label><span id="pending-parent" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">PHIC Member:</label><span id="pending-phic" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Mode of Transport:</label><span id="pending-transport" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Date/Time Admitted:</label><span id="pending-admitted" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Referring Doctor:</label><span id="pending-referring-doc" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Contact #:</label><span id="pending-contact-no" class="break-words">This is where you put the data</span></li><br>
-
-                            <li class="pending-type-ob hidden"><label class="font-bold underline">OB-Gyne</label><span id="pending-ob" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Last Menstrual Period:</label><span id="pending-last-mens" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Age of Gestation</label><span id="pending-gestation" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Chief Complaint and History:</label><span id="pending-complaint-history" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Physical Examination</label><span id="pending-pe" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Blood Pressure:</label><span id="pending-bp" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Heart Rate:</label><span id="pending-hr" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Respiratory Rate:</label><span id="pending-rr" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Temperature:</label><span id="pending-temp" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Weight:</label><span id="pending-weight" class="break-words">This is where you put the data</span></li><br>
-
-                            <li class="pending-type-ob hidden"><label class="font-bold">Fetal Heart Tone:</label><span id="pending-heart-tone" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Fundal Height:</label><span id="pending-fundal-height" class="break-words">This is where you put the data</span></li><br>
-
-                            <li class="pending-type-ob hidden"><label class="font-bold underline">Internal Examination</label><span id="pending-ie" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Cervical Dilatation:</label><span id="pending-cd" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Bag of Water:</label><span id="pending-bag-water" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Presentation:</label><span id="pending-presentation" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Others:</label><span id="pending-others" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Pertinent PE Findings:</label><span id="pending-p-pe-find" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Impression / Diagnosis:</label><span id="pending-diagnosis" class="break-words">This is where you put the data</span></li>
-                        </ul> -->
+                <div class="modal-body-incoming">
+                    <div class="container">
+                        <div class="left-div">
+                        </div>
+                        <div class="right-div">
+                        </div>  
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <!-- <button id="ok-modal-btn-incoming" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">OK</button>
-                    <button id="yes-modal-btn-incoming" type="button" class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">Yes</button>
-                 -->
+                    <button type="button" id="submit-modal-btn-incoming" class="btn btn-danger" data-bs-dismiss="modal">Submit</button>
+                    <button type="button" id="close-modal-btn-incoming" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-
     </div>
 
     <!-- Modal -->

@@ -142,6 +142,8 @@
                 </div> -->
 
             </div>
+            <div id="pagination-div"></div>
+
         </div>
 
         <div id="main-div">
@@ -564,7 +566,7 @@
                                 
                                 <div id="fifty" class="form-sub-divs-row-left">
                                     <div>
-                                        <label for="hperson-ll-mb-no-cwa"> Landline / Mobile No. </label>
+                                        <label for="hperson-ll-mb-no-cwa"> Landline/Mobile No. </label>
                                     </div>
                                     <input id="hperson-ll-mb-no-cwa" class="input-txt-classes-non form-control" type="text" name="hperson-ll-mb-no-cwa" autocomplete="off">
                                 </div>

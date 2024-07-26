@@ -1,51 +1,108 @@
-<?php 
-    session_start();
-    include("../database/connection2.php");
-
-    $sql = "SELECT * FROM incoming_referrals WHERE hpercode='PAT000023' ORDER BY date_time DESC LIMIT 1";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  
-    $jsonString = $data;
-
-    $incoming_referrals_data = $data;
-
-    echo '<pre>'; print_r($incoming_referrals_data); echo '</pre>';
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/assets/main_imgs/favicon/favicon.ico" type="image/x-icon"/>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll Down Example</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"/>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        }
 
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+        #main-screen {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+        }
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>Highlight Button</title>
-    <style>
-
-    </style>
+        #second-section {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #e0e0e0;
+        }
+  </style>
 </head>
 <body>
-   
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+<div class="modal fade" id="pendingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl pendingModalSize" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button>Print</button>
+                    <button id="close-pending-modal" data-bs-dismiss="modal">Close</button> -->
+                    PATIENT REFERRAL INFORMATION
+                </div>
+                
+                <div class="modal-body-incoming">
+                    <div class="container">
+                        <div class="left-div">
+                            
+                        </div>
+                        <div class="right-div">
+
+                            <div id="right-sub-div-a">
+                                <div id="right-sub-div-a-1"> 
+                                        <div class="right-sub-div"> <label>Case Number:</label><span id="case-no"> '. $response[0]['referral_id'].'</span> </div>
+                                        <div class="right-sub-div"> <label>Age:</label><span id="pat-age"> '. $response[1]['pat_age'].'</span> </div>
+                                </div>
+                                <div id="right-sub-div-a-2"> <label>ICD-10 Diagnosis:</label><textarea class="form-control" id="pat-icddiag"> </textarea> </div>
+                            </div>
+                        
+                            <div id="right-sub-div-b">
+                                <div id="right-sub-div-b-1">
+                                    <!-- <div class="right-sub-div"> 
+                                        <label>Select Case Category:</label>
+                                        <select class="form-control" id="select-response-status">
+                                            <option value="">Select</option>
+                                            <option value="Primary">Primary</option>
+                                            <option value="Secondary">Secondary</option> 
+                                            <option value="Tertiary">Tertiary</option>
+                                        </select>
+                                    </div> -->
+
+                                    <div class="right-sub-div"> 
+                                        <label>Select Response Status:</label>
+                                        <select class="form-control" id="select-response-status">
+                                            <option value="">Select</option>
+                                            <option value="Approved">Approve</option>
+                                            <option value="Deferred">Defer</option> 
+                                            <option value="Interdepartamental">Interdepartamental Referral</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="right-sub-div"> <label>Process Date/Time:</label><span id="refer-agency"> '. $response[1]['pat_age'].'</span> </div>
+                                    <div class="right-sub-div"> <label>Processed By:</label><span id="refer-agency"> asdf </span> </div>
+                                </div>
+                                <div id="right-sub-div-b-2"> <label>Deferred Reason:</label> <textarea class="form-control" id="defer-reason"></textarea> </div>
+                            </div>
+                            
+                            <div id="right-sub-div-c">
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="submit-modal-btn-incoming" class="btn btn-danger" data-bs-dismiss="modal">Submit</button>
+                    <button type="button" id="close-modal-btn-incoming" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <script src="script.js"></script>
 </body>
+
+<script>
+    document.getElementById('scroll-button').addEventListener('click', function() {
+            document.getElementById('second-section').scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
 </html>

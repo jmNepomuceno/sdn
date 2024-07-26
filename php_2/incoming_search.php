@@ -404,9 +404,11 @@
                         <td id="dt-patname">' . $pat_full_name  . '</td>
                         <td id="dt-type" style="background:' . $type_color . ' ">' . $row['type'] . '</td>
                         <td id="dt-phone-no">
-                            <label> Referred: ' . $row['referred_by'] . '  </label>
-                            <label> Landline: ' . $row['landline_no'] . ' </label>
-                            <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                            <div class="">
+                                <label> Referred: ' . $row['referred_by'] . '  </label>
+                                <label> Landline: ' . $row['landline_no'] . ' </label>
+                                <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                            </div>
                         </td>
                         <td id="dt-turnaround"> 
                             <i id="accordion-id- '.$accord_index.'" class="accordion-btn fa-solid fa-plus"></i>
@@ -440,9 +442,9 @@
                             <div> 
                                 <label class="pat-status-incoming">' . $row['status'] . '</label>';
                                 if ($row['sensitive_case'] === 'true') {
-                                    echo '<i class="pencil-btn fa-solid fa-pencil" style="pointer-events:none; opacity:0.3"></i>';
+                                    echo '<i class="pencil-btn fa-solid fa-pencil" style="pointer-events:none; opacity:0.3; color:#cc9900;"></i>';
                                 }else{
-                                    echo'<i class="pencil-btn fa-solid fa-pencil"></i>';
+                                    echo'<i class="pencil-btn fa-solid fa-pencil" style="color:#cc9900;"></i>';
                                 }
                                 
                                 echo '<input class="hpercode" type="hidden" name="hpercode" value= ' . $row['hpercode'] . '>

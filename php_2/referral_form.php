@@ -65,7 +65,7 @@
                 <div class="first-sub-div-part">
                     <div class="refer-to-div">
                         <label>Refer to <span>*</span></label>    
-                        <select id="refer-to-select">
+                        <select class="form-control"  id="refer-to-select">
                             <option value="Bataan General Hospital and Medical Center">Bataan General Hospital and Medical Center</option> -->
                             <?php for($i = 0; $i < count($hospital_names); $i++) { ?>
                                 <?php echo "<option value='" . $hospital_names[$i]['hospital_name'] . "'" . ">" . $hospital_names[$i]['hospital_name'] . "</option>" ?>
@@ -96,12 +96,12 @@
             <div class="second-part">
                 <div class="second-part-divs">
                     <label>Parent/Guardian(If minor)</label>
-                    <input id="parent-guard-input" type="text" autocomplete="off">
+                    <input class="form-control" id="parent-guard-input" type="text" autocomplete="off">
                 </div>
                 
                 <div class="second-part-divs">
                     <label>PHIC Member? <span>*</span></label>
-                    <select id="phic-member-select">
+                    <select class="form-control" id="phic-member-select">
                         <option value="">Select</option>
                         <option value="true"> Yes</option>
                         <option value="false"> No </option>
@@ -110,7 +110,7 @@
 
                 <div class="second-part-divs">
                     <label>Mode of Transport <span>*</span></label>
-                    <select id="transport-select">
+                    <select class="form-control" id="transport-select">
                         <option value="">Select</option>
                         <option value="Ambulance"> Ambulance </option>
                         <option value="Private Car"> Private Car </option>
@@ -120,7 +120,7 @@
 
                 <div class="second-part-divs">
                     <label>Date/Time Admitted <span></span></label>
-                    <input id="date-input" type="text" value=<?php echo $date_today ?> >
+                    <input class="form-control"  id="date-input" type="text" value=<?php echo $date_today ?> >
                 </div>   
 
                 
@@ -146,18 +146,21 @@
                             <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
                         </select> -->
 
-                        <input id="referring-doc-input" type="textbox">
+                        <input class="form-control" id="referring-doc-input" type="textbox">
                     </div>
 
                     <div class="left-sub-div-2">
-                        <label>Chief Complaint and History <span>*</span></label>
-                        <textarea id="complaint-history-input" autocomplete="off"></textarea>
+                        <label>Chief Complaint and History (Subjective) <span>*</span></label>
+                        <textarea class="form-control" id="complaint-history-input" autocomplete="off"></textarea>
 
-                        <label>Reason for Referral <span>*</span></label>
-                        <textarea id="reason-referral-input" autocomplete="off"></textarea>
+                        <label>Reason for Referral (Plan) <span>*</span></label>
+                        <textarea class="form-control" id="reason-referral-input" autocomplete="off"></textarea>
 
-                        <label>Impression / Diagnosis <span>*</span></label>
-                        <textarea id="diagnosis" autocomplete="off"></textarea>
+                        <label>Diagnosis (Assessment) <span>*</span></label>
+                        <textarea class="form-control" id="diagnosis" autocomplete="off"></textarea>
+
+                        <label>Remarks <span>*</span></label>
+                        <textarea class="form-control" id="remarks" autocomplete="off"></textarea>
                     </div>
 
 
@@ -168,22 +171,22 @@
                             echo '<div class="ob-part">
                                     <div class="ob-first">
                                         <label>Fetal Heart Tone<span>*</span></label>
-                                        <input type="text" id="fetal-heart-inp" autocomplete="off"/>
+                                        <input class="form-control" type="text" id="fetal-heart-inp" autocomplete="off"/>
                                     </div>
 
                                     <div class="ob-second">
                                         <label>Fundal Height<span>*</span></label>
-                                        <input type="text" id="fundal-height-inp" autocomplete="off"/>
+                                        <input class="form-control" type="text" id="fundal-height-inp" autocomplete="off"/>
                                     </div>
 
                                     <div class="ob-third">
                                         <label>Cervical Dilation<span>*</span></label>
-                                        <input type="text" id="cervical-dilation-inp" autocomplete="off"/>
-                                    </div>
+                                        <input class="form-control" type="text" id="cervical-dilation-inp" autocomplete="off"/>
+                                    </div> 
 
                                     <div class="ob-fourth">
                                         <label>Bag of Water<span>*</span></label>
-                                        <input type="text" id="bag-water-inp" autocomplete="off"/>
+                                        <input class="form-control" type="text" id="bag-water-inp" autocomplete="off"/>
                                     </div>
                                 </div>';
                         }
@@ -200,7 +203,7 @@
                                     <h1>BP <span>*</span></h1>
                                     <button>i</button>
                                 </div>
-                                <input id='bp-input' type="text" autocomplete="off">                      
+                                <input class="form-control" id='bp-input' type="text" autocomplete="off">                      
                             </div>
 
                             <div class="right-side-main-div-1-sub-2" style="width:20%; margin-left:1%">
@@ -208,7 +211,7 @@
                                     <h1>HR <span>*</span></h1>
                                     <button>i</button>
                                 </div>
-                                <input id='hr-input' type="text" autocomplete="off">     
+                                <input class="form-control" id='hr-input' type="text" autocomplete="off">     
                             </div>
 
                             <div class="right-side-main-div-1-sub-3" style="width:20%; margin-left:1%">
@@ -216,7 +219,7 @@
                                     <h1>RR <span>*</span></h1>
                                     <button>i</button>
                                 </div>
-                                <input id='rr-input' type="text" autocomplete="off">     
+                                <input class="form-control" id='rr-input' type="text" autocomplete="off">     
                             </div>
 
                             <div class="right-side-main-div-1-sub-4" style="width:20%; margin-left:1%">
@@ -224,7 +227,7 @@
                                     <h1>Temp (°C) <span>*</span></h1>
                                     <button>i</button>
                                 </div>
-                                <input id='temp-input' type="text" autocomplete="off"> 
+                                <input class="form-control" id='temp-input' type="text" autocomplete="off"> 
                             </div>
 
                             <div class="right-side-main-div-1-sub-5" style="width:20%; margin-left:1%">
@@ -232,7 +235,7 @@
                                     <h1>WT. (kg) <span>*</span></h1>
                                     <button>i</button>
                                 </div>
-                                <input id='weight-input' type="text" autocomplete="off"> 
+                                <input class="form-control" id='weight-input' type="text" autocomplete="off"> 
                             </div>
                         </div>
 
@@ -247,8 +250,8 @@
                         </div>  -->
 
                         <div class="right-side-main-div-2">
-                            <label>Pertinent PE Findings <span>*</span>       </label>
-                            <textarea id="pe-findings-input" autocomplete="off"></textarea>
+                            <label>Pertinent PE Findings (Objective) <span>*</span>       </label>
+                            <textarea class="form-control" id="pe-findings-input" autocomplete="off"></textarea>
                         </div>
 
                         <!-- only for OB -->
@@ -258,12 +261,12 @@
                                 <div class="right-side-main-div-3">
                                     <div>
                                         <label>Presentation<span>*</span></label>
-                                        <input type="text" id="presentation-ob-inp" autocomplete="off"/>
+                                        <input class="form-control" type="text" id="presentation-ob-inp" autocomplete="off"/>
                                     </div>
         
                                     <div>
                                         <label>Others<span>*</span></label>
-                                        <textarea id="others-ob-inp" autocomplete="off"></textarea>
+                                        <textarea class="form-control" id="others-ob-inp" autocomplete="off"></textarea>
                                     </div>
                                 </div>
                                 ';

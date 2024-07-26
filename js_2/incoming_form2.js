@@ -10,11 +10,11 @@ $(document).ready(function(){
     $('#myDataTable thead th').removeClass('sorting sorting_asc sorting_desc');
     dataTable.search('').draw(); 
 
-    const inactivityInterval = 551000; 
+    const inactivityInterval = 10000; 
 
     const myModal = new bootstrap.Modal(document.getElementById('pendingModal'));
     const defaultMyModal = new bootstrap.Modal(document.getElementById('myModal-incoming'));
-    // myModal.show()
+    myModal.show()
 
     let global_index = 0, global_paging = 1, global_timer = "", global_breakdown_index = 0;
     let final_time_total = ""
@@ -260,9 +260,14 @@ $(document).ready(function(){
             url: '../php_2/process_pending.php',
             method: "POST", 
             data:data,
+            dataType:'JSON',
             success: function(response){
-                document.querySelector('.ul-div').innerHTML = ''
-                document.querySelector('.ul-div').innerHTML += response
+                document.querySelector('.left-div').innerHTML = ''
+                document.querySelector('.right-div').innerHTML = ''
+
+                document.querySelector('.left-div').innerHTML += response.left_html;
+                document.querySelector('.right-div').innerHTML += response.right_html;
+
                 if(document.querySelectorAll('.pat-status-incoming')[index].textContent == 'Pending'){
                     console.log(259, index)
                     runTimer(index)
@@ -759,9 +764,9 @@ $(document).ready(function(){
         })
     })
 
-    
-    $('#imme-approval-btn').on('click' , function(event){
+    $(document).on('click', '#imme-approval-btn', function(event){
        defaultMyModal.show()
+       console.log('here')
        $('#modal-body-incoming').text('Are you sure you want to approve this?')
        $('#modal-title-incoming').text('Confimation')
        $('#ok-modal-btn-incoming').text('No')
@@ -850,26 +855,23 @@ $(document).ready(function(){
         // Use regular expression to extract the number
 
         if(toggle_accordion_obj[accordion_index]){
-            document.querySelectorAll('.tr-incoming #dt-turnaround')[accordion_index].style.height = "100%"
-            document.querySelectorAll('.tr-incoming #dt-turnaround')[accordion_index].style.overflow = "auto"
+            document.querySelectorAll('.tr-incoming #dt-turnaround .breakdown-div')[accordion_index].style.display = "flex"
             toggle_accordion_obj[accordion_index] = false
 
             // fa-solid fa-plus
             $('.accordion-btn').eq(accordion_index).removeClass('fa-plus')
             $('.accordion-btn').eq(accordion_index).addClass('fa-minus')
         }else{
-            document.querySelectorAll('.tr-incoming #dt-turnaround')[accordion_index].style.height = "90px"
-            document.querySelectorAll('.tr-incoming #dt-turnaround')[accordion_index].style.overflow = "hidden"
+            document.querySelectorAll('.tr-incoming #dt-turnaround .breakdown-div')[accordion_index].style.display = "none"
             toggle_accordion_obj[accordion_index] = true
 
             $('.accordion-btn').eq(accordion_index).addClass('fa-plus')
             $('.accordion-btn').eq(accordion_index).removeClass('fa-minus')
         }
-
-        
     })
 
-    $('.pre-emp-text').on('click' , function(event){
+    $(document).on('click' , '.pre-emp-text' , function(event){
+        console.log('here')
         var originalString = event.target.textContent;
         // Using substring
         var stringWithoutPlus = originalString.substring(2);
@@ -902,8 +904,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#approve-classification-select').on('change', function(event) {
-        console.log('asdf')
+    $(document).on('change' , '#approve-classification-select' , function(event){
         if ($(this).val() !== '' && $('#eraa').val().length > 1) {
             $('#imme-approval-btn').css('opacity' , '1')
             $('#imme-approval-btn').css('pointer-events' , 'auto')
@@ -944,6 +945,27 @@ $(document).ready(function(){
         clearInterval(running_timer_interval_update)
     });
 
+    $(document).on('change' , '#select-response-status' , function(event){
+        var selectedValue = $(this).val();
+        console.log(selectedValue)
+        
+        $('#right-sub-div-c').css('display' , 'flex')
+        document.getElementById('right-sub-div-c').scrollIntoView({ behavior: 'smooth' });
+
+        if (selectedValue === 'Approved') {
+            console.log('here')
+            $('#imme-approval-btn').css('display' , 'flex')
+            $('#inter-dept-referral-btn').css('display', 'none')
+
+            $('.interdept-div').css('display' , 'none')
+        } 
+        else if (selectedValue === 'Interdepartamental') {
+            console.log('asdf')
+            $('#imme-approval-btn').css('display' , 'none')
+            $('#inter-dept-referral-btn').css('display', 'flex')
+        }
+    })
+    
     $('#final-approve-btn').on('click', function(event) {
         const data = {
             global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
@@ -996,37 +1018,20 @@ $(document).ready(function(){
         //reset the the buttons in modal after the previous transaction
         $('#ok-modal-btn-incoming').text('OK')
         $('#yes-modal-btn-incoming').css('display', 'none') 
-       
+
+        $('#modal-title-incoming').text('Verification')
+        $('#modal-body-incoming').text('')
+
         sensitive_case_btn_index = $('.sensitive-case-btn').index(this);
-        let sensitive_hpercode = document.querySelectorAll('.sensitive-hpercode')
-        console.log(sensitive_case_btn_index)
 
-        $.ajax({
-            url: '../php_2/fetch_sensitive_names.php',
-            method: "POST",
-            data : {
-                hpercode : sensitive_hpercode[sensitive_case_btn_index].value // sensitive_case_btn_index = should always be = 0
-            },
-            dataType:'JSON',
-            success: function(response){
-                console.log(response)
-                let fullNameLabel = `<label class='pat-full-name-lbl'>${response.patlast}, ${response.patfirst} ${response.patmiddle}</label>`;
-                $('.pat-full-name-div').eq(sensitive_case_btn_index).append(fullNameLabel);
+        let sensitive_btn = document.createElement('input')
+        sensitive_btn.id = 'sensitive-pw'
+        sensitive_btn.type = 'password'
+        sensitive_btn.placeholder = 'Input Password'
 
-                $('#modal-title-incoming').text('Verification')
-                // <input id="sensitive-pw" type="password" placeholder="Input Password">
-                $('#modal-body-incoming').text('')
-                let sensitive_btn = document.createElement('input')
-                sensitive_btn.id = 'sensitive-pw'
-                sensitive_btn.type = 'password'
-                sensitive_btn.placeholder = 'Input Password'
+        $('#modal-body-incoming').append(sensitive_btn)
 
-                $('#modal-body-incoming').append(sensitive_btn)
-
-                defaultMyModal.show()
-            }
-        })
-
+        defaultMyModal.show()
     })
 
     $('#ok-modal-btn-incoming').on('click' , function(event){
@@ -1045,18 +1050,39 @@ $(document).ready(function(){
             }
             
             if (mcc_passwords_validity) {
-                console.log(sensitive_case_btn_index)
+                let sensitive_hpercode = document.querySelectorAll('.sensitive-hpercode')
 
-                $('.sensitive-lock-icon').eq(sensitive_case_btn_index)
-                    .css('color', 'lightgreen')
-                    .removeClass('fa-solid fa-lock')
-                    .addClass('fa-solid fa-lock-open');
-            
-                $('.pencil-btn').eq(sensitive_case_btn_index)
-                    .css('pointer-events', 'auto')
-                    .css('opacity', '1');
-                
-                $('.sensitive-case-btn').eq(sensitive_case_btn_index).fadeOut(2000)
+               console.log(sensitive_case_btn_index)
+               console.log(sensitive_hpercode)
+
+               $.ajax({
+                    url: '../php_2/fetch_sensitive_names.php',
+                    method: "POST",
+                    data : {
+                        hpercode : sensitive_hpercode[sensitive_case_btn_index].value // sensitive_case_btn_index = should always be = 0
+                    },
+                    dataType:'JSON',
+                    success: function(response){
+                        let fullNameLabel = $('<label>')
+                            .addClass('pat-full-name-lbl')
+                            .text(`${response.patlast}, ${response.patfirst} ${response.patmiddle}`);
+                        fullNameLabel.hide(); 
+
+                        $('.sensitive-lock-icon').eq(sensitive_case_btn_index)
+                            .css('color', 'lightgreen')
+                            .removeClass('fa-solid fa-lock')
+                            .addClass('fa-solid fa-lock-open');
+                    
+                        $('.pencil-btn').eq(sensitive_case_btn_index)
+                            .css('pointer-events', 'auto')
+                            .css('opacity', '1');
+                        
+                        $('.sensitive-case-btn').eq(sensitive_case_btn_index).fadeOut(2000, function() {
+                            $('.pat-full-name-div').eq(sensitive_case_btn_index).append(fullNameLabel);
+                            fullNameLabel.show(); 
+                        });
+                    }
+                })
             } else {
                 // Change color to red
                 console.log(sensitive_btn_index)

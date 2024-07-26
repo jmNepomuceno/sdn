@@ -77,6 +77,11 @@
     align-items: center;
     border:2px solid #bfbfbf;
     border-radius: 15px;
+
+    background: transparent;
+    padding: 20px;
+    border: none;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 .container .referral-body .first-part{
@@ -370,7 +375,7 @@
 .container .referral-body .third-part .left-side .left-sub-div-2 textarea{
     border:2px solid #bfbfbf;
     width:80%;
-    height: 33.3%;
+    height: 20%;
     resize: none;
     outline:none;
     border-radius: 5px;
@@ -447,6 +452,10 @@
     align-items: center;
     margin-bottom: 5px;
     margin-right: 15px;
+
+    background: transparent;
+    border: none;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 .container .referral-body .third-part .right-side .right-side-main-div .right-side-main-div-1{
@@ -534,12 +543,13 @@
 
 .container .referral-body .third-part .right-side .right-side-main-div .right-side-main-div-2{
     width:100%;
-    height: 70%;
+    height: 40%;
     margin-top: 1%;
     display:flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+
 }
 
 .container .referral-body .third-part .right-side .right-side-main-div .right-side-main-div-2 label{
@@ -547,6 +557,8 @@
     font-weight: bold;
     font-size: 0.8rem;
     width:88%;
+    margin-top:10px;
+
 }
 
 .container .referral-body .third-part .right-side .right-side-main-div .right-side-main-div-2 label span{
@@ -559,10 +571,11 @@
     border:2px solid #bfbfbf;
     width:80%;
     outline:none;
-    height: 88%;
+    height: 70%;
     margin-left: 1%;
     border-radius: 0.5rem;
     resize: none;
+    margin-top:10px;
 }
 
 .container .referral-body .third-part .right-side .right-side-main-div .right-side-main-div-3{

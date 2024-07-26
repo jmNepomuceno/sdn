@@ -65,45 +65,90 @@
     // echo $finalJsonString;
     // echo json_encode($data);
     
+    $pagination_html = '';
+    $results_html = '';
     if(count($data) >= 1){
-        for($i = 0; $i < count($data); $i++){
-            if ($i % 2 == 0) {
-                $bg_color = "#526c7a";
-            } else {
-                $bg_color = "transparent";
-            }
+        // Number of items per page
+        $items_per_page = 10;
+        // Current page number from POST parameter (default is 1)
+        $current_page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
+        // Calculate the offset for the SQL query
+        $offset = ($current_page - 1) * $items_per_page;
 
-            $history_style = "none";
+        // Total number of items (assuming $data is your array of items)
+        $total_items = count($data);
+
+        // Total number of pages
+        $total_pages = ceil($total_items / $items_per_page);
+
+        // Slice the data array to get only the items for the current page
+        $page_data = array_slice($data, $offset, $items_per_page);
+
+        $results_html = '';
+        $i = $offset; // Start the index from the current page offset
+
+        foreach ($page_data as $item) {
+            $bg_color = ($i % 2 == 0) ? "#526c7a" : "transparent";
             $text_color = "white";
-            if (isset($data[$i]['status'])) {
-                $text_color =  "#99ff99";
+            $history_style = "none";
+
+            if (isset($item['status'])) {
+                $text_color = "#99ff99";
                 $history_style = "block";
             }
 
             $sql = "SELECT hospital_name FROM sdn_hospital WHERE hospital_code=?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$data[$i]['hpatcode']]);
+            $stmt->execute([$item['hpatcode']]); // Ensure you use $item here
             $hpatcode_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            echo '<div id="search-sub-div" class="search-sub-div" style="background: '. $bg_color .'">';
-            echo ' <div id="upper-part-sub-div">';
-            echo    '<h1 id="pat-id-h1" class="search-sub-code">'. $data[$i]['hpercode'] .'</h1>';
-            echo      '<div>';
-            echo          '<h1>'. $data[$i]['patbdate'] .'</h1>';
-            echo           '<span class="fa-solid fa-user"></span>';
-            echo     ' </div>';
-            echo '</div>';
-            echo ' <div id="lower-part-sub-div">';
-            echo     ' <h3 id="pat-name">'. $data[$i]['patlast'] . ", " . $data[$i]['patfirst'] . " " . $data[$i]['patmiddle'] .'</h3>';
-            echo      '<div>';
-            echo        '<h3 class="pat-history-class" id="pat-history" style="display:'.$history_style.';"> <i class="fa-solid fa-clock-rotate-left"></i> </h3>';
-            echo        '<h3 id="pat-stat" style="color: '.$text_color.';">' . (isset($data[$i]['status']) ? "Status: Referred-" . $data[$i]['status'] : "Status: Not yet referred") . '</h3>';
-            echo      '</div>';
-            echo  '</div>';
-            echo '<label id="reg-at-lbl">Registered at: '. $hpatcode_data['hospital_name'] .'</label>';
-            echo'</div>';
+            $results_html .= '<div id="search-sub-div" class="search-sub-div" style="background: '. $bg_color .'">';
+            $results_html .= ' <div id="upper-part-sub-div">';
+            $results_html .=    '<h1 id="pat-id-h1" class="search-sub-code">'. $item['hpercode'] .'</h1>';
+            $results_html .=      '<div>';
+            $results_html .=          '<h1>'. $item['patbdate'] .'</h1>';
+            $results_html .=           '<span class="fa-solid fa-user"></span>';
+            $results_html .=     ' </div>';
+            $results_html .= '</div>';
+            $results_html .= ' <div id="lower-part-sub-div">';
+            $results_html .=     ' <h3 id="pat-name">'. $item['patlast'] . ", " . $item['patfirst'] . " " . $item['patmiddle'] .'</h3>';
+            $results_html .=      '<div>';
+            $results_html .=        '<h3 class="pat-history-class" id="pat-history" style="display:'.$history_style.';"> <i class="fa-solid fa-clock-rotate-left"></i> </h3>';
+            $results_html .=        '<h3 id="pat-stat" style="color: '.$text_color.';">' . (isset($item['status']) ? "Status: Referred-" . $item['status'] : "Status: Not yet referred") . '</h3>';
+            $results_html .=      '</div>';
+            $results_html .=  '</div>';
+            $results_html .= '<label id="reg-at-lbl">Registered at: '. $hpatcode_data['hospital_name'] .'</label>';
+            $results_html .= '</div>';
+
+            $i += 1;
         }
+
+        $pagination_html = '';
+        if ($total_pages > 1) {
+            $pagination_html .= '<div class="pagination">';
+            if ($current_page > 1) {
+                $pagination_html .= '<a href="#" data-page="'.($current_page - 1).'">&laquo; Previous</a>';
+            }
+
+            for ($page = 1; $page <= $total_pages; $page++) {
+                if ($page == $current_page) {
+                    $pagination_html .= '<span class="current-page">'.$page.'</span>';
+                } else {
+                    $pagination_html .= '<a href="#" data-page="'.$page.'">'.$page.'</a>';
+                }
+            }
+
+            if ($current_page < $total_pages) {
+                $pagination_html .= '<a href="#" data-page="'.($current_page + 1).'">Next &raquo;</a>';
+            }
+            $pagination_html .= '</div>';
+        }
+
+        // Return the results and pagination as JSON
+        echo json_encode(['results' => $results_html, 'pagination' => $pagination_html]);
+
+        
     }else{
-        echo "No User Found";
+        echo json_encode(['results' => $results_html, 'pagination' => $pagination_html]);
     }
 ?>

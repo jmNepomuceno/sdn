@@ -39,6 +39,7 @@ $(document).ready(function(){
                 complaint_history_input : $('#complaint-history-input').val(),
                 reason_referral_input : $('#reason-referral-input').val(),
                 diagnosis : $('#diagnosis').val(),
+                remarks : $('#remarks').val(),
 
                 bp_input : $('#bp-input').val(),
                 hr_input : $('#hr-input').val(),

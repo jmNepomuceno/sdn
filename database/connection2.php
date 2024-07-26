@@ -5,6 +5,11 @@
   $dbPassword = "S3rv3r";
   $dbName = "bghmc";
 
+  // $dbHost = "localhost";
+  // $dbUser = "root";
+  // $dbPassword = "password";
+  // $dbName = "bghmc";
+
   try {
     $dsn = "mysql:host=" . $dbHost . ";dbname=" . $dbName;
     $pdo = new PDO($dsn, $dbUser, $dbPassword);
