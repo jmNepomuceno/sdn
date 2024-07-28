@@ -771,6 +771,7 @@
     flex-direction: column;
     justify-content: start;
     align-items: left;
+
 }
 
 #pendingModal .modal-content #approval-form .approval-main-content #pre-text .pre-emp-text{
@@ -1030,6 +1031,30 @@
     }
 
     #pendingModal .modal-content .modal-body-incoming{
+        height: 550px;
+    }
+
+     #pendingModal .modal-content #approval-form .approval-main-content #eraa,
+    #pendingModal .modal-content #approval-details .approval-main-content #eraa-details{
+        height: 150px;
+    }
+/*
+    #pendingModal .modal-content #approval-form .approval-main-content #pre-text{
+        height: 150px;
+        border:2px solid blue;
+    } */
+
+    #pendingModal .modal-content #approval-form .approval-main-content #pre-text .pre-emp-text{
+        font-size: 10pt;
+    }
+
+    /* #pendingModal .modal-content #approval-form .approval-main-content,
+    #pendingModal .modal-content #approval-details .approval-main-content{
+        height: 400px;
+        border:1px solid red;
+    } */
+
+    #pendingModal .modal-content .modal-body-incoming #approval-form{
         height: 500px;
     }
 }

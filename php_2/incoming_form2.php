@@ -59,49 +59,49 @@
 
     // ******************************************************************
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000023'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000023'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000024'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000024'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000025'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000025'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000026'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000026'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000027'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null WHERE hpercode='PAT000027'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "DELETE FROM incoming_interdept";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "DELETE FROM incoming_interdept";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
     
     // echo $_SESSION['running_timer'] . "----";
     // echo $_SESSION['running_bool'] . "----";
@@ -469,8 +469,123 @@
                 <div class="modal-body-incoming">
                     <div class="container">
                         <div class="left-div">
+                            <div class="left-sub-div"> <label>Patient ID:</label><span id="pat-id"> '. $response[1]['hpercode'].'</span> </div>
+                            <div class="left-sub-div"> <label>Referral Status:</label><span id="pat-id"> '. $response[1]['hpercode'].'</span> </div>
+                            <div class="left-sub-div"> <label>Referring Agency:</label><span id="refer-agency"> '. $response[0]['referred_by'].'</span> </div>
+                            <div class="left-sub-div"> <label>Last Name:</label><span id="pat-last"> '. $response[1]['patlast'].'</span> </div>
+                            <div class="left-sub-div"> <label>First Name:</label><span id="pat-first"> '. $response[1]['patfirst'].'</span> </div>
+                            <div class="left-sub-div"> <label>Middle Name:</label><span id="pat-middle"> '. $response[1]['patmiddle'].'</span> </div>
+                            <div class="left-sub-div"> <label>Extension Name:</label><span id="pat-exten"> '. $response[1]['patsuffix'].'</span> </div>
+                            <div class="left-sub-div"> <label>Gender:</label><span id="pat-gender"> '. $response[1]['patsex'].'</span> </div>
+                            <div class="left-sub-div"> <label>Civil Status:</label><span id="pat-cstat"> '. $response[1]['patcstat'].'</span> </div>
+                            <div class="left-sub-div"> <label>Religion:</label><span id="pat-rel"> '. $response[1]['relcode'].'</span> </div>
+                            <div class="left-sub-div"> <label>Contanct No.:</label><span id="pat-phone-no"> '. $response[1]['pat_mobile_no'].'</span> </div>
+                            <div class="left-sub-div"> <label>Blood Pressure:</label><span id="pat-bp"> '. $response[0]['bp'].'</span> </div>
+                            <div class="left-sub-div"> <label>Heart Rate (HR):</label><span id="pat-hr"> '. $response[0]['hr'].'</span> </div>
+                            <div class="left-sub-div"> <label>Respiratory Rate (RR):</label><span id="pat-rr"> '. $response[0]['rr'].'</span> </div>
+                            <div class="left-sub-div"> <label>Body Temperature:</label><span id="pat-temp"> '. $response[0]['temp'].'</span> </div>
+                            <div class="left-sub-div"> <label>Weight:</label><span id="pat-weight"> '. $response[0]['weight'].'</span> </div>
+                            <div class="left-sub-div"> <label>Remarks:</label><span id="pat-remarks"> '. $response[0]['remarks'].' </span> </div>
+                            <div class="left-sub-div"> <label>Referred By:</label><span id="pat-refered-by"> Juan Dela Cruz</span> </div>
                         </div>
                         <div class="right-div">
+                            <div id="right-sub-div-a">
+                                <div id="right-sub-div-a-1"> 
+                                        <div class="right-sub-div"> <label>Case Number:</label><span id="case-no"> '. $response[0]['referral_id'].'</span> </div>
+                                        <div class="right-sub-div"> <label>Age:</label><span id="pat-age"> '. $response[1]['pat_age'].'</span> </div>
+                                </div>
+                                <div id="right-sub-div-a-2"> <label>ICD-10 Diagnosis:</label><textarea class="form-control" id="pat-icddiag"> </textarea> </div>
+                            </div>
+
+                            <div class="right-sub-div textarea-div" id="subjective-id"> <label>SUBJECTIVE:</label><textarea class="form-control" id="pat-subjective"> '. $response[0]['chief_complaint_history'].' </textarea> </div>
+                            <div class="right-sub-div textarea-div" id="objective-id"> <label>OBJECTIVE:</label><textarea class="form-control" id="pat-objective"> '. $response[0]['pertinent_findings'].' </textarea> </div>
+                            <div class="right-sub-div textarea-div" id="assessment-id"> <label>ASSESSMENT:</label><textarea class="form-control" id="pat-assessment"> '. $response[0]['diagnosis'].' </textarea> </div>
+                            <div class="right-sub-div textarea-div" id="plan-id"> <label>PLAN:</label><textarea class="form-control" id="pat-plan"> '. $response[0]['reason'].' </textarea> </div>
+                    
+                            <div id="right-sub-div-b">
+                                <div id="right-sub-div-b-1">
+                                    <div class="right-sub-div"> 
+                                        <label>Select Response Status:</label>
+                                        <select class="form-control" id="select-response-status">
+                                            <option value="">Select</option>
+                                            <option value="Approved">Approve</option>
+                                            <option value="Deferred">Defer</option> 
+                                            <option value="Interdepartamental">Interdepartamental Referral</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="right-sub-div"> <label>Process Date/Time:</label><span id="refer-agency"> '. $response[0]['reception_time'].'</span> </div>
+                                    <div class="right-sub-div"> <label>Processed By:</label><span id="refer-agency"> . $_SESSION['first_name'].'</span> </div>
+                                </div>
+                                <div id="right-sub-div-b-2"> <label>Deferred Reason:</label> <textarea class="form-control" id="defer-reason"></textarea> </div>
+                            </div>
+
+                            <div id="right-sub-div-c">
+                                <div id="approval-form">
+                                    <label id="approval-title-div">Approval Form</label>
+                                        
+                                    <div class="approval-main-content"> 
+
+                                        <label id="case-cate-title">Case Category</label>
+                                        <select id="approve-classification-select">
+                                            <option value="">Select</option>
+                                            <option value="Primary">Primary</option>
+                                            <option value="Secondary">Secondary</option> 
+                                            <option value="Tertiary">Tertiary</option>
+                                        </select>
+
+                                        <label id="admin-action-title">Emergency Room Administrator Action</label>
+                                        <textarea id="eraa"></textarea>
+
+                                        <div id="pre-text">
+                                            <label class="pre-emp-text">+ May transfer patient once stable.</label>
+                                            <label class="pre-emp-text">+ Please attach imaging and laboratory results to the referral letter.</label>
+                                            <label class="pre-emp-text">+ Hook to oxygen support and maintain saturation at >95%.</label>
+                                            <label class="pre-emp-text">+ Start venoclysis with appropriate intravenous fluids.</label>
+                                            <label class="pre-emp-text">+ Insert nasogastric tube(NGT).</label>
+                                            <label class="pre-emp-text">+ Insert indwelling foley catheter(IFC).</label>
+                                            <label class="pre-emp-text">+ Thank you for your referral.</label>
+                                        </div>
+
+                                        <!-- <label class="ml-[2%] font-semibold">Action</label>
+                                        <select id="approved-action-select" class="border border-slate-800 w-[95%] ml-[2%] rounded-sm outline-none">
+                                            <option value="">Pending</option>
+                                            <option value="Approve">Approve</option>
+                                            <option value="Defer">Defer</option>
+                                        </select> -->
+                                    </div> 
+
+                                    <div id="approval-form-btns">
+                                        <button id="inter-dept-referral-btn"> Interdepartamental Referral </button>
+                                        <button id="imme-approval-btn"> Immediate Approval </button>
+                                    </div>
+                                </div>
+
+                                <div class="interdept-div">
+                                    <div id="inter-dept-stat-form-div" class="status-form-div">
+                                        <label id="status-bg-div">Inter-Department Referral </label>
+                                    </div>
+                                    <label for="" id="inter-dept-lbl">Department: </label>
+                                    <select id="inter-depts-select" style="cursor:pointer;">
+                                        <option value="">Select</option>
+                                        <option value="SURGERY"> Surgery </option>
+                                        <option value="OB-GYNE"> OB-GYNE </option>
+                                        <option value="IM"> Internal Medicine </option>
+                                        <option value="FAMILY MEDICINE"> Family Medicine </option>
+                                        <option value="ANESTHESIA"> Anesthesia </option>
+                                        <option value="OTOLARYNGOLOGY"> Otolaryngology </option>
+                                        <option value="PEDIATRICS"> Pediatrics </option>
+                                        <option value="OPHTHALMOLOGY"> Ophthalmology </option>
+                                        <option value="PHYSICAL REHAB"> Physical Rehab </option>
+                                        <option value="IHOMP"> IHOMP </option>
+                                    </select>
+                                    <div class="int-dept-btn-div">
+                                        <button id="int-dept-btn-forward">Send / Forward</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
                         </div>  
                     </div>
                 </div>

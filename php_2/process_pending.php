@@ -113,6 +113,7 @@
 
     // Left-side content
     $left_html .= '<div class="left-sub-div"> <label>Patient ID:</label><span id="pat-id"> '. $response[1]['hpercode'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Referral Status:</label><span id="pat-id"> '. $response[0]['status'].'</span> </div>';
     $left_html .= '<div class="left-sub-div"> <label>Referring Agency:</label><span id="refer-agency"> '. $response[0]['referred_by'].'</span> </div>';
     $left_html .= '<div class="left-sub-div"> <label>Last Name:</label><span id="pat-last"> '. $response[1]['patlast'].'</span> </div>';
     $left_html .= '<div class="left-sub-div"> <label>First Name:</label><span id="pat-first"> '. $response[1]['patfirst'].'</span> </div>';
