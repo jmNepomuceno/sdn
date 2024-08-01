@@ -15,7 +15,7 @@ $(document).ready(function(){
     // patHistoryModal.show()
 
     // loadContent('php/opd_referral_form.php?type=' + $('#tertiary-case').val() + "&code=" + $('#hpercode-input').val())
-    loadContent('../php_2/referral_form.php?type="OB"&code="BGHMC-0058"')
+    // loadContent('../php_2/referral_form.php?type="OB"&code="BGHMC-0058"')
 
     $('#check-if-registered-btn').on('click' , function(event){
         $('#check-if-registered-btn').css('display', 'none')

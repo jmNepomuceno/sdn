@@ -459,7 +459,6 @@
             $accord_index += 1;
         }
     }
-
     else{
         try{
             $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to='". $_SESSION["hospital_name"] ."' ORDER BY date_time ASC";

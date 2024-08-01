@@ -14,7 +14,7 @@ $(document).ready(function(){
 
     const myModal = new bootstrap.Modal(document.getElementById('pendingModal'));
     const defaultMyModal = new bootstrap.Modal(document.getElementById('myModal-incoming'));
-    myModal.show()
+    // myModal.show()
 
     let global_index = 0, global_paging = 1, global_timer = "", global_breakdown_index = 0;
     let final_time_total = ""
@@ -67,14 +67,12 @@ $(document).ready(function(){
                     let timeString = response[1].curr_time;
                     if(timeString){
                         running_timer_interval_update = setInterval(function() {
-                            console.log(timeString)
                             let totalSeconds = timeString;
                             let hours = Math.floor(totalSeconds / 3600);
                             let minutes = Math.floor((totalSeconds % 3600) / 60);
                             let seconds = (totalSeconds % 60).toFixed(0);
 
                             const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                            console.log(formattedTime)
                             
                             $('#v2-update-stat').text(`Last update: ${response[0]['currentDateTime']}`)
 
@@ -244,11 +242,12 @@ $(document).ready(function(){
             userIsActive = false;
             
         }, inactivityInterval);
-    }
+    } 
 
     startInactivityTimer();
 
     const ajax_method = (index, event) => {
+        console.log(250)
         global_index = index
         const data = {
             hpercode: document.querySelectorAll('.hpercode')[index].value,
@@ -282,8 +281,9 @@ $(document).ready(function(){
                     })
                     $('#update-stat-select').css('display' , 'none')
 
-                }else if(document.querySelectorAll('.pat-status-incoming')[index].textContent == 'Approved'){
-                    console.log('wopwopwop')
+                }
+                else if(document.querySelectorAll('.pat-status-incoming')[index].textContent == 'Approved'){
+                    console.log('286')
                     let data = {
                         hpercode : document.querySelectorAll('.hpercode')[index].value,
                     }
@@ -299,6 +299,9 @@ $(document).ready(function(){
                             // response[0].pat_class
                             $('#approve-classification-select-details').val(response[0].pat_class)
                             $('#eraa-details').val(response[0].approval_details)
+                            // right-sub-div-b
+                            $('#right-sub-div-b').css('display' , 'none')
+                            $('#right-sub-div-d').css('display' , 'block')
                             
                         }
                     })
@@ -316,15 +319,16 @@ $(document).ready(function(){
                     data:data,
                     success: function(response){
                         response = JSON.parse(response);    
-                        console.log(response)
+                        console.log(322)
                         
                         console.log(typeof response.status_interdept)
 
                         if(response.status_interdept){
-                            $('#approval-form').css('display','none')
-                            $('.interdept-div-v2').css('display','flex')
-                            $('#cancel-btn').css('display','block')
-                
+                            // $('#approval-form').css('display','none')
+                            // $('.interdept-div-v2').css('display','flex')
+                            // $('#cancel-btn').css('display','block')
+
+                            $('#right-sub-div-e').css('display' , 'block')
                             updateInterdeptFunc()
                         }else{
                             $('#approval-form').css('display','flex')
@@ -333,8 +337,8 @@ $(document).ready(function(){
                             $('#cancel-btn').css('display','none')
                         }
 
-                        $('#seen-by-lbl span').text(response.referring_seenBy)
-                        $('#seen-date-lbl span').text(response.referring_seenTime)
+                        $('#seen-by-lbl span').text((response.referring_seenBy) ? response.referring_seenBy : "Not seen yet")
+                        $('#seen-date-lbl span').text((response.referring_seenTime) ? response.referring_seenTime : "Not seen yet")
                         
                         if (document.querySelectorAll('.pat-status-incoming')[global_index].textContent.includes("Approve")) {
                             $('#final-approve-btn').css('display','block')
@@ -356,12 +360,9 @@ $(document).ready(function(){
     });
 
 
-    function pad(num) {
-        return (num < 10 ? '0' : '') + num;
-    }
-
     function loadStateFromSession(current_dataTable_index) {
         // upon logout
+        console.log('reload')
         if(post_value_reload === 'true'){
             console.log('366')
             $.ajax({
@@ -388,12 +389,14 @@ $(document).ready(function(){
             })
         }else{
             console.log('390')
+
             running_bool_var =  (running_bool_var === "true") ? true : false;
             elapsedTime = (running_timer_var || 0) * 1000; // Convert seconds to milliseconds
             startTime = running_startTime_var ? running_startTime_var : performance.now() - elapsedTime;
             running = running_bool_var || false;
-    
-    
+            
+            console.log(running , previous_loadcontent)
+            // if (running) {
             if (running && previous_loadcontent === "incoming_ref") {
                 startTime = performance.now() - elapsedTime;
                 requestId = requestAnimationFrame(runTimer(current_dataTable_index).updateTimer);
@@ -430,8 +433,8 @@ $(document).ready(function(){
                 if(document.querySelectorAll('.pat-status-incoming').length > 0){
                     if (global_paging === 1) {
                         // console.log(document.querySelectorAll('.stopwatch').length, index)
+                        // console.log(index)
                         document.querySelectorAll('.stopwatch')[index].textContent = formatTime(elapsedTime);
-
                         document.querySelectorAll('.pat-status-incoming')[index].textContent = 'On-Process';
                     }
         
@@ -442,6 +445,14 @@ $(document).ready(function(){
                             curr_index = i;
                         }
                     }
+
+                    // console.log({
+                    //     timer : elapsedTime / 1000,
+                    //     running_bool : running,
+                    //     startTime : running ? performance.now() : startTime,
+                    //     hpercode: document.querySelectorAll('.hpercode')[curr_index].value,
+                    //     index: curr_index 
+                    // })
 
                     $.ajax({
                         url: '../php_2/fetch_onProcess.php',
@@ -456,10 +467,12 @@ $(document).ready(function(){
                         },
                         success: function(response){
                             // console.log(response)
+                            // console.log('yawa')
                         }
                     })
 
                 }else{
+                    console.log('asdf')
                     if (global_paging === 1) {
                         document.querySelectorAll('.stopwatch')[index].textContent = formatTime(elapsedTime);
                     }
@@ -474,6 +487,7 @@ $(document).ready(function(){
             running = true;
             startTime = performance.now() - elapsedTime;
             requestId = requestAnimationFrame(updateTimer);
+            console.log('481')
             // saveStateToSession(); // Save state whenever the timer is started
         }
 
@@ -708,12 +722,12 @@ $(document).ready(function(){
     }
 
 
-    $('#inter-dept-referral-btn').on('click' , function(event){
-        $('.interdept-div').css('display' , 'flex')
+    $(document).on('click' , '#inter-dept-referral-btn' , function(event){
+        $('.interdept-div').css('display' , 'block')
+        document.querySelector('.interdept-div').scrollIntoView({ behavior: 'smooth' });
     })
 
-    $('#int-dept-btn-forward').on('click' , function(event){
-        // 
+    $(document).on('click' , '#int-dept-btn-forward' , function(event){
         $('#modal-title-incoming').text('Successed')
         document.querySelector('#modal-icon').className = 'fa-solid fa-circle-check'
         $('#modal-body-incoming').text('Successfully Forwarded')
@@ -796,6 +810,7 @@ $(document).ready(function(){
                 // console.log(response)
 
                 // clearInterval(running_timer_interval)
+                console.log('dendendendenden')
                 runTimer().stop()
                 document.querySelectorAll('.pat-status-incoming')[global_index].textContent = 'Approved';
                 myModal.hide()
@@ -890,8 +905,7 @@ $(document).ready(function(){
         }
     })
 
-    // 
-    $('#inter-depts-select').on('change', function(event) {
+    $(document).on('change' , '#inter-depts-select' , function(event){
         // Check if an option is selected
         if ($(this).val() !== '') {
             // Apply CSS changes when an option is selected
@@ -945,6 +959,7 @@ $(document).ready(function(){
         clearInterval(running_timer_interval_update)
     });
 
+    
     $(document).on('change' , '#select-response-status' , function(event){
         var selectedValue = $(this).val();
         console.log(selectedValue)
@@ -958,15 +973,23 @@ $(document).ready(function(){
             $('#inter-dept-referral-btn').css('display', 'none')
 
             $('.interdept-div').css('display' , 'none')
+
+            console.log($('#imme-approval-btn').css('display'))
         } 
         else if (selectedValue === 'Interdepartamental') {
             console.log('asdf')
             $('#imme-approval-btn').css('display' , 'none')
             $('#inter-dept-referral-btn').css('display', 'flex')
+
+            // $('#approval-form').css('display' , 'none')
+
+            $('.interdept-div').css('display' , 'none')
+            // $('.interdept-div').css('margin-top' , '2%')
         }
     })
     
-    $('#final-approve-btn').on('click', function(event) {
+    $(document).on('click' , '#final-approve-btn' , function(event){
+        console.log('dendendendendenden')
         const data = {
             global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
             timer : final_time_total,
@@ -977,21 +1000,31 @@ $(document).ready(function(){
         }
 
         console.log(data);
-
+        runTimer().stop()
         $.ajax({
             url: '../php_2/approved_pending.php',
             method: "POST",
             data : data,
             success: function(response){
-                // response = JSON.parse(response);    
-                // console.log(response)
-
+                
                 document.querySelectorAll('.pat-status-incoming')[global_index].textContent = 'Approved';
                 myModal.hide()
                 
                 dataTable.clear();
                 dataTable.rows.add($(response)).draw();
+
+                // find the on-process
+                let yawa;
+                for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
+                    if(document.querySelectorAll('.pat-status-incoming')[i].textContent === 'On-Process'){
+                        yawa = i;
+                        break;
+                    }
+                }                
                 
+                // runTimer().stop()
+                runTimer(yawa).start()
+
                 length_curr_table = $('.tr-incoming').length
                 for(let i = 0; i < length_curr_table; i++){
                     toggle_accordion_obj[i] = true
@@ -1096,16 +1129,18 @@ $(document).ready(function(){
         }
     })
 
-    $('#update-stat-select').on('change', function() {
+    $(document).on('change', '#update-stat-select', function(event){
         var selectedValue = $(this).val();
         if (selectedValue) {
-            $('#save-update').show(); 
+            $('#update-stat-check-btn').css('opacity' , '1')
+            $('#update-stat-check-btn').css('pointer-events' , 'auto')
         } else {
-            $('#save-update').hide(); 
+            $('#update-stat-check-btn').css('opacity' , '0.3')
+            $('#update-stat-check-btn').css('pointer-events' , 'none')
         }
     });
-
-    $('#save-update').on('click', function() {
+    
+    $(document).on('click', '#update-stat-check-btn', function(event){
         const  selectedValue = $('#update-stat-select').val();
         let data = {
             hpercode : document.querySelectorAll('.hpercode')[global_index].value,

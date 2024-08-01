@@ -110,10 +110,28 @@
 
     $left_html = '';
     $right_html = '';
+    $pat_status = "";
+    $selected_response = "Select";
+    $select_style = "pointer-events:auto; background: none;";
+
+    if($response[0]['status_interdept'] != '' || $response[0]['status_interdept'] != null){
+        $pat_status = $response[0]['status'] . " - " .$response[0]['status_interdept'] . ": Interdept";
+        $pat_status = "Interdept: " . $response[0]['status_interdept'];
+
+        $selected_response = "Interdepartamental";
+        $select_style = "pointer-events:none; background: #a5d6a7;";
+    }else{
+        $pat_status = $response[0]['status'];
+    }
+
+    if($response[0]['status_interdept'] == null && $response[0]['final_progressed_timer'] != null){
+        $selected_response = "Approve";
+        $select_style = "pointer-events:none; background: #a5d6a7;";
+    }   
 
     // Left-side content
     $left_html .= '<div class="left-sub-div"> <label>Patient ID:</label><span id="pat-id"> '. $response[1]['hpercode'].'</span> </div>';
-    $left_html .= '<div class="left-sub-div"> <label>Referral Status:</label><span id="pat-id"> '. $response[0]['status'].'</span> </div>';
+    $left_html .= '<div class="left-sub-div"> <label>Referral Status:</label><span id="pat-id"> '.  $pat_status .'</span> </div>';
     $left_html .= '<div class="left-sub-div"> <label>Referring Agency:</label><span id="refer-agency"> '. $response[0]['referred_by'].'</span> </div>';
     $left_html .= '<div class="left-sub-div"> <label>Last Name:</label><span id="pat-last"> '. $response[1]['patlast'].'</span> </div>';
     $left_html .= '<div class="left-sub-div"> <label>First Name:</label><span id="pat-first"> '. $response[1]['patfirst'].'</span> </div>';
@@ -153,8 +171,8 @@
             <div id="right-sub-div-b-1">
                 <div class="right-sub-div"> 
                     <label>Select Response Status:</label>
-                    <select class="form-control" id="select-response-status">
-                        <option value="">Select</option>
+                    <select class="form-control" id="select-response-status" style="'.$select_style.'">
+                        <option value="">'.$selected_response.'</option>
                         <option value="Approved">Approve</option>
                         <option value="Deferred">Defer</option> 
                         <option value="Interdepartamental">Interdepartamental Referral</option>
@@ -218,7 +236,7 @@
             <select id="inter-depts-select" style="cursor:pointer;">
                 <option value="">Select</option>
                 <option value="SURGERY"> Surgery </option>
-                <option value="OB-GYNE"> OB-GYNE </option>
+                <option value="OB-GYNE"> OB-GYNE </option>s
                 <option value="IM"> Internal Medicine </option>
                 <option value="FAMILY MEDICINE"> Family Medicine </option>
                 <option value="ANESTHESIA"> Anesthesia </option>
@@ -235,6 +253,54 @@
         
     </div>
 
+    ';
+
+    $right_html .= '
+         <div id="right-sub-div-d">
+            <h5 id="approval-details-div">Approval Details</h5>
+            <div class="appr-det-sub-container">
+                <div class="appr-det-sub-div"> <label>Case Category:</label><span> '. $response[1]['hpercode'].'</span> </div>
+                <div class="appr-det-sub-div"> 
+                    <label>Update Status:</label>
+                    <select id="update-stat-select" autocomplete="off" required>
+                        <option value="" disabled selected hidden>Status</option>
+                        <option class="custom-select" value="Cancelled"> Cancelled</option>
+                        <option class="custom-select" value="Arrived"> Arrived</option>
+                        <option class="custom-select" value="Checked"> Checked</option>
+                        <option class="custom-select" value="Admitted"> Admitted</option>
+                        <option class="custom-select" value="Discharged"> Discharged</option>
+                        <option class="custom-select" value="For follow"> For follow up</option>
+                        <option class="custom-select" value="Referred"> Referred Back</option>
+                    </select>
+                    <i id="update-stat-check-btn" class="fa-solid fa-square-check"></i>
+                </div>
+                <div class="appr-det-sub-div"> <label>Emergency Room Administrator Action:</label><span> '. $response[1]['hpercode'].'</span> </div>
+            </div>
+        </div>
+    ';
+
+    $right_html .= '
+        <div id="right-sub-div-e">
+            <div class="interdept-div-v2">
+                <div id="inter-dept-stat-form-div" class="status-form-div">
+                    <label id="status-bg-div">Interdepartment: Surgery - Status </label>
+                </div>
+                <!-- <label for="" id="v2-stat"> <span id="span-dept">Surgery</span> - Processing - <span id="span-time">00:07:09</span></label> -->
+                <label id="v2-stat"> <span id="span-dept">Surgery</span>  <span id="span-status">Pending</span> <span id="span-time">00:00:00</span></span></label>
+                <label id="v2-update-stat">Updated 0 second(s) ago...</label>
+                
+                <!-- set to null -->
+                <div class="seen-div">
+                    <label id="seen-by-lbl">Seened by: <span>John Marvin Nepomuceno</span> </label>
+                    <label id="seen-date-lbl">Seened date: <span>04/08/24 11:11:11</span> </label>
+                </div>
+
+                <div class="int-dept-btn-div-v2">
+                    <button id="cancel-btn" >Cancel</button>
+                    <button id="final-approve-btn">Proceed to Approval</button>
+                </div>
+            </div>
+        </div>
     ';
 
     echo json_encode(['left_html' => $left_html, 'right_html' => $right_html]);

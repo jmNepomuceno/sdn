@@ -287,8 +287,8 @@
                     <td id="dt-type" style="background:' . $type_color . ' ">' . $row['type'] . '</td>
                     <td id="dt-phone-no">
                         <div class="">
-                            <label> Referred: ' . $row['referred_by'] . '  </label>
-                            <label> Landline: ' . $row['landline_no'] . ' </label>
+                            <label> Referred: ' . $_SESSION['running_hpercode'] . '  </label>
+                            <label> Landline: ' . $_SESSION['datatable_index'] . ' </label>
                             <label> Mobile: ' . $row['mobile_no'] . ' </label>
                         </div>
                     </td>
@@ -368,4 +368,11 @@
 
     $_SESSION['running_hpercode'] = "";
     $_SESSION['running_index'] = null;
+    $_SESSION['datatable_index'] = null;
+
+    // if($_SESSION['datatable_index'] != "" && $_SESSION['datatable_index'] != null){
+    //     $_SESSION['datatable_index'] = (int)$_SESSION['datatable_index'] - 1;
+    // }else{
+    //     $_SESSION['datatable_index'] = null;
+    // }
 ?>

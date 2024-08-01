@@ -306,6 +306,10 @@
         </div>
     </div>
 
+    <div id="stopwatch-sub-div" style="display:none">
+        Processing: <span class="stopwatch"></span>
+    </div>
+    
     <script src="../js_2/referral_form.js?v=<?php echo time(); ?>"></script>
 
 </body>

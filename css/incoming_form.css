@@ -455,13 +455,12 @@
     width: 100%;
     height: 50px;
     border: 1px solid #c4cfd4;
-    display: flex;
+    display: flex; 
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     box-sizing: border-box; /* Ensure padding and border are included in the width and height */
 }
-
 
 #pendingModal .modal-content .modal-body-incoming .container .left-div .left-sub-div label,
 #pendingModal .modal-content .modal-body-incoming .container .right-div .right-sub-div label{
@@ -478,9 +477,9 @@
     padding: 5px;
 }
 
-#pendingModal .modal-content .modal-body-incoming .container .right-div .right-sub-div label{
+/* #pendingModal .modal-content .modal-body-incoming .container .right-div .right-sub-div label{
     background: #a5d6a7;
-}
+} */
 
 #pendingModal .modal-content .modal-body-incoming .container .left-div .left-sub-div span,
 #pendingModal .modal-content .modal-body-incoming .container .right-div .right-sub-div span{
@@ -529,7 +528,8 @@
     display: none;
 }
 
-#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-c .interdept-div .status-form-div{
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-c .interdept-div .status-form-div,
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .status-form-div{
     width:100%;
     height: 50px;
     border-radius: 0.125rem;
@@ -541,7 +541,8 @@
     font-size: 14pt;
 }
 
-#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-c .interdept-div .status-form-div label{
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-c .interdept-div .status-form-div label,
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .status-form-div label{
     margin-left:10px;
     color:white;
     font-weight: bold;
@@ -732,6 +733,7 @@
     display:flex;
     flex-direction: column;
     height: 85%;
+
 }
 
 #pendingModal .modal-content #approval-form .approval-main-content #case-cate-title,
@@ -786,7 +788,7 @@
     align-items: center;
     width: 100%;
     margin-top: 0.5rem;
-    border-top: 3px solid #bfbfbf;
+    /* border-top: 3px solid #bfbfbf; */
 }
 
 #pendingModal .modal-content #approval-form #approval-form-btns button{
@@ -805,10 +807,248 @@
     background: #046595;
 }
 
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d,
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e{
+    width: 100%;
+    height: 200px;
+    border: 2px solid #4c5e67;
+    display:none;
+    /* margin-top:2%; */
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e{
+    height: 220px;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div{
+    width: 100%;
+    height: 50px;
+    border: 1px solid #c4cfd4;
+    display: flex; 
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box; 
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-container{
+    width: 100%;
+    height:auto;
+
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap:wrap;
+    margin-top:-1%;
+
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div label{
+    width: 40%;
+    background: #b0bec5;
+    height: 100%;
+    font-size: 10pt;
+    font-weight: bold;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div span{
+    margin-left: 10px;
+    font-size: 10pt;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d #approval-details-div{
+    width: 100%;
+    padding:5px;
+    background: #4c5e67;
+    color:white;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div{
+    width: 50%;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div:nth-child(1){
+    border-right:3px solid #4c5e67;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div:nth-child(3){
+    width: 100%;
+    height: 112px;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div:nth-child(3) label{
+    width: 20%;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div:nth-child(2) select{
+    width:150px;
+    height: 40px;
+    padding:5px;
+    text-align: center;
+    background: #2f3e46;
+    border-radius: 5px; 
+    font-size: 11pt;
+    color:white;
+    margin-left: 10px;
+    border:none;
+    background: #ffc107;
+    /* color: black; */
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    margin-right:5px;
+    /* display:none; */
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div:nth-child(2) i{
+    color: #198754;
+    border:none;
+    border-radius: 5px;
+    padding:5px;
+    font-size: 20pt;
+    opacity: 0.3;
+    cursor: pointer;
+    pointer-events: none;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-d .appr-det-sub-div:nth-child(2) i:hover{
+    opacity: 1;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 #inter-dept-stat-form-div{
+    margin-top:0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .seen-div{
+    width:100%;
+    height: 40px;
+    margin-top:10px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .seen-div label{
+    color:black;
+    font-weight: bold;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .seen-div #seen-by-lbl{
+    margin-left: 30px;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .seen-div #seen-date-lbl{
+    margin-right: 30px;
+}
+
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .seen-div label span{
+    font-weight: normal;
+    font-style: italic;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .int-dept-btn-div-v2{
+    width:100%;
+    /* height: 50px; */
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top:25px;
+
+    /* border:2px solid red; */
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .int-dept-btn-div-v2{
+    margin-top:0;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .int-dept-btn-div-v2 button{
+    width:170px;
+    height: 30px;
+    border:none;
+    background: #0587ca;
+    border-radius: 3px;
+    color:white;
+    font-weight: 600;
+    margin-right:1%;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .int-dept-btn-div-v2 #final-approve-btn{
+    width:200px;
+    display:none;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .int-dept-btn-div-v2 button{
+    width: 100px;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 .int-dept-btn-div-v2 #cancel-btn{
+    /* display:none; */
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 #v2-stat,
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 #v2-update-stat{
+    margin-top:20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+
+    width:100%;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 #v2-stat #span-time{
+    color:black;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 #v2-stat #span-dept{
+    /* background: #171f23; */
+    padding: 5px;
+    border-radius: 5px;
+    /* color:#ffffff; */
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 #v2-stat #span-update{
+    font-size: 0.7rem;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2 #v2-update-stat{
+    margin-top:0;
+
+    color:black;
+    font-weight: 500;
+    opacity: 0.3;
+    font-size: 0.9rem;
+}
+
+/* #pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-e .interdept-div-v2{
+    width: 100%;
+    height: 180px;
+    margin-top:1.5%;
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: top;
+    background: #c2cfd6;
+    border-radius: 5px;
+    display:none;
+} */
+
 /* #pendingModal .modal-content .modal-body-incoming .right-div{
     width: 60%;
     height: 100%;
-    border:1px solid red;
+    border:1px solid red;l
 
     display:flex;
     flex-direction: column;
@@ -1031,7 +1271,7 @@
     }
 
     #pendingModal .modal-content .modal-body-incoming{
-        height: 550px;
+        height: 500px;
     }
 
      #pendingModal .modal-content #approval-form .approval-main-content #eraa,
@@ -1056,5 +1296,11 @@
 
     #pendingModal .modal-content .modal-body-incoming #approval-form{
         height: 500px;
+    }
+
+    #pendingModal .modal-content .modal-body-incoming .container .left-div .left-sub-div,
+    #pendingModal .modal-content .modal-body-incoming .container .right-div .right-sub-div{
+        width: 100%;
+        height: 50px;
     }
 }

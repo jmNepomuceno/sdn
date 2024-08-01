@@ -5,6 +5,7 @@ $(document).ready(function(){
     const screenWidth = window.innerWidth;
 
     // load the 4 web pages
+    console.log("height: " + screenHeight + "-" + "width: " + screenWidth)
     const loadContent = (url) => {
         let nav_path = false;
         if (url.includes('incoming_form2')) {
