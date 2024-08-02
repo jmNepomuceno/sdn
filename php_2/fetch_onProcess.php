@@ -13,5 +13,10 @@
 
     $_SESSION['datatable_index'] = $_POST['index'];
 
-    echo $_SESSION['running_timer'];
+    $sql = "SELECT status_interdept FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to='". $_SESSION["hospital_name"] ."' ORDER BY date_time ASC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $status_interdept_arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode($status_interdept_arr);
 ?>

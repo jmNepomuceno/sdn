@@ -119,7 +119,6 @@
     // echo $_SESSION['datatable_index'];
 ?>
 
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>

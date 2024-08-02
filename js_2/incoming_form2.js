@@ -362,7 +362,7 @@ $(document).ready(function(){
 
     function loadStateFromSession(current_dataTable_index) {
         // upon logout
-        console.log('reload')
+        console.log('reload' , current_dataTable_index)
         if(post_value_reload === 'true'){
             console.log('366')
             $.ajax({
@@ -446,13 +446,7 @@ $(document).ready(function(){
                         }
                     }
 
-                    // console.log({
-                    //     timer : elapsedTime / 1000,
-                    //     running_bool : running,
-                    //     startTime : running ? performance.now() : startTime,
-                    //     hpercode: document.querySelectorAll('.hpercode')[curr_index].value,
-                    //     index: curr_index 
-                    // })
+                    // console.log({ index: curr_index })
 
                     $.ajax({
                         url: '../php_2/fetch_onProcess.php',
@@ -465,9 +459,11 @@ $(document).ready(function(){
                             hpercode: document.querySelectorAll('.hpercode')[curr_index].value,
                             index: curr_index // questionable
                         },
+                        dataType : "JSON",
                         success: function(response){
-                            // console.log(response)
-                            // console.log('yawa')
+                            // console.log(465,response)
+                            status_interdept_arr = response
+                            console.log(status_interdept_arr)
                         }
                     })
 
@@ -525,6 +521,8 @@ $(document).ready(function(){
             }
         }
 
+        console.log(status_interdept_arr)
+
         if(interdept_status != null || interdept_status != "" || interdept_status != undefined){
             curr_index = interdept_status + 1
         }else{
@@ -534,6 +532,8 @@ $(document).ready(function(){
                 }
             }
         }
+
+        console.log(533, curr_index)
         
         $.ajax({
             url: '../php_2/fetch_onProcess.php',
@@ -548,13 +548,16 @@ $(document).ready(function(){
             },
             success: function(response){
                 // console.log(response)
+                
             }
         })
 
     }
         
     window.addEventListener('beforeunload', function(event) {
+        // event.preventDefault(); 
         saveTimeSession()
+        // event.returnValue = 'Are you sure you want to leave?'; 
     });
 
     $.ajax({
