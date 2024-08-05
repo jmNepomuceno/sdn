@@ -252,7 +252,7 @@
         </div>
     </div>
 
-    <!-- bucas referral modal -->
+    <!-- bucas referral modal --> 
     <div class="modal fade" id="bucasBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
     tabindex="-1" aria-labelledby="bucasBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -260,7 +260,7 @@
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="bucasBackdropLabel">BUCAS MEDICAL RECORD SUMMARY</h1>
                 </div>
-                <div class="modal-body" style="max-height: 700px; font-size: 14px !important; overflow-y: auto;">
+                <div class="modal-body-bucas" style="max-height: 700px; font-size: 14px !important; overflow-y: auto;">
 
                 </div>
                 <div class="modal-footer">
@@ -342,7 +342,7 @@
 
     <!-- <script src="../js_2/patient_register_form2.js?v=<?php echo time(); ?>"></script>
     
-    <!-- <script src="./js/incoming_form_2.js?v=<?php echo time(); ?>"></script> -->
+    <script src="./js/incoming_form_2.js?v=<?php echo time(); ?>"></script> -->
     <!-- <script src="./js/fetch_interval.js?v=<?php echo time(); ?>"></script> -->
 </body>
 </html>

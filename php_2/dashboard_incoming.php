@@ -92,9 +92,10 @@
         }
 
         // Calculate the average in seconds
-        // echo (int) $totalSeconds_interdept;
+        // echo (int) $totalSeconds_interdept . ' --- ';
         // echo count($dataRecep_interdept);
-        $averageSeconds_interdept = (int) ($totalSeconds_interdept / (count($dataRecep_interdept) === 0) ? 1 : count($dataRecep_interdept));
+        // $averageSeconds_interdept = (int) ($totalSeconds_interdept / (count($dataRecep_interdept) === 0) ? 1 : count($dataRecep_interdept));
+        $averageSeconds_interdept = (int) ($totalSeconds_interdept / count($dataRecep_interdept));
         // $averageSeconds_interdept = 0;
 
 

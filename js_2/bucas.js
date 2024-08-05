@@ -2,14 +2,14 @@ $(document).ready(function() {
     $('.view-link').click(function() {
         var bucasID = $(this).data('bucas-id');
         var formData = { bucasID_parameter: bucasID };
-        console.log(bucasID);
+        // console.log(bucasID);
         
         $.ajax({
             type: 'POST',
             url: '../php_2/bucas_referral.php',
             data: formData,
             success: function(response) {
-                $('.modal-body').html(response); 
+                $('.modal-body-bucas').html(response); 
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);
@@ -24,6 +24,7 @@ $(document).ready(function() {
 });
 
 document.getElementById('submit-referral-btn').addEventListener("click", function() {
+    console.log('he2re')
     var sdnPatientID = document.getElementById("sdnBucasID").value;
     var sdnCaseNo = document.getElementById("sdnCaseNo").value;
     var sdnStatusInput = document.getElementById("sdnStatus").value;
@@ -45,28 +46,30 @@ document.getElementById('submit-referral-btn').addEventListener("click", functio
         sdnUserLog: sdnUserLog
     }
 
-    $.ajax({
-        type: 'POST',
-        url: '../php_2/referral_response.php',
-        data: formData,
-        success: function (response) {
-            var _response = JSON.parse(response);
-            if (_response.success == true) {
-                alert(_response.message);
-                // close the modal progmatically
-                document.getElementById('bucasBackdrop').style.display = "none";
-                var modalBackdrops = document.querySelectorAll('.modal-backdrop');
-                modalBackdrops.forEach(function(backdrop) {
-                    backdrop.remove();
-                });
-                document.body.classList.remove('modal-open');
-                window.location.reload();
-            } else {
-                alert(_response.message);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error inserting data:', error);
-        }
-    });
+    console.log(formData)
+
+    // $.ajax({
+    //     type: 'POST',
+    //     url: '../php_2/referral_response.php',
+    //     data: formData,
+    //     success: function (response) {
+    //         var _response = JSON.parse(response);
+    //         if (_response.success == true) {
+    //             alert(_response.message);
+    //             // close the modal progmatically
+    //             document.getElementById('bucasBackdrop').style.display = "none";
+    //             var modalBackdrops = document.querySelectorAll('.modal-backdrop');
+    //             modalBackdrops.forEach(function(backdrop) {
+    //                 backdrop.remove();
+    //             });
+    //             document.body.classList.remove('modal-open');
+    //             window.location.reload();
+    //         } else {
+    //             alert(_response.message);
+    //         }
+    //     },
+    //     error: function(xhr, status, error) {
+    //         console.error('Error inserting data:', error);
+    //     }
+    // });
 }); 

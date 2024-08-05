@@ -463,10 +463,9 @@ $(document).ready(function(){
                         success: function(response){
                             // console.log(465,response)
                             status_interdept_arr = response
-                            console.log(status_interdept_arr)
+                            // console.log(status_interdept_arr)
                         }
                     })
-
                 }else{
                     console.log('asdf')
                     if (global_paging === 1) {
@@ -1019,6 +1018,7 @@ $(document).ready(function(){
                 // find the on-process
                 let yawa;
                 for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
+                    console.log(1021, i , document.querySelectorAll('.pat-status-incoming')[i].textContent, document.querySelectorAll('.pat-status-incoming')[i].textContent === 'On-Process')
                     if(document.querySelectorAll('.pat-status-incoming')[i].textContent === 'On-Process'){
                         yawa = i;
                         break;
@@ -1026,7 +1026,13 @@ $(document).ready(function(){
                 }                
                 
                 // runTimer().stop()
-                runTimer(yawa).start()
+                console.log(1029, yawa)
+                if(yawa >= 0){
+                    console.log(1031 , 'here')
+                    runTimer(yawa).start()
+                }else{
+                    runTimer().reset()
+                }
 
                 length_curr_table = $('.tr-incoming').length
                 for(let i = 0; i < length_curr_table; i++){

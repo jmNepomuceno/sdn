@@ -335,7 +335,7 @@
                                 
                                 <div id="fifty" class="form-sub-divs-row-left">
                                     <div>
-                                        <label for="hperson-province-select-pa"> Province </label>
+                                        <label id="kingina" for="hperson-province-select-pa"> Province </label>
                                     </div>
                                     <select id="hperson-province-select-pa"  class="input-txt-classes" required onchange="getLocations('province', 'pa-province')" name="province" required>
                                         <option value="" class="">Select</option>
