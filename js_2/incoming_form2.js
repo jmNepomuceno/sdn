@@ -50,9 +50,9 @@ $(document).ready(function(){
             url: '../php_2/fetch_update_interdept.php',
             method: "POST", 
             data:data,
+            dataType: "JSON",
             success: function(response){
                 clearInterval(running_timer_interval_update)
-                response = JSON.parse(response);   
                 console.log(response)
 
                 if(response[0]['status_interdept'] === "Pending"){
@@ -194,12 +194,19 @@ $(document).ready(function(){
                     toggle_accordion_obj[i] = true
                 }
 
-                const pencil_elements = document.querySelectorAll('.pencil-btn');
-                    pencil_elements.forEach(function(element, index) {
-                    element.addEventListener('click', function() {
-                        console.log('den')
-                        ajax_method(index)
-                    });
+                // const pencil_elements = document.querySelectorAll('.pencil-btn');
+                //     pencil_elements.forEach(function(element, index) {
+                //     element.addEventListener('click', function() {
+                //         console.log('den')
+                //         ajax_method(index)
+                //     });
+                // });
+
+                dataTable.on('click', '.pencil-btn', function () {
+                    console.log('den');
+                    var row = $(this).closest('tr');
+                    var rowIndex = dataTable.row(row).index();
+                    ajax_method(rowIndex);
                 });
 
                 const expand_elements = document.querySelectorAll('.accordion-btn');
@@ -217,6 +224,11 @@ $(document).ready(function(){
                 // console.log(document.querySelectorAll('.pat-status-incoming')[global_index].textContent)
 
                 if(document.querySelectorAll('.pat-status-incoming').length > 0){
+                    // console.log(global_index , global_paging)
+                    // if(global_paging > 1){
+                    //     global_index -= 6
+                    // }
+                    // console.log(document.querySelectorAll('.pat-status-incoming'))
                     const myString = document.querySelectorAll('.pat-status-incoming')[global_index].textContent;
                     const substring = "Approve";
     
@@ -224,7 +236,6 @@ $(document).ready(function(){
                         clearInterval(running_timer_interval_update)
                         $('#span-status').text("Approved | ") 
                         $('#final-approve-btn').css('display',  'block')
-    
                     }
                 }
                
@@ -249,6 +260,9 @@ $(document).ready(function(){
     const ajax_method = (index, event) => {
         console.log(250)
         global_index = index
+        if(global_paging > 1){
+            index -= 6
+        }
         const data = {
             hpercode: document.querySelectorAll('.hpercode')[index].value,
             from:'incoming',
@@ -267,6 +281,10 @@ $(document).ready(function(){
                 document.querySelector('.left-div').innerHTML += response.left_html;
                 document.querySelector('.right-div').innerHTML += response.right_html;
 
+                let temp_arr_x = [
+                    'Approved', 'Discharged' , 'Cancelled' , 'Arrived' , 'Checked' , 'Admitted' , 'For follow' , 'Referred'
+                ]
+
                 if(document.querySelectorAll('.pat-status-incoming')[index].textContent == 'Pending'){
                     console.log(259, index)
                     runTimer(index)
@@ -282,7 +300,7 @@ $(document).ready(function(){
                     $('#update-stat-select').css('display' , 'none')
 
                 }
-                else if(document.querySelectorAll('.pat-status-incoming')[index].textContent == 'Approved'){
+                else if(temp_arr_x.includes(document.querySelectorAll('.pat-status-incoming')[index].textContent)){
                     console.log('286')
                     let data = {
                         hpercode : document.querySelectorAll('.hpercode')[index].value,
@@ -317,10 +335,10 @@ $(document).ready(function(){
                     url: '../php_2/check_interdept_refer.php',
                     method: "POST", 
                     data:data,
+                    dataType: "JSON",
                     success: function(response){
-                        response = JSON.parse(response);    
                         console.log(322)
-                        
+                        console.log(response)
                         console.log(typeof response.status_interdept)
 
                         if(response.status_interdept){
@@ -330,6 +348,13 @@ $(document).ready(function(){
 
                             $('#right-sub-div-e').css('display' , 'block')
                             updateInterdeptFunc()
+
+                            $('#seen-by-lbl span').text((response.referring_seenBy) ? response.referring_seenBy : "Not seen yet")
+                            $('#seen-date-lbl span').text((response.referring_seenTime) ? response.referring_seenTime : "Not seen yet")
+                            
+                            if (document.querySelectorAll('.pat-status-incoming')[global_index].textContent.includes("Approve")) {
+                                $('#final-approve-btn').css('display','block')
+                            } 
                         }else{
                             $('#approval-form').css('display','flex')
                             $('.approval-main-content').css('display','block')
@@ -337,12 +362,7 @@ $(document).ready(function(){
                             $('#cancel-btn').css('display','none')
                         }
 
-                        $('#seen-by-lbl span').text((response.referring_seenBy) ? response.referring_seenBy : "Not seen yet")
-                        $('#seen-date-lbl span').text((response.referring_seenTime) ? response.referring_seenTime : "Not seen yet")
                         
-                        if (document.querySelectorAll('.pat-status-incoming')[global_index].textContent.includes("Approve")) {
-                            $('#final-approve-btn').css('display','block')
-                        } 
                     }
                 })
 
@@ -352,11 +372,18 @@ $(document).ready(function(){
         })
     }
 
-    const pencil_elements = document.querySelectorAll('.pencil-btn');
-        pencil_elements.forEach(function(element, index) {
-        element.addEventListener('click', function() {       
-            ajax_method(index)
-        });
+    // const pencil_elements = document.querySelectorAll('.pencil-btn');
+    //     pencil_elements.forEach(function(element, index) {
+    //     element.addEventListener('click', function() {       
+    //         ajax_method(index)
+    //     });
+    // });
+
+    dataTable.on('click', '.pencil-btn', function () {
+        console.log('den');
+        var row = $(this).closest('tr');
+        var rowIndex = dataTable.row(row).index();
+        ajax_method(rowIndex);
     });
 
 
@@ -398,6 +425,7 @@ $(document).ready(function(){
             console.log(running , previous_loadcontent)
             // if (running) {
             if (running && previous_loadcontent === "incoming_ref") {
+                console.log('here')
                 startTime = performance.now() - elapsedTime;
                 requestId = requestAnimationFrame(runTimer(current_dataTable_index).updateTimer);
             }
@@ -439,15 +467,14 @@ $(document).ready(function(){
                     }
         
                     // console.log("global_timer: " + global_timer);
+
                     let curr_index = 0;
                     for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
                         if(document.querySelectorAll('.pat-status-incoming')[i].textContent === "On-Process"){
                             curr_index = i;
                         }
                     }
-
-                    // console.log({ index: curr_index })
-
+                    // console.log(running)
                     $.ajax({
                         url: '../php_2/fetch_onProcess.php',
                         method: "POST", 
@@ -469,7 +496,7 @@ $(document).ready(function(){
                 }else{
                     console.log('asdf')
                     if (global_paging === 1) {
-                        document.querySelectorAll('.stopwatch')[index].textContent = formatTime(elapsedTime);
+                        document.querySelectorAll('.stopwatch')[0].textContent = formatTime(elapsedTime);
                     }
                 }
             }
@@ -623,7 +650,8 @@ $(document).ready(function(){
                 case_type : $('#incoming-type-select').val(),
                 agency : $('#incoming-agency-select').val(),
                 status : $('#incoming-status-select').val(),
-                where : 'search'
+                where : 'search',
+                where_type : 'incoming'
             }
             console.log(data)
 
@@ -651,12 +679,19 @@ $(document).ready(function(){
                         });
                     });
 
-                    const pencil_elements = document.querySelectorAll('.pencil-btn');
-                    pencil_elements.forEach(function(element, index) {
-                        element.addEventListener('click', function() {
-                            console.log('den')
-                            ajax_method(index)
-                        });
+                    // const pencil_elements = document.querySelectorAll('.pencil-btn');
+                    // pencil_elements.forEach(function(element, index) {
+                    //     element.addEventListener('click', function() {
+                    //         console.log('den')
+                    //         ajax_method(index)
+                    //     });
+                    // });
+
+                    dataTable.on('click', '.pencil-btn', function () {
+                        console.log('den');
+                        var row = $(this).closest('tr');
+                        var rowIndex = dataTable.row(row).index();
+                        ajax_method(rowIndex);
                     });
 
                 }
@@ -708,7 +743,7 @@ $(document).ready(function(){
 
     dataTable.on('page.dt', function () {
         // clearInterval(running_timer_interval)
-
+        console.log(716)
         var currentPageIndex = dataTable.page();
         var currentPageNumber = currentPageIndex + 1;
 
@@ -751,8 +786,8 @@ $(document).ready(function(){
             url: '../php_2/incoming_interdept.php',
             method: "POST", 
             data:data,
+            dataType: "JSON",
             success: function(response){
-                response = JSON.parse(response);   
                 console.log(response)
 
                 $('.interdept-div').css('display','none')
@@ -838,12 +873,19 @@ $(document).ready(function(){
                 $('#inter-dept-referral-btn').css('opacity' , '0.6')
                 $('#inter-dept-referral-btn').css('pointer-events' , 'none')
 
-                const pencil_elements = document.querySelectorAll('.pencil-btn');
-                    pencil_elements.forEach(function(element, index) {
-                    element.addEventListener('click', function() {
-                        console.log('den')
-                        ajax_method(index)
-                    });
+                // const pencil_elements = document.querySelectorAll('.pencil-btn');
+                //     pencil_elements.forEach(function(element, index) {
+                //     element.addEventListener('click', function() {
+                //         console.log('den')
+                //         ajax_method(index)
+                //     });
+                // });
+
+                dataTable.on('click', '.pencil-btn', function () {
+                    console.log('den');
+                    var row = $(this).closest('tr');
+                    var rowIndex = dataTable.row(row).index();
+                    ajax_method(rowIndex);
                 });
 
                 const expand_elements = document.querySelectorAll('.accordion-btn');
@@ -1039,12 +1081,20 @@ $(document).ready(function(){
                     toggle_accordion_obj[i] = true
                 }
                 
-                const pencil_elements = document.querySelectorAll('.pencil-btn');
-                pencil_elements.forEach(function(element, index) {
-                    element.addEventListener('click', function() {
-                        console.log('den')
-                        ajax_method(index)
-                    });
+                // const pencil_elements = document.querySelectorAll('.pencil-btn');
+                // pencil_elements.forEach(function(element, index) {
+                //     element.addEventListener('click', function() {
+                //         console.log('den')
+                //         ajax_method(index)
+                //     });
+                // });
+
+
+                dataTable.on('click', '.pencil-btn', function () {
+                    console.log('den');
+                    var row = $(this).closest('tr');
+                    var rowIndex = dataTable.row(row).index();
+                    ajax_method(rowIndex);
                 });
 
                 enabledNextReferral()
@@ -1172,4 +1222,6 @@ $(document).ready(function(){
             }
          })
     });
+
+    
 })

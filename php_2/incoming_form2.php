@@ -59,49 +59,61 @@
 
     // ******************************************************************
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000023'";
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000023'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000024'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000025'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000026'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000027'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    $sql = "DELETE FROM incoming_interdept";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000031'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000024'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "DELETE FROM incoming_referrals WHERE hpercode='PAT000031'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000025'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000026'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000027'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "DELETE FROM incoming_interdept";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "UPDATE hperson SET status=null, referral_id=null WHERE hpercode='PAT000031'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
     
     // echo $_SESSION['running_timer'] . "----";
     // echo $_SESSION['running_bool'] . "----";
@@ -141,6 +153,7 @@
     ?>
 
     <div class="incoming-container">
+        <h1>Incoming Referral Patients</h1>
         <div class="search-main-div">
             <div class="refer-no-div">
                 <label>Referral No.</label>
@@ -482,7 +495,6 @@
             </div>
         </div>
     </div>
-    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="myModal-incoming" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -538,4 +550,9 @@
 </body>
 </html>
 
-<?php $_SESSION['current_content'] = 'incoming_ref' ?>;
+<?php $_SESSION['current_content'] = 'incoming_ref' ?>
+
+<!-- Interdepartment: Surgery - Status approved - div
+491
+VM7797:491 Uncaught TypeError: Cannot set properties of undefined (setting 'textContent')
+    at updateTimer (<anonymous>:491:80) -->

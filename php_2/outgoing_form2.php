@@ -9,22 +9,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous"> -->
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
-
-    <link rel="stylesheet" href="../css/outgoing_form.css">
+    <?php require "../header_link.php" ?>
+    <link rel="stylesheet" href="../css/incoming_form.css">
 </head>
 <body>
+
     <div class="incoming-container">
+        <h1>Outgoing Referral Patients</h1>
         <div class="search-main-div">
             <div class="refer-no-div">
                 <label>Referral No.</label>
@@ -49,11 +40,15 @@
             <div class="caseType-search-div">
                 <label>Case Type</label>
                 <select id='incoming-type-select'>
-                    <option value=""> None</option>
-                    <option value="ER"> ER</option>
-                    <option value="OB"> OB</option>
-                    <option value="OPD"> OPD</option>
-                    <option value="PCR"> PCR</option>
+                    <?php 
+                        $stmt = $pdo->prepare('SELECT classifications FROM classifications');
+                        $stmt->execute();
+
+                        echo '<option value=""> None </option>';
+                        while($data = $stmt->fetch(PDO::FETCH_ASSOC)){
+                            echo '<option value="' , $data['classifications'] , '">' , $data['classifications'] , '</option>';
+                        } 
+                    ?>
                 </select>
             </div>
 
@@ -100,8 +95,7 @@
         </div>
 
         <section class="incoming-table">
-
-            <table id="myDataTable" class="display">
+            <table id="myDataTable" class="display table table-bordered custom-search-modal" style="width: 100%; border-spacing: -1px;">
                 <thead>
                     <tr class="text-center">
                         <th id="refer-no">Reference No. </th>
@@ -114,11 +108,22 @@
                     </tr>
                 </thead>
                 <tbody id="incoming-tbody">
-                    <?php
+                <?php
+                        // get the classification names
+                        $sql = "SELECT classifications FROM classifications";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute();
+                        $data_classifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        $color = ["#d77707" , "#22c45e" , "#0368a1" , "#cf3136" , "#919122" , "#999966" , "#6666ff"];
+                        $dynamic_classification = [];
+                        for($i = 0; $i < count($data_classifications); $i++){
+                            $dynamic_classification[$data_classifications[$i]['classifications']] = $color[$i];
+                        }
+
                         // SQL query to fetch data from your table
-                        // echo  "here";
                         try{
-                            $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND referred_by='". $_SESSION['hospital_name'] ."' ORDER BY date_time ASC";
+                            $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND referred_by='". $_SESSION["hospital_name"] ."' ORDER BY date_time ASC";
                             $stmt = $pdo->prepare($sql);
                             $stmt->execute();
                             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -131,17 +136,7 @@
                             $loop = 0;
                             // Loop through the data and generate table rows
                             foreach ($data as $row) {
-                                $type_color;
-                                if($row['type'] == 'OPD'){
-                                    $type_color = '#d77707';
-                                }else if($row['type'] == 'OB'){
-                                    $type_color = '#22c45e';
-                                }else if($row['type'] == 'ER'){
-                                    $type_color = '#0368a1';
-                                }else if($row['type'] == 'PCR' || $row['type'] == 'Toxicology'){
-                                    $type_color = '#cf3136';
-                                }
-
+                                $type_color = $dynamic_classification[$row['type']];
                                 if($previous == 0){
                                     $index += 1;
                                 }else{
@@ -152,6 +147,12 @@
                                     }  
                                 }
                                 
+                                // $style_tr = 'background:#33444d; color:white;';
+                                $style_tr = '';
+                                if($loop != 0 &&  $row['status'] === 'Pending'){
+                                    $style_tr = 'opacity:0.5; pointer-events:none;';
+                                }
+
                                 // $waiting_time = "--:--:--";
                                 $date1 = new DateTime($row['date_time']);
                                 $waiting_time_bd = "";
@@ -173,25 +174,113 @@
                                     $row['reception_time'] = "00:00:00";
                                 }
 
-                                echo '<tr class="tr-incoming">
+                                if($row['status_interdept'] != "" && $row['status_interdept'] != null){
+                                    $sql = "SELECT department FROM incoming_interdept WHERE hpercode='". $row['hpercode'] ."'";
+                                    $stmt = $pdo->prepare($sql);
+                                    $stmt->execute();
+                                    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                                    $row['status'] = $row['status_interdept'] . " - " . strtoupper($data['department']);
+                                }
+                                // processed time = progress time ng admin + progress time ng dept
+                                // maiiwan yung timer na naka print, once na send na sa interdept
+                                
+                                $sql = "SELECT final_progress_time FROM incoming_interdept WHERE hpercode=:hpercode";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->bindParam(':hpercode', $row['hpercode'], PDO::PARAM_STR);
+                                $stmt->execute();
+                                $interdept_time = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                $total_time = "00:00:00";
+                                if($interdept_time){
+                                    if($interdept_time[0]['final_progress_time'] != "" && $row['sent_interdept_time'] != ""){
+                                        list($hours1, $minutes1, $seconds1) = array_map('intval', explode(':', $interdept_time[0]['final_progress_time']));
+                                        list($hours2, $minutes2, $seconds2) = array_map('intval', explode(':', $row['sent_interdept_time']));
+
+                                        // Create DateTime objects in UTC with the provided hours, minutes, and seconds
+                                        $date1 = new DateTime('1970-01-01 ' . $hours1 . ':' . $minutes1 . ':' . $seconds1, new DateTimeZone('UTC'));
+                                        $date2 = new DateTime('1970-01-01 ' . $hours2 . ':' . $minutes2 . ':' . $seconds2, new DateTimeZone('UTC'));
+
+                                        // Calculate the total milliseconds
+                                        $totalMilliseconds = $date1->getTimestamp() * 1000 + $date2->getTimestamp() * 1000;
+
+                                        // Create a new DateTime object in UTC with the total milliseconds
+                                        $newDate = new DateTime('@' . ($totalMilliseconds / 1000), new DateTimeZone('UTC'));
+
+                                        // Format the result in UTC time "HH:mm:ss"
+                                        $total_time = $newDate->format('H:i:s');
+                                    }
+                                }else{
+                                    $interdept_time[0]['final_progress_time'] = "00:00:00";
+                                    $row['sent_interdept_time'] = "00:00:00";
+                                    // $total_time = $row['final_progressed_timer'];
+                                }
+
+                                // echo($total_time);
+
+                                if($row['approved_time'] == ""){
+                                    $row['approved_time'] = "0000-00-00 00:00:00";
+                                }
+
+                                if($interdept_time[0]['final_progress_time'] == ""){
+                                    $interdept_time[0]['final_progress_time'] = "00:00:00";
+                                }
+
+                                if($row['sent_interdept_time'] == ""){
+                                    $row['sent_interdept_time'] = "00:00:00";
+                                }
+
+                                $stopwatch = "00:00:00";
+                                if($row['sent_interdept_time'] == "00:00:00"){
+                                    if($_SESSION['running_timer'] != "" && $row['status'] == 'On-Process'){
+                                        $stopwatch  = $_SESSION['running_timer'];
+                                    }
+                                }else{
+                                    $stopwatch  = $row['sent_interdept_time'];
+                                }
+
+                                // for sensitive case
+                                $pat_full_name = ""; 
+                                if($row['sensitive_case'] === 'true'){
+                                    $pat_full_name = "
+                                        <div class='pat-full-name-div'>
+                                            <button class='sensitive-case-btn'> <i class='sensitive-lock-icon fa-solid fa-lock'></i> Sensitive Case </button>
+                                            <input class='sensitive-hpercode' type='hidden' name='sensitive-hpercode' value= '" . $row['hpercode'] . "'>
+                                        </div>
+                                    ";
+                                }else{
+                                    // $pat_full_name = $row['patlast'] . ", " . $row['patfirst'] . " " . $row['patmiddle'];
+                                    $pat_full_name = "
+                                        <div class='pat-full-name-div'>
+                                            <button class='sensitive-case-btn' style='display:none;'> <i class='sensitive-lock-icon fa-solid fa-lock'></i> Sensitive Case </button>
+                                            <label> " . $row['patlast'] . " , " . $row['patfirst'] . "  " . $row['patmiddle'] . "</label>
+                                            <input class='sensitive-hpercode' type='hidden' name='sensitive-hpercode' value= '" . $row['hpercode'] . "'>
+                                        </div>
+                                    ";
+                                }
+
+                                echo '<tr class="tr-incoming" style="'. $style_tr .'">
                                         <td id="dt-refer-no"> ' . $row['reference_num'] . ' - '.$index.' </td>
-                                        <td id="dt-patname">' . $row['patlast'] , ", " , $row['patfirst'] , " " , $row['patmiddle']  . '</td>
+                                        <td id="dt-patname">' . $pat_full_name . '</td>
                                         <td id="dt-type" style="background:' . $type_color . ' ">' . $row['type'] . '</td>
                                         <td id="dt-phone-no">
-                                            <label> Referred To: ' . $row['refer_to'] . '  </label>
-                                            <label> Landline: ' . $row['landline_no'] . ' </label>
-                                            <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                                            <div class="">
+                                                <label> Referred by: ' . $row['referred_by'] . '  </label>
+                                                <label> Landline: ' . $row['landline_no'] . ' </label>
+                                                <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                                            </div>
                                         </td>
                                         <td id="dt-turnaround"> 
                                             <i class="accordion-btn fa-solid fa-plus"></i>
 
                                             <label class="referred-time-lbl"> Referred: ' . $row['date_time'] . ' </label>
-                                            <label class="queue-time-lbl"> Queue Time: ' . $waiting_time_bd . ' </label>
-                                            <label class="reception-time-lbl"> Reception: '. $row['reception_time'] .'</label> 
+                                            <label class="reception-time-lbl"> Reception: '. $row['reception_time'] .'</label>
+                                            <label class="sdn-proc-time-lbl"> SDN Processed: '. $row['sent_interdept_time'] .'</label>
                                             
                                             <div class="breakdown-div">
-                                                <label class="processed-time-lbl"> Processed: 00:00:00  </label>  
-                                                <label> Approval: 0000-00-00 00:00:00  </label>  
+                                                <label class="interdept-proc-time-lbl"> Interdept Processed: '. $interdept_time[0]['final_progress_time'].'</label>
+                                                <label class="processed-time-lbl"> Total Processed: '.$total_time.'  </label>  
+                                                <label> Approval: '.$row['approved_time'] .'  </label>  
                                                 <label> Deferral: 0000-00-00 00:00:00  </label>  
                                                 <label> Cancelled: 0000-00-00 00:00:00  </label>  
                                                 <label> Arrived: 0000-00-00 00:00:00  </label>  
@@ -204,22 +293,27 @@
                                         </td>
                                         <td id="dt-stopwatch">
                                             <div id="stopwatch-sub-div">
-                                                Processing: <span class="stopwatch">00:00:00</span>
+                                                Processing: <span class="stopwatch">'.$stopwatch.'</span>
                                             </div>
                                         </td>
                                         
                                         <td id="dt-status">
                                             <div> 
+                                                <label class="pat-status-incoming">' . $row['status'] . '</label>';
+                                                if ($row['sensitive_case'] === 'true') {
+                                                    echo '<i class="pencil-btn fa-solid fa-pencil" style="pointer-events:none; opacity:0.3; color:#cc9900;"></i>';
+                                                }else{
+                                                    echo'<i class="pencil-btn fa-solid fa-pencil" style="color:#cc9900;"></i>';
+                                                }
                                                 
-                                                <label class="pat-status-incoming">' . $row['status'] . '</label>
-                                                <i class="pencil-btn fa-solid fa-pencil"></i>
-                                                <input class="hpercode" type="hidden" name="hpercode" value= ' . $row['hpercode'] . '>
+                                                echo '<input class="hpercode" type="hidden" name="hpercode" value= ' . $row['hpercode'] . '>
 
                                             </div>
                                         </td>
                                     </tr>';
 
-                                $previous = $row['reference_num'];
+                            
+                                    $previous = $row['reference_num'];
                                 $loop += 1;
                             }
 
@@ -240,117 +334,29 @@
 
     
     <div class="modal fade" id="pendingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl pendingModalSize" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button>Print</button>
-                    <button id="close-pending-modal" data-bs-dismiss="modal">Close</button>
-                    <!-- <span aria-hidden="true">&times;</span> --> 
+                    <!-- <button>Print</button>
+                    <button id="close-pending-modal" data-bs-dismiss="modal">Close</button> -->
+                    PATIENT REFERRAL INFORMATION
                 </div>
-                <div  class="modal-body-incoming">
-                    <div class="status-form-div">
-                        <label id="status-bg-div">Status: </label>
-                        <label  id="pat-status-form">Pending</label>
-                    </div>
-                                
-                    <div class="interdept-div">
-                        <div id="inter-dept-stat-form-div" class="status-form-div">
-                            <label id="status-bg-div">Inter-Department Referral </label>
-                        </div>
-                        <label for="" id="inter-dept-lbl">Department: </label>
-                        <select id="inter-depts-select" style="cursor:pointer;">
-                            <option value="">Select</option>
-                            <option value=""> Surgery </option>
-                            <option value=""> OB </option>
-                            <option value=""> Internal Medicine </option>
-                            <option value=""> Fam Med </option>
-                            <option value=""> asdf </option>
-                            <option value=""> asdf </option>
-                        </select>
-                        <div class="int-dept-btn-div">
-                            <button id="int-dept-btn-forward">Send / Forward</button>
-                        </div>
-                    </div>
-
-                    <div class="interdept-div-v2">
-                        <div id="inter-dept-stat-form-div" class="status-form-div">
-                            <label id="status-bg-div">Interdepartment: Surgery - Status </label>
-                        </div>
-                        <!-- <label for="" id="v2-stat"> <span id="span-dept">Surgery</span> - Processing - <span id="span-time">00:07:09</span></label> -->
-                        <label for="" id="v2-stat"> Surgery - Processing - <span id="span-time">00:07:09</span></label>
-
-                        <div class="int-dept-btn-div-v2">
-                            <button id="review-btn">Review</button>
-                        </div>
-                    </div>
-
-                    <div class="referral-details">
-                        <div id="inter-dept-stat-form-div" class="status-form-div">
-                            <label id="status-bg-div">Referral Details </label>
-                        </div>
-                        <div class="ul-div">
-                            
-                        </div>
-                        <!-- <ul class="list-none flex flex-col space-y-2">
-                            <li><label class="font-bold">Referring Agency:</label><span id="refer-agency" class="break-words"></span></li>
-                            <li><label class="font-bold">Reason for Referral:</label><span id="refer-reason" class="break-words"></span></li><br>
                 
-                            <li><label class="font-bold">Name:</label><span id="pending-name"  class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Birthday:</label><span id="pending-bday" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Age:</label><span id="pending-age" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Sex:</label><span id="pending-sex" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Civil Status:</label><span id="pending-civil" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Religion:</label><span id="pending-religion" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Address:</label><span id="pending-address" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Parent/Guardian:</label><span id="pending-parent" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">PHIC Member:</label><span id="pending-phic" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Mode of Transport:</label><span id="pending-transport" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Date/Time Admitted:</label><span id="pending-admitted" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Referring Doctor:</label><span id="pending-referring-doc" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Contact #:</label><span id="pending-contact-no" class="break-words">This is where you put the data</span></li><br>
-
-                            <li class="pending-type-ob hidden"><label class="font-bold underline">OB-Gyne</label><span id="pending-ob" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Last Menstrual Period:</label><span id="pending-last-mens" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Age of Gestation</label><span id="pending-gestation" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Chief Complaint and History:</label><span id="pending-complaint-history" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Physical Examination</label><span id="pending-pe" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Blood Pressure:</label><span id="pending-bp" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Heart Rate:</label><span id="pending-hr" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Respiratory Rate:</label><span id="pending-rr" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Temperature:</label><span id="pending-temp" class="break-words">This is where you put the data</span></li>
-                            <li><label class="font-bold">Weight:</label><span id="pending-weight" class="break-words">This is where you put the data</span></li><br>
-
-                            <li class="pending-type-ob hidden"><label class="font-bold">Fetal Heart Tone:</label><span id="pending-heart-tone" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Fundal Height:</label><span id="pending-fundal-height" class="break-words">This is where you put the data</span></li><br>
-
-                            <li class="pending-type-ob hidden"><label class="font-bold underline">Internal Examination</label><span id="pending-ie" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Cervical Dilatation:</label><span id="pending-cd" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Bag of Water:</label><span id="pending-bag-water" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Presentation:</label><span id="pending-presentation" class="break-words">This is where you put the data</span></li>
-                            <li class="pending-type-ob hidden"><label class="font-bold">Others:</label><span id="pending-others" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Pertinent PE Findings:</label><span id="pending-p-pe-find" class="break-words">This is where you put the data</span></li><br>
-                
-                            <li><label class="font-bold">Impression / Diagnosis:</label><span id="pending-diagnosis" class="break-words">This is where you put the data</span></li>
-                        </ul> -->
+                <div class="modal-body-incoming">
+                    <div class="container">
+                        <div class="left-div"> 
+                        </div>
+                        <div class="right-div">
+                        </div>  
                     </div>
                 </div>
 
-                
                 <div class="modal-footer">
-                    <!-- <button id="ok-modal-btn-incoming" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">OK</button>
-                    <button id="yes-modal-btn-incoming" type="button" class="hidden bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" data-bs-dismiss="modal">Yes</button>
-                 -->
+                    <button type="button" id="submit-modal-btn-incoming" class="btn btn-danger" data-bs-dismiss="modal">Submit</button>
+                    <button type="button" id="close-modal-btn-incoming" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-    </div>
-
-
-
     </div>
 
     <!-- Modal -->
@@ -371,13 +377,12 @@
                 Please input at least one value in any field.
             </div>
             <div class="modal-footer">
-                <button id="ok-modal-btn-incoming" type="button" data-bs-dismiss="modal">OK</button>
+                <button id="ok-modal-btn-incoming" type="button" data-bs-dismiss="modal" data-target=".sensitive-case-btn">OK</button>
                 <button id="yes-modal-btn-incoming" type="button" data-bs-dismiss="modal">Yes</button>
             </div>
             </div>
         </div>
     </div>
-
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->

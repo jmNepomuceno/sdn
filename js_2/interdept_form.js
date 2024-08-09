@@ -175,8 +175,8 @@ $(document).ready(function(){
                 timer: document.querySelectorAll('.stopwatch')[0].textContent,
                 hpercode: document.querySelectorAll('.hpercode')[0].value
             },
+            dataType: "JSON",
             success: function(response){
-                response = JSON.parse(response);   
                 console.log(response)
 
                 document.querySelector('.referral-details').innerHTML += response

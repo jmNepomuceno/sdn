@@ -105,65 +105,76 @@ $(document).ready(function(){
     
     function fetchMySQLData() {
       $.ajax({
-        url: '../php_2/fetch_interval.php',
-        method: "POST",
-        data : {
-            from_where : 'bell'
-        },
-        success: function(response) {
-            response = JSON.parse(response);  
-            // console.log(response);
-            // console.log('pot')
-  
-            $('#notif-span').text(response.length);
-            $('#notif-circle').removeClass('hidden');
-                
-                // populate notif-sub-div
-                // document.querySelector('.notif-sub-div').innerHTML = 
-  
-                let type_counter = []
-                for(let i = 0; i < response.length; i++){
-  
-                    if(!type_counter.includes(response[i]['type'])){
-                        type_counter.push(response[i]['type'])
-                    }
-                }
-  
-                // console.log(type_counter)
-                
-                document.getElementById('notif-sub-div').innerHTML = '';
-                for(let i = 0; i < type_counter.length; i++){
-                    let type_var  = type_counter[i]
-                    let type_counts  = 0
-  
-                    for(let j = 0; j < response.length; j++){
-                        if(type_counter[i] ===  response[j]['type']){
-                            type_counts += 1
-                        }
-                    }
-  
-                    if(i % 2 === 0){
-                        document.getElementById('notif-sub-div').innerHTML += '\
-                        <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-transparent text-white opacity-30 hover:opacity-100">\
-                        <h4 class="font-bold text-lg">' + type_counts + '</h4>\
-                            <h4 class="font-bold text-lg">' + type_var + '</h4>\
-                        </div>\
-                    ';
-                    }else{
-                        document.getElementById('notif-sub-div').innerHTML += '\
-                        <div class="h-[30px] w-[90%] border border-black flex flex-row justify-evenly items-center mt-1 bg-white opacity-30 hover:opacity-100">\
-                        <h4 class="font-bold text-lg">' + type_counts + '</h4>\
-                            <h4 class="font-bold text-lg">' + type_var + '</h4>\
-                        </div>\
-                    ';
-                    }
-                }
-            
-            fetch_timer = setTimeout(fetchMySQLData, 5000);
-        }
-    });
-    }
-  
+          url: '../php_2/fetch_interval.php',
+          method: "POST",
+          data : {
+              from_where : 'bell'
+          },
+          dataType: "JSON",
+          success: function(response) {
+              // response = JSON.parse(response);  
+              $('#notif-span').text(response.length);
+              if(response.length > 9){
+                  $('#notif-span').css('font-size' , '0.65rem');
+              }
+
+              if (parseInt(response.length) >= 1) {
+                  if(current_page === 'incoming_page'){
+                      stopSound()
+                  }else{
+                      playAudio();
+                  }
+                  timer_running = true;
+                  // $('#notif-circle').removeClass('hidden');
+                  $('#notif-circle').css('display' , 'block');
+                  
+                  let type_counter = []
+                  for(let i = 0; i < response.length; i++){
+
+                      if(!type_counter.includes(response[i]['type'])){
+                          type_counter.push(response[i]['type'])
+                      }
+                  }
+
+                  
+                  document.getElementById('notif-sub-div').innerHTML = '';
+                  for(let i = 0; i < type_counter.length; i++){
+                      let type_var  = type_counter[i]
+                      let type_counts  = 0
+
+                      for(let j = 0; j < response.length; j++){
+                          if(type_counter[i] ===  response[j]['type']){
+                              type_counts += 1
+                          }
+                      }
+
+                      if(i % 2 === 0){ 
+                          document.getElementById('notif-sub-div').innerHTML += '\
+                          <div>\
+                              <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                              <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                          </div>\
+                      ';
+                      }else{
+                          document.getElementById('notif-sub-div').innerHTML += '\
+                          <div>\
+                              <h4 class="font-bold text-lg">' + type_counts + '</h4>\
+                              <h4 class="font-bold text-lg">' + type_var + '</h4>\
+                          </div>\
+                      ';
+                      }
+                  }
+
+              } else {
+                  // $('#notif-circle').addClass('hidden');
+                  $('#notif-circle').css('display' , 'none');
+                  stopSound()
+              }
+              
+              fetch_timer = setTimeout(fetchMySQLData, 10000);
+          }
+      });
+  }   
     fetchMySQLData(); 
   
       $('#side-bar-mobile-btn').on('click' , function(event){

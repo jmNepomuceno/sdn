@@ -287,8 +287,8 @@
                     <td id="dt-type" style="background:' . $type_color . ' ">' . $row['type'] . '</td>
                     <td id="dt-phone-no">
                         <div class="">
-                            <label> Referred: ' . $_SESSION['running_index'] . '  </label>
-                            <label> Landline: ' . $_SESSION['datatable_index'] . ' </label>
+                            <label> Referred: ' . $row['referred_by'] . '  </label>
+                            <label> Landline: ' . $row['landline_no'] . ' </label>
                             <label> Mobile: ' . $row['mobile_no'] . ' </label>
                         </div>
                     </td>

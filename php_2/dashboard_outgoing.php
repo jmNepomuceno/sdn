@@ -16,7 +16,6 @@
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
     $number_of_referrals = $data['COUNT(*)'];
     
-
     if ($_SESSION['user_name'] === 'admin'){
         $user_name = 'Bataan General Hospital and Medical Center';
     }else{
@@ -93,8 +92,8 @@
         }
 
         // Calculate the average in seconds
-        // $averageSeconds_interdept = (int) ($totalSeconds_interdept / (count($dataRecep_interdept) === 0) ? 1 : count($dataRecep_interdept));
-        $averageSeconds_interdept = (int) ($totalSeconds_interdept / count($dataRecep_interdept));
+        $averageSeconds_interdept = (int) ($totalSeconds_interdept / (count($dataRecep_interdept) === 0) ? 1 : count($dataRecep_interdept));
+        // $averageSeconds_interdept = (int) ($totalSeconds_interdept / count($dataRecep_interdept));
         // Optionally, convert the average back to hh:mm:ss format
         $averageTime_interdept = gmdate("H:i:s", $averageSeconds_interdept);
 
@@ -203,7 +202,7 @@
     $dataReferFrom = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dataReferFrom_json = json_encode($dataReferFrom);
 
-    $sql = "SELECT pat_class FROM incoming_referrals WHERE referred_by = :hospital_name AND reception_time LIKE :current_date";
+    $sql = "SELECT pat_class FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :current_date AND referred_by = :hospital_name AND reception_time LIKE :current_date";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
     $currentDateTime_param = "%$currentDateTime%";
@@ -212,7 +211,7 @@
     $dataPatClass = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dataPatClass_json = json_encode($dataPatClass);
 
-    $sql = "SELECT type FROM incoming_referrals WHERE referred_by = :hospital_name AND reception_time LIKE :current_date";
+    $sql = "SELECT type FROM incoming_referrals WHERE status='Approved' AND approved_time LIKE :current_date AND referred_by = :hospital_name AND reception_time LIKE :current_date";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':hospital_name', $_SESSION['hospital_name']); 
     $currentDateTime_param = "%$currentDateTime%";

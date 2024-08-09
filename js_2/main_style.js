@@ -21,7 +21,7 @@ $(document).ready(function(){
                 nav_path : nav_path
             },
             success: function(response) {
-                console.log(response, typeof response)
+                // console.log(response, typeof response)
             }
         });
 
@@ -35,15 +35,41 @@ $(document).ready(function(){
 
 
     const myModal_main = new bootstrap.Modal(document.getElementById('myModal-main'));
-
-    // loadContent('../php_2/default_view2.php')
     // loadContent('../php_2/patient_register_form2.php')
     // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
     // loadContent('../php_2/incoming_form2.php')
-    loadContent('../php_2/bucas_queue.php')
+    // loadContent('../php_2/bucas_queue.php')
     // loadContent('../php_2/bucas_history.php')
     // loadContent('../php_2/outgoing_form2.php')
     // loadContent('../php_2/interdept_form.php')
+
+    console.log(running_bool , typeof running_bool)
+
+    if(running_bool === "true" || running_bool === true){
+        loadContent('../php_2/incoming_form2.php')
+    }else{
+        loadContent('../php_2/default_view2.php')
+        // loadContent('../php_2/patient_register_form2.php')
+        // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
+        // loadContent('../php_2/incoming_form2.php')
+        // loadContent('../php_2/bucas_queue.php')
+        // loadContent('../php_2/bucas_history.php')
+        // loadContent('../php_2/outgoing_form2.php')
+        // loadContent('../php_2/interdept_form.php') 
+    }
+    // if(running_bool){
+    //     console.log(running_bool)
+    //     loadContent('../php_2/incoming_form2.php')
+    // }else{
+    //     loadContent('../php_2/default_view2.php')
+    //     // loadContent('../php_2/patient_register_form2.php')
+    //     // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
+    //     // loadContent('../php_2/incoming_form2.php')
+    //     // loadContent('../php_2/bucas_queue.php')
+    //     // loadContent('../php_2/bucas_history.php')
+    //     // loadContent('../php_2/outgoing_form2.php')
+    //     // loadContent('../php_2/interdept_form.php')
+    // }
 
     // Function to parse query parameters from URL  
     function getQueryVariable(variable) {
@@ -94,8 +120,9 @@ $(document).ready(function(){
             data : {
                 from_where : 'bell'
             },
+            dataType: "JSON",
             success: function(response) {
-                response = JSON.parse(response);  
+                // response = JSON.parse(response);  
                 $('#notif-span').text(response.length);
                 if(response.length > 9){
                     $('#notif-span').css('font-size' , '0.65rem');
@@ -108,7 +135,8 @@ $(document).ready(function(){
                         playAudio();
                     }
                     timer_running = true;
-                    $('#notif-circle').removeClass('hidden');
+                    // $('#notif-circle').removeClass('hidden');
+                    $('#notif-circle').css('display' , 'block');
                     
                     let type_counter = []
                     for(let i = 0; i < response.length; i++){
@@ -148,11 +176,12 @@ $(document).ready(function(){
                     }
 
                 } else {
-                    $('#notif-circle').addClass('hidden');
+                    // $('#notif-circle').addClass('hidden');
+                    $('#notif-circle').css('display' , 'none');
                     stopSound()
                 }
                 
-                fetch_timer = setTimeout(fetchMySQLData, 5000);
+                fetch_timer = setTimeout(fetchMySQLData, 3000);
             }
         });
     }   

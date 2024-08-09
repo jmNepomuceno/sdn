@@ -43,7 +43,7 @@ if (!isset($_SESSION['_csrf_token'])) {
     $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// // Monitor the session and echo _csrf_token
+// Monitor the session and echo _csrf_token
 // if (isset($_SESSION['_csrf_token'])) {
 //     echo "CSRF Token: " . $_SESSION['_csrf_token'];
 // } else {

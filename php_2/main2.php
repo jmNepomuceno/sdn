@@ -19,6 +19,8 @@
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $incoming_num = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // echo $_SESSION['running_bool'], gettype($_SESSION['running_bool']);
 ?>
 
 <!DOCTYPE html>
@@ -313,8 +315,11 @@
     <script src="../js_2/location.js?v=<?php echo time(); ?>"></script>
 
     <script>
+        var running_bool = <?php echo ($_SESSION['running_bool']) === "true" ? "true" : "false"; ?>;
+        
         // bucas referral badge count pending
         $(document).ready(function() {
+            // 
             function updateCountPending() {
                 $.ajax({
                     url: 'count_pending.php',
@@ -335,7 +340,9 @@
             setInterval(function() {
                 updateCountPending();
             }, 60000);
+
         });
+
     </script>
 
 

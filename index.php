@@ -1,17 +1,12 @@
 <?php 
     include('database/connection2.php');
-    // include('');
-    // include('./php/csrf/session.php');
-
-    session_start();
-    // echo "Session ID: " . $sessionID . "<br>";
-    // echo "CSRF Token: " . $_SESSION['_csrf_token'];
+    include('./php_2/csrf/session.php');
 
     if($_POST){
-        // if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['_csrf_token']) {
-        //     // CSRF token verification failed, handle accordingly (e.g., show an error)
-        //     die("CSRF token verification failed");
-        // }
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['_csrf_token']) {
+            // CSRF token verification failed, handle accordingly (e.g., show an error)
+            die("CSRF token verification failed");
+        }
         
         $_SESSION["process_timer"] = [] ;
         $sdn_username = $_POST['sdn_username'];
@@ -219,6 +214,9 @@
                         });
                     </script>';
         }
+
+        
+
     }
 
 ?>
@@ -283,6 +281,7 @@
                 <h1 id="login-txt">Login</h1>
                 <form action="index.php" method="POST">
                     <!-- here csrf -->
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
 
                     <div id="username-div">
                         <i class="username-icon fa-solid fa-user"></i>
@@ -321,6 +320,8 @@
             </div>
 
             <form class="sub-content-registration-form">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
+
                 <div class="reg-form-divs">
                     <label for="" class="reg-labels">Hospital Name<span>*</span></label>
                     <input id="sdn-hospital-name" type="text" class="reg-inputs form-control" required autocomplete="off">
@@ -412,7 +413,7 @@
             </form>
 
             <form class="sub-content-authorization-form">
-                
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
                             
                 <div class="autho-form-divs">
                     <label for="" class="reg-labels">Hospital Code<span>*</span></label>

@@ -76,9 +76,13 @@
         } else {
             $sql .= "1";  // Always true condition if no input values provided.
         }
-        
-        $sql .= " AND refer_to = '" . $_SESSION["hospital_name"] . "' ORDER BY date_time DESC";
 
+        if($_POST['where_type'] == 'incoming'){
+            $sql .= " AND refer_to = '" . $_SESSION["hospital_name"] . "' ORDER BY date_time DESC";
+        }else{
+            $sql .= " AND referred_by = '" . $_SESSION["hospital_name"] . "' ORDER BY date_time DESC";
+        }
+    
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

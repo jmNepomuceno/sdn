@@ -103,10 +103,12 @@
     // print mo lang lahat ng need i print sa incoming_form.js bukas. gege
     // gl hf tomorrow! :)))))) <333333
 
-    $sql = "UPDATE hperson SET status='On-Process' WHERE hpercode=:hpercode";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
-    $stmt->execute();
+    if($_POST['from'] == 'incoming'){
+        $sql = "UPDATE hperson SET status='On-Process' WHERE hpercode=:hpercode";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
+        $stmt->execute();
+    }
 
     $left_html = '';
     $right_html = '';
