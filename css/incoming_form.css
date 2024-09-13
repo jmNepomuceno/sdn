@@ -166,6 +166,9 @@
     width: 100%;
 }
 
+/* .incoming-container .incoming-table #incoming-tbody .tr-incoming p{
+    margin:0;
+} */
 
 .incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-refer-no,
 .incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-patname{
@@ -202,12 +205,14 @@
     overflow: scroll;
 }
 
-.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-phone-no div label{
+.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-phone-no div p{
     font-size: 10pt;
     margin-left: 0.25rem;
+    padding:0;
+    margin:0;
 }
 
-.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-phone-no div label:nth-child(1){
+.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-phone-no div p:nth-child(1){
     margin-top:10px;
 }
 
@@ -227,6 +232,7 @@
     overflow: scroll;
     transition-property: all;
     transition-timing-function: ease !important;
+
 }
 
 .incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround i{
@@ -257,19 +263,21 @@
     height: 270px;
 }
 
-.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround label,
-.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround label .breakdown-div label{
+.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround p,
+.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround p .breakdown-div p{
     font-size: 0.85rem; 
     /* line-height: 1rem;  */
     width: 95%;
     border-bottom: 1px solid #bfbfbf; 
     /* margin-top: 0.25rem; */
+    margin:0;
+    padding:0;
 }
 
-.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround label{
+.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround p{
 }
 
-.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround label:nth-child(1){
+.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-turnaround p:nth-child(1){
     margin-top: 0;
 }
 
@@ -294,7 +302,7 @@
     font-size: 11pt;
 }
 
-.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-status label{
+.incoming-container .incoming-table #incoming-tbody .tr-incoming #dt-status p{
     color:#b0bec5;
 }
 

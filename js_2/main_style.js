@@ -6,6 +6,7 @@ $(document).ready(function(){
 
     // load the 4 web pages
     console.log("height: " + screenHeight + "-" + "width: " + screenWidth)
+
     const loadContent = (url) => {
         let nav_path = false;
         if (url.includes('incoming_form2')) {
@@ -33,43 +34,27 @@ $(document).ready(function(){
         })
     }
 
+    for(let i = 0; i < $('.side-bar-navs-class').length; i++){
+        $('.side-bar-navs-class').css('opacity' , '0.3')
+        $('.side-bar-navs-class').css('border-top' , 'none')
+        $('.side-bar-navs-class').css('border-bottom' , 'none')
+    }
+
 
     const myModal_main = new bootstrap.Modal(document.getElementById('myModal-main'));
-    // loadContent('../php_2/patient_register_form2.php')
-    // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
-    // loadContent('../php_2/incoming_form2.php')
-    // loadContent('../php_2/bucas_queue.php')
-    // loadContent('../php_2/bucas_history.php')
-    // loadContent('../php_2/outgoing_form2.php')
-    // loadContent('../php_2/interdept_form.php')
-
-    console.log(running_bool , typeof running_bool)
 
     if(running_bool === "true" || running_bool === true){
         loadContent('../php_2/incoming_form2.php')
     }else{
-        loadContent('../php_2/default_view2.php')
+        // loadContent('../php_2/default_view2.php')
         // loadContent('../php_2/patient_register_form2.php')
         // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
-        // loadContent('../php_2/incoming_form2.php')
+        loadContent('../php_2/incoming_form2.php')
         // loadContent('../php_2/bucas_queue.php')
         // loadContent('../php_2/bucas_history.php')
         // loadContent('../php_2/outgoing_form2.php')
         // loadContent('../php_2/interdept_form.php') 
     }
-    // if(running_bool){
-    //     console.log(running_bool)
-    //     loadContent('../php_2/incoming_form2.php')
-    // }else{
-    //     loadContent('../php_2/default_view2.php')
-    //     // loadContent('../php_2/patient_register_form2.php')
-    //     // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
-    //     // loadContent('../php_2/incoming_form2.php')
-    //     // loadContent('../php_2/bucas_queue.php')
-    //     // loadContent('../php_2/bucas_history.php')
-    //     // loadContent('../php_2/outgoing_form2.php')
-    //     // loadContent('../php_2/interdept_form.php')
-    // }
 
     // Function to parse query parameters from URL  
     function getQueryVariable(variable) {
@@ -122,12 +107,11 @@ $(document).ready(function(){
             },
             dataType: "JSON",
             success: function(response) {
-                // response = JSON.parse(response);  
+                // response = JSON.parse(response);
                 $('#notif-span').text(response.length);
                 if(response.length > 9){
                     $('#notif-span').css('font-size' , '0.65rem');
                 }
-
                 if (parseInt(response.length) >= 1) {
                     if(current_page === 'incoming_page'){
                         stopSound()
@@ -221,14 +205,15 @@ $(document).ready(function(){
         let currentDate = new Date();
 
         let year = currentDate.getFullYear();
-        let month = currentDate.getMonth() + 1;
-        let day = currentDate.getDate();
+        let month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        let day = String(currentDate.getDate()).padStart(2, '0');
 
-        let hours = currentDate.getHours();
-        let minutes = currentDate.getMinutes();
-        let seconds = currentDate.getSeconds();
+        let hours = String(currentDate.getHours()).padStart(2, '0');
+        let minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        let seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-        let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds
+        let final_date = year + "/" + month + "/" + day + " " + hours + ":" + minutes + ":" + seconds;
+        
         $.ajax({
             url: '../php_2/save_process_time.php',
             data : {
@@ -482,5 +467,4 @@ $(document).ready(function(){
 /*
     incoming_referrals: referral_id = REF000010 / reference_num = R3-BTN-BALANGA-BGHMC-2024-06-11 / hpercode = PAT000012
     bucas_referral: bucasID = BUCAS-20240307-00034 / caseNo = 2024-000002
-    
 */

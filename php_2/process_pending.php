@@ -123,7 +123,7 @@
         $selected_response = "Interdepartamental";
         $select_style = "pointer-events:none; background: #a5d6a7;";
     }else{
-        $pat_status = $response[0]['status'];
+        $pat_status = ($response[0]['status'] === "Pending") ? "On-Process" : $response[0]['status'];
     }
 
     if($response[0]['status_interdept'] == null && $response[0]['final_progressed_timer'] != null){

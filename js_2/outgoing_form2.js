@@ -10,6 +10,16 @@ $(document).ready(function(){
     $('#myDataTable thead th').removeClass('sorting sorting_asc sorting_desc');
     dataTable.search('').draw(); 
 
+    for(let i = 0; i < $('.side-bar-navs-class').length; i++){
+        $('.side-bar-navs-class').css('opacity' , '0.3')
+        $('.side-bar-navs-class').css('border-top' , 'none')
+        $('.side-bar-navs-class').css('border-bottom' , 'none')
+    }
+
+    $('#outgoing-sub-div-id').css('opacity' , '1')
+    $('#outgoing-sub-div-id').css('border-top' , '2px solid #3e515b')
+    $('#outgoing-sub-div-id').css('border-bottom' , '2px solid #3e515b')
+
     const inactivityInterval = 1110000; 
 
     const myModal = new bootstrap.Modal(document.getElementById('pendingModal'));
@@ -58,7 +68,7 @@ $(document).ready(function(){
             url: '../php_2/fetch_interval.php',
             method: "POST",
             data : {
-                from_where : 'incoming'
+                from_where : 'outgoing'
             }, 
             success: function(response) {
                 console.log("fetch_interval")

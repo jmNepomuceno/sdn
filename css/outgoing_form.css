@@ -155,7 +155,8 @@
 }
 
 .incoming-container .incoming-table #incoming-tbody .tr-incoming{
-    height: 61px;
+    height: 80px !important;
+    width: 100%;
 }
 
 

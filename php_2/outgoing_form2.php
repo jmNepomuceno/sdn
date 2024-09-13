@@ -1,6 +1,8 @@
 <?php
     session_start();
     include('../database/connection2.php');
+
+    $_SESSION['current_content'] = "outgoing_referral";
 ?>
 
 <!DOCTYPE html>
@@ -265,30 +267,30 @@
                                         <td id="dt-type" style="background:' . $type_color . ' ">' . $row['type'] . '</td>
                                         <td id="dt-phone-no">
                                             <div class="">
-                                                <label> Referred by: ' . $row['referred_by'] . '  </label>
-                                                <label> Landline: ' . $row['landline_no'] . ' </label>
-                                                <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                                                <p> Referred by: ' . $row['referred_by'] . '  </p>
+                                                <p> Landline: ' . $row['landline_no'] . ' </p>
+                                                <p> Mobile: ' . $row['mobile_no'] . ' </p>
                                             </div>
                                         </td>
                                         <td id="dt-turnaround"> 
                                             <i class="accordion-btn fa-solid fa-plus"></i>
 
-                                            <label class="referred-time-lbl"> Referred: ' . $row['date_time'] . ' </label>
-                                            <label class="reception-time-lbl"> Reception: '. $row['reception_time'] .'</label>
-                                            <label class="sdn-proc-time-lbl"> SDN Processed: '. $row['sent_interdept_time'] .'</label>
+                                            <p class="referred-time-lbl"> Referred: ' . $row['date_time'] . ' </p>
+                                            <p class="reception-time-lbl"> Reception: '. $row['reception_time'] .'</p>
+                                            <p class="sdn-proc-time-lbl"> SDN Processed: '. $row['sent_interdept_time'] .'</p>
                                             
                                             <div class="breakdown-div">
-                                                <label class="interdept-proc-time-lbl"> Interdept Processed: '. $interdept_time[0]['final_progress_time'].'</label>
-                                                <label class="processed-time-lbl"> Total Processed: '.$total_time.'  </label>  
-                                                <label> Approval: '.$row['approved_time'] .'  </label>  
-                                                <label> Deferral: 0000-00-00 00:00:00  </label>  
-                                                <label> Cancelled: 0000-00-00 00:00:00  </label>  
-                                                <label> Arrived: 0000-00-00 00:00:00  </label>  
-                                                <label> Checked: 0000-00-00 00:00:00  </label>  
-                                                <label> Admitted: 0000-00-00 00:00:00  </label>  
-                                                <label> Discharged: 0000-00-00 00:00:00  </label>  
-                                                <label> Follow up: 0000-00-00 00:00:00  </label>  
-                                                <label> Ref. Back: 0000-00-00 00:00:00  </label>  
+                                                <p class="interdept-proc-time-lbl"> Interdept Processed: '. $interdept_time[0]['final_progress_time'].'</p>
+                                                <p class="processed-time-lbl"> Total Processed: '.$total_time.'  </p>  
+                                                <p> Approval: '.$row['approved_time'] .'  </p>  
+                                                <p> Deferral: 0000-00-00 00:00:00  </p>  
+                                                <p> Cancelled: 0000-00-00 00:00:00  </p>  
+                                                <p> Arrived: 0000-00-00 00:00:00  </p>  
+                                                <p> Checked: 0000-00-00 00:00:00  </p>  
+                                                <p> Admitted: 0000-00-00 00:00:00  </p>  
+                                                <p> Discharged: 0000-00-00 00:00:00  </p>  
+                                                <p> Follow up: 0000-00-00 00:00:00  </p>  
+                                                <p> Ref. Back: 0000-00-00 00:00:00  </p>  
                                             </div>
                                         </td>
                                         <td id="dt-stopwatch">
@@ -299,7 +301,7 @@
                                         
                                         <td id="dt-status">
                                             <div> 
-                                                <label class="pat-status-incoming">' . $row['status'] . '</label>';
+                                                <p class="pat-status-incoming">' . $row['status'] . '</p>';
                                                 if ($row['sensitive_case'] === 'true') {
                                                     echo '<i class="pencil-btn fa-solid fa-pencil" style="pointer-events:none; opacity:0.3; color:#cc9900;"></i>';
                                                 }else{
@@ -382,6 +384,10 @@
             </div>
             </div>
         </div>
+    </div>
+
+    <div id="stopwatch-sub-div" style="display:none">
+        Processing: <span class="stopwatch"></span>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

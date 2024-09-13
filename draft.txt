@@ -1114,3 +1114,11 @@ https://www.pinterest.com/pin/678917712607931594/
 
 https://www.youtube.com/watch?v=xLOw7LeoBwo
 how to implement automatic backup database for MySQL
+
+24
+25
+33
+51
+52
+53
+74

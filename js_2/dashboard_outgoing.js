@@ -1,5 +1,6 @@
 // ************************************************************************** 
 //  ME ME ME ME ME ME ME
+let current_page = ""
 $(document).ready(function(){
   const myModal = new bootstrap.Modal(document.getElementById('myModal-dashboardIncoming'));
   

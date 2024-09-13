@@ -137,9 +137,9 @@
                     <select id="history-select" type="text" >
                         <option value="">All Logs</option>
                         <option value="login">Login</option>
-                        <option value="register">Register</option>
-                        <option value="incoming">Incoming</option>
-                        <option value="outgoing">Outgoing</option>
+                        <option value="register">Registered Patient</option>
+                        <option value="incoming">Incoming Referral</option>
+                        <option value="outgoing">Outgoing Referral</option>
                     </select>
                 </div>
             </div>

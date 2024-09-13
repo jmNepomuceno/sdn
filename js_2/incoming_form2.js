@@ -1,4 +1,34 @@
 $(document).ready(function(){
+    // let last_modified_arr = []
+    // for(let elem of jsonData){
+    //     last_modified_arr.push({last_modified : elem.last_modified})
+    // }
+    // console.log(last_modified_arr)
+
+    // function pollServer() {
+    //     $.ajax({
+    //         url: '../../php_2/poll/comet.php',
+    //         type: 'POST',
+    //         data: { last_modified_arr },
+    //         dataType: 'json',
+    //         success: function(data) {
+    //             console.log(data)
+    //             if (!data.hasOwnProperty('same') && !data.hasOwnProperty('status_comet')) {
+    //                 last_modified_arr = data.map(item => ({ last_modified: item.last_modified }));
+    //                 console.log('Data updated:', data);
+    //             }
+    //             pollServer(); // Continue polling
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error('Error:', error);
+    //             setTimeout(pollServer, 5000); // Retry after a delay in case of error
+    //         }
+    //     });
+    // }
+
+    // pollServer() 
+
+
     $('#myDataTable').DataTable({
         "bSort": false,
         "paging": true, 
@@ -9,6 +39,16 @@ $(document).ready(function(){
     var dataTable = $('#myDataTable').DataTable();
     $('#myDataTable thead th').removeClass('sorting sorting_asc sorting_desc');
     dataTable.search('').draw(); 
+
+    for(let i = 0; i < $('.side-bar-navs-class').length; i++){
+        $('.side-bar-navs-class').css('opacity' , '0.3')
+        $('.side-bar-navs-class').css('border-top' , 'none')
+        $('.side-bar-navs-class').css('border-bottom' , 'none')
+    }
+
+    $('#incoming-sub-div-id').css('opacity' , '1')
+    $('#incoming-sub-div-id').css('border-top' , '2px solid #3e515b')
+    $('#incoming-sub-div-id').css('border-bottom' , '2px solid #3e515b')
 
     const inactivityInterval = 10000; 
 
@@ -174,17 +214,17 @@ $(document).ready(function(){
 
     function handleUserInactivity() {
         userIsActive = false;
+        console.log(187)
         $.ajax({
             url: '../php_2/fetch_interval.php',
             method: "POST",
             data : {
                 from_where : 'incoming'
             }, 
+            // dataType : "JSON",
             success: function(response) {
-                console.log("fetch_interval")
-
-                // response = JSON.parse(response);    
-                // console.log(response)
+                // console.log("fetch_interval")
+                console.log(response.length)
 
                 dataTable.clear();
                 dataTable.rows.add($(response)).draw();
@@ -194,20 +234,6 @@ $(document).ready(function(){
                     toggle_accordion_obj[i] = true
                 }
 
-                // const pencil_elements = document.querySelectorAll('.pencil-btn');
-                //     pencil_elements.forEach(function(element, index) {
-                //     element.addEventListener('click', function() {
-                //         console.log('den')
-                //         ajax_method(index)
-                //     });
-                // });
-
-                dataTable.on('click', '.pencil-btn', function () {
-                    console.log('den');
-                    var row = $(this).closest('tr');
-                    var rowIndex = dataTable.row(row).index();
-                    ajax_method(rowIndex);
-                });
 
                 const expand_elements = document.querySelectorAll('.accordion-btn');
                     expand_elements.forEach(function(element, index) {
@@ -238,7 +264,10 @@ $(document).ready(function(){
                         $('#final-approve-btn').css('display',  'block')
                     }
                 }
-               
+
+            },
+            error: function(xhr, status, error) {
+                console.error("Error: " + error);
             }
         });
     }
@@ -263,6 +292,7 @@ $(document).ready(function(){
         if(global_paging > 1){
             index -= 6
         }
+        console.log(index, global_index)
         const data = {
             hpercode: document.querySelectorAll('.hpercode')[index].value,
             from:'incoming',
@@ -327,7 +357,7 @@ $(document).ready(function(){
                     changePatientModalContent()
                 }
 
-                
+
                 // checking if the patient is already referred interdepartamentally
                 console.log(data)
 
@@ -383,6 +413,7 @@ $(document).ready(function(){
         console.log('den');
         var row = $(this).closest('tr');
         var rowIndex = dataTable.row(row).index();
+        console.log(rowIndex)
         ajax_method(rowIndex);
     });
 
@@ -398,6 +429,7 @@ $(document).ready(function(){
                 data : {what: 'continue'},
                 dataType : 'JSON',
                 success: function(response){
+                    console.log(response)
                     running_timer_var = response[0].progress_timer
                     post_value_reload_bool = (post_value_reload === "true") ? true : false;
 
@@ -421,7 +453,6 @@ $(document).ready(function(){
             elapsedTime = (running_timer_var || 0) * 1000; // Convert seconds to milliseconds
             startTime = running_startTime_var ? running_startTime_var : performance.now() - elapsedTime;
             running = running_bool_var || false;
-            
             console.log(running , previous_loadcontent)
             // if (running) {
             if (running && previous_loadcontent === "incoming_ref") {
@@ -601,8 +632,6 @@ $(document).ready(function(){
 
     // search incoming patients
     $('#incoming-search-btn').on('click' , function(event){        
-        $('#incoming-clear-search-btn').css('opacity' , '1')
-        $('#incoming-clear-search-btn').css('pointer-events' , 'auto')
 
         let valid_search = false;
         let elements = [$('#incoming-referral-no-search').val(), $('#incoming-last-name-search').val(), $('#incoming-first-name-search').val(),
@@ -618,6 +647,9 @@ $(document).ready(function(){
         }
 
         if(valid_search){
+            $('#incoming-clear-search-btn').css('opacity' , '1')
+            $('#incoming-clear-search-btn').css('pointer-events' , 'auto')
+
             // find all status that is, sent already on the interdept or On-Process
             let hpercode_arr = []
             for(let i = 0; i < document.querySelectorAll('.pat-status-incoming').length; i++){
@@ -687,16 +719,17 @@ $(document).ready(function(){
                     //     });
                     // });
 
-                    dataTable.on('click', '.pencil-btn', function () {
-                        console.log('den');
-                        var row = $(this).closest('tr');
-                        var rowIndex = dataTable.row(row).index();
-                        ajax_method(rowIndex);
-                    });
+                    // dataTable.on('click', '.pencil-btn', function () {
+                    //     console.log('den');
+                    //     var row = $(this).closest('tr');
+                    //     var rowIndex = dataTable.row(row).index();
+                    //     ajax_method(rowIndex);
+                    // });
 
                 }
             }) 
         }else{
+            $('#ok-modal-btn-incoming').text('X')
             defaultMyModal.show()
         }
 
@@ -710,7 +743,8 @@ $(document).ready(function(){
                 'where' : "clear"
             },
             success: function(response){
-                // console.log(response)
+                $('#incoming-clear-search-btn').css('opacity' , '0.3')
+                $('#incoming-clear-search-btn').css('pointer-events' , 'none')
 
                 dataTable.clear();
                 dataTable.rows.add($(response)).draw();
@@ -736,7 +770,7 @@ $(document).ready(function(){
                     });
                 });
 
-                
+                enabledNextReferral()
             }
         }) 
     })
@@ -881,12 +915,12 @@ $(document).ready(function(){
                 //     });
                 // });
 
-                dataTable.on('click', '.pencil-btn', function () {
-                    console.log('den');
-                    var row = $(this).closest('tr');
-                    var rowIndex = dataTable.row(row).index();
-                    ajax_method(rowIndex);
-                });
+                // dataTable.on('click', '.pencil-btn', function () {
+                //     console.log('den');
+                //     var row = $(this).closest('tr');
+                //     var rowIndex = dataTable.row(row).index();
+                //     ajax_method(rowIndex);
+                // });
 
                 const expand_elements = document.querySelectorAll('.accordion-btn');
                     expand_elements.forEach(function(element, index) {
@@ -1090,12 +1124,12 @@ $(document).ready(function(){
                 // });
 
 
-                dataTable.on('click', '.pencil-btn', function () {
-                    console.log('den');
-                    var row = $(this).closest('tr');
-                    var rowIndex = dataTable.row(row).index();
-                    ajax_method(rowIndex);
-                });
+                // dataTable.on('click', '.pencil-btn', function () {
+                //     console.log('den');
+                //     var row = $(this).closest('tr');
+                //     var rowIndex = dataTable.row(row).index();
+                //     ajax_method(rowIndex);
+                // });
 
                 enabledNextReferral()
                 // if()
@@ -1130,7 +1164,7 @@ $(document).ready(function(){
         if($('#ok-modal-btn-incoming').text() === 'Close'){
             console.log('done interdept referral shared')
         }
-        else{
+        else if($('#ok-modal-btn-incoming').text() === 'OK'){
             let mcc_passwords_validity = false
             let input_pw = $('#sensitive-pw').val().toString()
             for (var key in mcc_passwords) {

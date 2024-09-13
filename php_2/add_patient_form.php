@@ -1,7 +1,7 @@
 <?php
     session_start();
     include("../database/connection2.php");
-
+    date_default_timezone_set('Asia/Manila');
     //PERSONAL INFORMATIONS // 16
 
     // generation for hpercode or referral patient code
@@ -100,7 +100,7 @@
     $pat_office_mobile_no_ofw = $_POST['pat_office_mobile_no_ofw'];
     $pat_mobile_no_ofw = $_POST['pat_mobile_no_ofw'];
 
-    $created_at =  date("Y-m-d H:i:s");
+    $created_at =  $_POST['created_at'];
 
 
     

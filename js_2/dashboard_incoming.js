@@ -1,5 +1,6 @@
 // ************************************************************************** 
 //  ME ME ME ME ME ME ME
+let current_page = ""
 $(document).ready(function(){
   const myModal = new bootstrap.Modal(document.getElementById('myModal-dashboardIncoming'));
   
@@ -15,6 +16,13 @@ $(document).ready(function(){
     audio.play().catch(function(error){
         'Error playing audio: ' , error
     }) 
+  }
+
+  const stopSound = () =>{
+    let audio = document.getElementById("notif-sound")
+    audio.pause;
+    audio.muted = true;
+    audio.currentTime = 0;
   }
 
   function renderPieChart(chart, dataArray) {
@@ -107,7 +115,7 @@ $(document).ready(function(){
             }
         }
     });
-}
+  }
 
 console.log(dataReferFrom)
 renderPieChart("rhu" , dataReferFrom)

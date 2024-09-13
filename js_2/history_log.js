@@ -1,49 +1,8 @@
 $(document).ready(function(){
-  let intervalHistoryLog;
-
-  let inactivityTimer;
-  let userIsActive = true;
-  function handleUserActivity() {
-      userIsActive = true;
-      // Additional code to handle user activity if needed
-      clearInterval(intervalHistoryLog)
-
-  }
-
-  function handleUserInactivity() {
-      userIsActive = false;
-      // Additional code to handle user inactivity if needed
-      intervalHistoryLog = setInterval(fetchHistoryLog, 10000);
-  }
-
-  // Attach event listeners
-  document.addEventListener('mousemove', handleUserActivity);
-
-  // Set up a timer to check user inactivity periodically
-  const inactivityInterval = 10000; // Execute every 5 seconds (adjust as needed)
- 
-  function startInactivityTimer() {
-      inactivityTimer = setInterval(() => {
-          if (!userIsActive) {
-              handleUserInactivity();
-          }
-          userIsActive = false; // Reset userIsActive after each check
-          
-      }, inactivityInterval);
-  }
-
-  function resetInactivityTimer() {
-      clearInterval(inactivityTimer);
-
-      startInactivityTimer();
-  }
-
-  // Start the inactivity timer when the page loads
-  startInactivityTimer();
+  let current_page = ""
 
   //----------------------------------------------------------------------------
-
-    $('#total-processed-refer').text($('#total-processed-refer-inp').val())
+  $('#total-processed-refer').text($('#total-processed-refer-inp').val())
   console.log($('#total-processed-refer-inp').val())
   const playAudio = () =>{
     let audio = document.getElementById("notif-sound")
@@ -167,7 +126,7 @@ $(document).ready(function(){
                 stopSound()
             }
             
-            fetch_timer = setTimeout(fetchMySQLData, 10000);
+            fetch_timer = setTimeout(fetchMySQLData, 1000);
         }
     });
 }   
@@ -188,9 +147,9 @@ $(document).ready(function(){
     });
   }
 
-  intervalHistoryLog = setInterval(fetchHistoryLog, 10000);
+  intervalHistoryLog = setInterval(fetchHistoryLog, 1000);
   
-  fetchHistoryLog();
+  // fetchHistoryLog();
 
     $('#side-bar-mobile-btn').on('click' , function(event){
       document.querySelector('#side-bar-div').classList.toggle('hidden');

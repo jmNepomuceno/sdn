@@ -59,62 +59,62 @@
 
     // ******************************************************************
 
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000023'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000024'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000025'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000026'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000027'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    $sql = "DELETE FROM incoming_interdept";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000031'";
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000023'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    $sql = "DELETE FROM incoming_referrals WHERE hpercode='PAT000031'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000024'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
-    $sql = "UPDATE hperson SET status=null, referral_id=null WHERE hpercode='PAT000031'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000025'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000026'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000027'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "DELETE FROM incoming_interdept";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000034'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "DELETE FROM incoming_referrals WHERE hpercode='PAT000031'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
+    // $sql = "UPDATE hperson SET status=null, referral_id=null, type=null WHERE hpercode='PAT000031'";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
+
     // echo $_SESSION['running_timer'] . "----";
     // echo $_SESSION['running_bool'] . "----";
     // echo $_SESSION['running_hpercode'] . "----";
@@ -156,27 +156,27 @@
         <h1>Incoming Referral Patients</h1>
         <div class="search-main-div">
             <div class="refer-no-div">
-                <label>Referral No.</label>
+                <label for="incoming-referral-no-search">Referral No.</label>
                 <input id="incoming-referral-no-search" type="textbox">
             </div>
         
             <div class="lname-search-div">
-                <label>Last Name</label>
+                <label for="incoming-last-name-search">Last Name</label>
                 <input id="incoming-last-name-search" type="textbox">
             </div>
 
             <div class="fname-search-div">
-                <label>First Name</label>
+                <label  for="incoming-first-name-search">First Name</label>
                 <input id="incoming-first-name-search" type="textbox">
             </div>
 
             <div class="mname-search-div">
-                <label>Middle Name</label>
+                <label  for="incoming-middle-name-search">Middle Name</label>
                 <input id="incoming-middle-name-search" type="textbox">
             </div>
 
             <div class="caseType-search-div">
-                <label>Case Type</label>
+                <label for="incoming-type-select">Case Type</label>
                 <select id='incoming-type-select'>
                     <?php 
                         $stmt = $pdo->prepare('SELECT classifications FROM classifications');
@@ -192,7 +192,7 @@
 
 
             <div class="agency-search-div">
-                <label>Agency</label>
+                <label id="agency-search" for="incoming-agency-select">Agency</label>
                 <select id='incoming-agency-select'>
                    <?php 
                     $stmt = $pdo->prepare('SELECT hospital_name FROM sdn_hospital');
@@ -208,7 +208,7 @@
 
 
             <div class="status-search-div">
-                <label>Status</label>
+                <label for="incoming-status-select">Status</label>
                 <select id='incoming-status-select'>
                     <option value="default">Select</option>
                     <option value="Pending">Pending</option>
@@ -392,7 +392,7 @@
                                     $pat_full_name = "
                                         <div class='pat-full-name-div'>
                                             <button class='sensitive-case-btn' style='display:none;'> <i class='sensitive-lock-icon fa-solid fa-lock'></i> Sensitive Case </button>
-                                            <label> " . $row['patlast'] . " , " . $row['patfirst'] . "  " . $row['patmiddle'] . "</label>
+                                            <p> " . $row['patlast'] . " , " . $row['patfirst'] . "  " . $row['patmiddle'] . "</p>
                                             <input class='sensitive-hpercode' type='hidden' name='sensitive-hpercode' value= '" . $row['hpercode'] . "'>
                                         </div>
                                     ";
@@ -404,30 +404,30 @@
                                         <td id="dt-type" style="background:' . $type_color . ' ">' . $row['type'] . '</td>
                                         <td id="dt-phone-no">
                                             <div class="">
-                                                <label> Referred by: ' . $row['referred_by'] . '  </label>
-                                                <label> Landline: ' . $row['landline_no'] . ' </label>
-                                                <label> Mobile: ' . $row['mobile_no'] . ' </label>
+                                                <p> Referred by: ' . $row['referred_by'] . '  </p>
+                                                <p> Landline: ' . $row['landline_no'] . ' </p>
+                                                <p> Mobile: ' . $row['mobile_no'] . ' </p>
                                             </div>
                                         </td>
                                         <td id="dt-turnaround"> 
                                             <i class="accordion-btn fa-solid fa-plus"></i>
 
-                                            <label class="referred-time-lbl"> Referred: ' . $row['date_time'] . ' </label>
-                                            <label class="reception-time-lbl"> Reception: '. $row['reception_time'] .'</label>
-                                            <label class="sdn-proc-time-lbl"> SDN Processed: '. $row['sent_interdept_time'] .'</label>
+                                            <p class="referred-time-lbl"> Referred: ' . $row['date_time'] . ' </p>
+                                            <p class="reception-time-lbl"> Reception: '. $row['reception_time'] .'</p>
+                                            <p class="sdn-proc-time-lbl"> SDN Processed: '. $row['sent_interdept_time'] .'</p>
                                             
                                             <div class="breakdown-div">
-                                                <label class="interdept-proc-time-lbl"> Interdept Processed: '. $interdept_time[0]['final_progress_time'].'</label>
-                                                <label class="processed-time-lbl"> Total Processed: '.$total_time.'  </label>  
-                                                <label> Approval: '.$row['approved_time'] .'  </label>  
-                                                <label> Deferral: 0000-00-00 00:00:00  </label>  
-                                                <label> Cancelled: 0000-00-00 00:00:00  </label>  
-                                                <label> Arrived: 0000-00-00 00:00:00  </label>  
-                                                <label> Checked: 0000-00-00 00:00:00  </label>  
-                                                <label> Admitted: 0000-00-00 00:00:00  </label>  
-                                                <label> Discharged: 0000-00-00 00:00:00  </label>  
-                                                <label> Follow up: 0000-00-00 00:00:00  </label>  
-                                                <label> Ref. Back: 0000-00-00 00:00:00  </label>  
+                                                <p class="interdept-proc-time-lbl"> Interdept Processed: '. $interdept_time[0]['final_progress_time'].'</p>
+                                                <p class="processed-time-lbl"> Total Processed: '.$total_time.'  </p>  
+                                                <p> Approval: '.$row['approved_time'] .'  </p>  
+                                                <p> Deferral: 0000-00-00 00:00:00  </p>  
+                                                <p> Cancelled: 0000-00-00 00:00:00  </p>  
+                                                <p> Arrived: 0000-00-00 00:00:00  </p>  
+                                                <p> Checked: 0000-00-00 00:00:00  </p>  
+                                                <p> Admitted: 0000-00-00 00:00:00  </p>  
+                                                <p> Discharged: 0000-00-00 00:00:00  </p>  
+                                                <p> Follow up: 0000-00-00 00:00:00  </p>  
+                                                <p> Ref. Back: 0000-00-00 00:00:00  </p>  
                                             </div>
                                         </td>
                                         <td id="dt-stopwatch">
@@ -438,7 +438,7 @@
                                         
                                         <td id="dt-status">
                                             <div> 
-                                                <label class="pat-status-incoming">' . $row['status'] . '</label>';
+                                                <p class="pat-status-incoming">' . $row['status'] . '</p>';
                                                 if ($row['sensitive_case'] === 'true') {
                                                     echo '<i class="pencil-btn fa-solid fa-pencil" style="pointer-events:none; opacity:0.3; color:#cc9900;"></i>';
                                                 }else{
@@ -452,7 +452,7 @@
                                     </tr>';
 
                                
-                                    $previous = $row['reference_num'];
+                                $previous = $row['reference_num'];
                                 $loop += 1;
                             }
 
@@ -543,7 +543,6 @@
         var login_data = "<?php echo $_SESSION['login_time']; ?>";
 
         var status_interdept_arr = <?php echo json_encode($status_interdept_arr); ?>;
-        console.log(status_interdept_arr)
 
         var current_dataTable_index = <?php echo json_encode($_SESSION['datatable_index']); ?>;
     </script>

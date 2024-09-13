@@ -8,6 +8,16 @@ $(document).ready(function(){
         })
     }
 
+    for(let i = 0; i < $('.side-bar-navs-class').length; i++){
+        $('.side-bar-navs-class').css('opacity' , '0.3')
+        $('.side-bar-navs-class').css('border-top' , 'none')
+        $('.side-bar-navs-class').css('border-bottom' , 'none')
+    }
+
+    $('#patient-reg-form-sub-side-bar').css('opacity' , '1')
+    $('#patient-reg-form-sub-side-bar').css('border-top' , '2px solid #3e515b')
+    $('#patient-reg-form-sub-side-bar').css('border-bottom' , '2px solid #3e515b')
+
     // patHistoryModal
     const patHistoryModal = new bootstrap.Modal(document.getElementById('patHistoryModal'));
     let patRegModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
@@ -202,12 +212,13 @@ $(document).ready(function(){
             console.log('asdf')
             const currentDateTime = new Date();
             const year = currentDateTime.getFullYear();
-            const month = currentDateTime.getMonth() + 1; // Month is zero-based, so add 1 to get the correct month.
-            const day = currentDateTime.getDate();
-            const hours = currentDateTime.getHours();
-            const minutes = currentDateTime.getMinutes();
-            const seconds = currentDateTime.getSeconds();
-            let created_at = (`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`)
+            const month = String(currentDateTime.getMonth() + 1).padStart(2, '0'); // Add leading zero
+            const day = String(currentDateTime.getDate()).padStart(2, '0'); // Add leading zero
+            const hours = String(currentDateTime.getHours()).padStart(2, '0'); // Add leading zero
+            const minutes = String(currentDateTime.getMinutes()).padStart(2, '0'); // Add leading zero
+            const seconds = String(currentDateTime.getSeconds()).padStart(2, '0'); // Add leading zero
+
+            let created_at = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
             data = {
                 //PERSONAL INFORMATIONS

@@ -453,7 +453,7 @@ background: #555;
 #main-div .aside-main-div #side-bar-div #main-side-bar-1 #sub-side-bar-1 #patient-reg-form-sub-side-bar i,
 #main-div .aside-main-div #side-bar-div #main-side-bar-2 #sub-side-bar-2 #outgoing-sub-div-id i,
 #main-div .aside-main-div #side-bar-div #main-side-bar-2 #sub-side-bar-2 #incoming-sub-div-id i,
-#main-div .aside-main-div #side-bar-div #main-side-bar-2 #sub-side-bar-2 #bucasPending-sub-div-id,
+#main-div .aside-main-div #side-bar-div #main-side-bar-2 #sub-side-bar-2 #bucasPending-sub-div-id i,
 #main-div .aside-main-div #side-bar-div #main-side-bar-2 #sub-side-bar-2 #bucasHistory-sub-div-id i{
     margin-left: 2rem;
     font-size: 1.125rem;

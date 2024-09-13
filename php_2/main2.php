@@ -20,6 +20,12 @@
     $stmt->execute();
     $incoming_num = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE progress_timer!=null AND refer_to='". $_SESSION['hospital_name'] ."'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $progress_timer_num = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // echo '<pre>'; print_r($progress_timer_num); echo '</pre>'; 
     // echo $_SESSION['running_bool'], gettype($_SESSION['running_bool']);
 ?>
 
@@ -163,7 +169,7 @@
                     </div>
 
                     <div id="sub-side-bar-1">
-                        <div id="patient-reg-form-sub-side-bar">
+                        <div id="patient-reg-form-sub-side-bar" class="side-bar-navs-class">
                             <i class="fa-solid fa-hospital-user"></i>  
                             <h3>Patient Registration Form</h3>
                         </div>
@@ -177,11 +183,11 @@
                     </div>
 
                     <div id="sub-side-bar-2">
-                        <div id="outgoing-sub-div-id">
+                        <div id="outgoing-sub-div-id" class="side-bar-navs-class">
                             <i class="fa-solid fa-inbox"></i>
                             <h3>Outgoing</h3>
                         </div>
-                        <div id="incoming-sub-div-id">
+                        <div id="incoming-sub-div-id" class="side-bar-navs-class">
                             <!-- <h3 class="m-16 text-white">Incoming</h3> -->
                             <i class="fa-solid fa-inbox"></i>
                             <h3>Incoming</h3>
@@ -195,17 +201,17 @@
 
                         <?php if($_SESSION['user_name'] === 'admin'){?>
                         <!-- bucas referral with badge -->
-                        <div id="bucasPending-sub-div-id">
+                        <div id="bucasPending-sub-div-id" class="side-bar-navs-class">
                             <i class="fa-solid fa-inbox"></i>
                             <h3>BUCAS (Incoming)</h3>
-                            <span id="badge" class="position-absolute top-80 start-80 translate-middle badge rounded-pill bg-danger">
+                            <span id="badge" class="position-absolute top-80 start-80 translate-middle badge rounded-pill bg-danger" style="left:30px;">
                             <span style="font-size: 10px !important;"><?php echo $count_pending; ?></span>
                                 <span class="visually-hidden">unread messages</span>
                             </span>
                         </div>
                         
                         <!-- bucas referral -->
-                        <div id="bucasHistory-sub-div-id">
+                        <div id="bucasHistory-sub-div-id" class="side-bar-navs-class">
                             <i class="fa-solid fa-inbox"></i>
                             <h3>BUCAS (History)</h3>
                         </div>

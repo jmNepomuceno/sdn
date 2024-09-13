@@ -14,14 +14,6 @@
     }
 
 
-
-
-
-
-
-
-
-
     // function sendUpdate($data) {
     //     echo "asdf: $data\n\n";
     //     ob_flush();

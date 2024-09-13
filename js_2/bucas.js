@@ -1,4 +1,14 @@
 $(document).ready(function() {
+    for(let i = 0; i < $('.side-bar-navs-class').length; i++){
+        $('.side-bar-navs-class').css('opacity' , '0.3')
+        $('.side-bar-navs-class').css('border-top' , 'none')
+        $('.side-bar-navs-class').css('border-bottom' , 'none')
+    }
+
+    $('#bucasPending-sub-div-id').css('opacity' , '1')
+    $('#bucasPending-sub-div-id').css('border-top' , '2px solid #3e515b')
+    $('#bucasPending-sub-div-id').css('border-bottom' , '2px solid #3e515b')
+
     $('.view-link').click(function() {
         var bucasID = $(this).data('bucas-id');
         var formData = { bucasID_parameter: bucasID };

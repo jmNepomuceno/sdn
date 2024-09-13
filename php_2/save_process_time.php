@@ -65,15 +65,34 @@
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        $givenDate = $data[0]['logout_date'];
+
+        // Create DateTime objects for the given date and the current date
+        $givenDateTime = DateTime::createFromFormat('Y/m/d H:i:s', $givenDate);
+        $currentDateTime = new DateTime(); // This gets the current date and time
+
+        // Calculate the difference between the two DateTime objects
+        $interval = $currentDateTime->diff($givenDateTime);
+
+        // Convert the difference to seconds
+        $differenceInSeconds = (
+            ($interval->days * 24 * 60 * 60) +      // Days to seconds
+            ($interval->h * 60 * 60) +              // Hours to seconds
+            ($interval->i * 60) +                   // Minutes to seconds
+            $interval->s                            // Seconds
+        );
+
+        $data[0]['progress_timer'] = (int)$data[0]['progress_timer'] + $differenceInSeconds;
+        
         $jsonString = json_encode($data);
         echo $jsonString;
 
         // delete the progress_timer after sending back the request
         // dapat yung referralID kukunin mo hindi yung hpercode
 
-        $sql = "UPDATE incoming_referrals SET progress_timer=null WHERE hpercode='PAT000023'";
+        $sql = "UPDATE incoming_referrals SET progress_timer=null WHERE hpercode=?";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute();
+        $stmt->execute([$data[0]['hpercode']]);
     }
 
     
