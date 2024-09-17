@@ -63,45 +63,41 @@
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000024'";
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000031'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000025'";
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000032'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000026'";
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000033'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000027'";
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000034'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000023'";
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000031'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000024'";
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000032'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000025'";
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000033'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000026'";
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000034'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000027'";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
-
-    // $sql = "DELETE FROM incoming_interdept";
-    // $stmt = $pdo->prepare($sql);
-    // $stmt->execute();
+    $sql = "DELETE FROM sdn_hospital";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 
     // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000034'";
     // $stmt = $pdo->prepare($sql);

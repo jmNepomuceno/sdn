@@ -1,7 +1,7 @@
 <?php 
     include('database/connection2.php');
     include('./php_2/csrf/session.php');
-
+    
     if($_POST){
         if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['_csrf_token']) {
             // CSRF token verification failed, handle accordingly (e.g., show an error)
@@ -124,7 +124,6 @@
             }
 
         }
-        
         //verification for admin user logged in
         else if($sdn_username == "admin" && $sdn_password == "admin"){
             $_SESSION['hospital_code'] = '1437';
