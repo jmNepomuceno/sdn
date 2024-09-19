@@ -24,7 +24,8 @@ $(document).ready(function(){
                         return $(this).val();
                     }).get();
                     console.log(inputValues);
-                    window.location.href = "http://10.10.90.14:8079/index.php" 
+                    // window.location.href = "http://10.10.90.14:8079/index.php" 
+                    // window.location.href = '../index.php'
                 }
             })
         }else {

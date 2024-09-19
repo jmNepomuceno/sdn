@@ -1,14 +1,7 @@
 $(document).ready(function(){
     $('#resend-otp-btn').on('click' , function(event){
-        function generateRandomNumber(min, max) {
-            // console.log("w/out " , Math.random() * (max - min + 1))
-            return Math.floor(Math.random() * (max - min + 1) + min);
-        }
-        
-        let OTP = generateRandomNumber(100000, 999999);
         const data = {
-            hospital_code : $('#sdn-hospital-code').val(),
-            OTP : OTP,
+            hospital_code :  $('#sdn-hospital-code').val(),
             email : $('#sdn-email-address').val()
         }
 
@@ -27,6 +20,7 @@ $(document).ready(function(){
                 // Set the countdown duration in seconds (5 minutes)
 
                 // $('#resend-otp-btn').addClass('opacity-50 pointer-events-none')
+                $('#new-otp-sent-txt').css('opacity' , '1')
                 $('#resend-otp-btn').css('opacity', '0.5')
                 $('#resend-otp-btn').css('pointer-events', 'none')
                 const countdownDuration = 300;
@@ -36,24 +30,30 @@ $(document).ready(function(){
 
                 // Initialize the countdown value
                 let countdown = countdownDuration;
-
+                let opacity_new_otp_txt = 5;
                 // Update the timer display function
                 function updateTimer() {
-                const minutes = Math.floor(countdown / 60);
-                const seconds = countdown % 60;
+                    const minutes = Math.floor(countdown / 60);
+                    const seconds = countdown % 60;
 
-                // Display minutes and seconds
-                timerElement.textContent = `Resend OTP after: ${minutes}m ${seconds}s`;
+                    // Display minutes and seconds
+                    timerElement.textContent = `Resend OTP after: ${minutes}m ${seconds}s`;
 
-                // Check if the countdown has reached zero
-                if (countdown === 0) {
-                    clearInterval(timerInterval); // Stop the timer
-                    timerElement.textContent = '00:00';
-                    $('#resend-otp-btn').css('opacity', '1')
-                    $('#resend-otp-btn').css('pointer-events', 'none')
-                } else {
-                    countdown--; // Decrement the countdown
-                }
+                    // #new-otp-sent-txt
+                    if(opacity_new_otp_txt >= 0){
+                        $('#new-otp-sent-txt').css('opacity' , '0.' + opacity_new_otp_txt)
+                        opacity_new_otp_txt -= 1
+                    }
+
+                    // Check if the countdown has reached zero
+                    if (countdown === 0) {
+                        clearInterval(timerInterval); // Stop the timer
+                        timerElement.textContent = '00:00';
+                        $('#resend-otp-btn').css('opacity', '1')
+                        $('#resend-otp-btn').css('pointer-events', 'auto')
+                    } else {
+                        countdown--; // Decrement the countdown
+                    }
                 }
 
                 // Set up the timer to update every second

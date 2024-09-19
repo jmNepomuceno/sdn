@@ -132,6 +132,9 @@
     height: 96.5%;
     transition-delay: 50ms;
     transition-duration: 150ms;
+
+    /* pointer-events: none;
+    opacity: 0.3; */
 } 
 
 #patient-reg-form-div #upper-part-div .important-btns .patient-form-btns #clear-patform-btn-id{

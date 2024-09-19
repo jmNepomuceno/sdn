@@ -1,4 +1,4 @@
-var timerInterval, timerElement;
+var timerInterval, timerElement, yawa = "asdf";
 $(document).ready(function(){ //sdn-register-btn
     $('#register-confirm-btn').on('click' , function(event){
     // $('#register-confirm-btn').on('click' , function(event){
@@ -12,7 +12,8 @@ $(document).ready(function(){ //sdn-register-btn
                 filled_inputs = true
             }
         })
-        
+
+
         if(filled_inputs){
             const data = {
                 hospital_name : $('#sdn-hospital-name').val(),
@@ -44,7 +45,7 @@ $(document).ready(function(){ //sdn-register-btn
             //     municipality : "30806",
             //     barangay : "30806015",
             //     zip_code : "2103",
-            //     email : "cosmotamer@gmail.com",
+            //     email : "jmgnngmj@gmail.com",
             //     landline_no : "425-4255",
 
             //     hospital_mobile_no : "0919-6044-820",

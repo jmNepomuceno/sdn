@@ -1,7 +1,7 @@
 <?php
     session_start();
     include('../database/connection2.php');
-
+    
     //if cache is cleared redirect to index page
     if (!isset($_SESSION['user_name']) || empty($_SESSION['user_name'])) {
         header("Location: ../index.php");
@@ -15,14 +15,14 @@
         }
     }
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to='". $_SESSION['hospital_name'] ."'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION['hospital_name']]);
     $incoming_num = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE progress_timer!=null AND refer_to='". $_SESSION['hospital_name'] ."'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE progress_timer!=null AND refer_to=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION['hospital_name']]);
     $progress_timer_num = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // echo '<pre>'; print_r($progress_timer_num); echo '</pre>'; 
@@ -103,7 +103,7 @@
                             if($_SESSION['last_name'] === 'Administrator'){
                                 echo '<h1 id="user_name-id">' . $user_name . ' | ' . $_SESSION["last_name"] . '</h1>';
                             }else{
-                                echo '<h1 id="user_name-id">' . $user_name . ' | ' . $_SESSION["last_name"] . ', ' . $_SESSION['first_name'] . ' ' . $_SESSION['middle_name'] . '</h1>';;
+                                echo '<h1 id="user_name-id">' . $user_name . ' | ' . $_SESSION["last_name"] . ', ' . $_SESSION['first_name'] . ' ' . $_SESSION['middle_name'] . '</h1>';
 
                             }
                         ?>
@@ -132,13 +132,15 @@
                     <h2 class="nav-drop-btns-txt">Dashboard (Outgoing)</h2>
                 </div>
 
-                <div class="nav-drop-btns">
+                <!-- <div class="nav-drop-btns">
                     <h2 class="nav-drop-btns-txt">Dashboard (ER/OPD)</h2>
-                </div>
+                </div> -->
 
-                <div id="history-log-btn" class="nav-drop-btns">
-                    <h2 class="nav-drop-btns-txt">History Log</h2>
-                </div>
+                <?php if($_SESSION["user_name"] == "admin") {?>
+                    <div id="history-log-btn" class="nav-drop-btns">
+                        <h2 class="nav-drop-btns-txt">History Log</h2>
+                    </div>
+                <?php } ?>
 
                 <div class="nav-drop-btns">
                     <h2 class="nav-drop-btns-txt">Settings</h2>
@@ -171,7 +173,7 @@
                     <div id="sub-side-bar-1">
                         <div id="patient-reg-form-sub-side-bar" class="side-bar-navs-class">
                             <i class="fa-solid fa-hospital-user"></i>  
-                            <h3>Patient Registration Form</h3>
+                            <h3 id="pat-reg-form-h3">Patient Registration Form</h3>
                         </div>
                     </div>
                 </div>
@@ -185,12 +187,12 @@
                     <div id="sub-side-bar-2">
                         <div id="outgoing-sub-div-id" class="side-bar-navs-class">
                             <i class="fa-solid fa-inbox"></i>
-                            <h3>Outgoing</h3>
+                            <h3 id="outgoing-h3">Outgoing</h3>
                         </div>
                         <div id="incoming-sub-div-id" class="side-bar-navs-class">
                             <!-- <h3 class="m-16 text-white">Incoming</h3> -->
                             <i class="fa-solid fa-inbox"></i>
-                            <h3>Incoming</h3>
+                            <h3 id="incoming-h3">Incoming</h3>
                         </div>
                         
                         <!-- bucas referral -->
@@ -211,7 +213,7 @@
                         </div>
                         
                         <!-- bucas referral -->
-                        <div id="bucasHistory-sub-div-id" class="side-bar-navs-class">
+                        <div id="bucasHistory-sub-div-id" class="side-bar-navs-class" style="display:none;">
                             <i class="fa-solid fa-inbox"></i>
                             <h3>BUCAS (History)</h3>
                         </div>

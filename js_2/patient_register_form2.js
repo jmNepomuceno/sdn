@@ -110,7 +110,7 @@ $(document).ready(function(){
                 }
             }
 
-            zero_inputs = 0;
+            // zero_inputs = 0;
             if(zero_inputs >= 1){
                 console.log('here')
                 $('#modal-body').text('Please fill out the required fields.')

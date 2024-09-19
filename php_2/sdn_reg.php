@@ -103,7 +103,7 @@
         $stmt->bindParam(14, $point_person_mobile_no, PDO::PARAM_STR);
         $stmt->bindParam(15, $OTP, PDO::PARAM_INT);
 
-        $stmt->execute();
+        $stmt->execute([$hospital_code, $hospital_name, $region, $province, $municipality, $barangay, $zip_code, $email, $landline_no, $hospital_mobile_no, $hospital_director, $hospital_director_mobile_no, $point_person, $point_person_mobile_no, $OTP]);
 
         //SENDING EMAIL
         try {                
@@ -123,8 +123,9 @@
             $mail->addAddress($email);
             //Content
             $mail->isHTML(true); // Set email format to HTML
-            $mail->Subject = 'Job Order';
-            $mail->Body = $OTP; // OTP value from sdn_reg
+            $mail->Subject = 'OTP Verification BGHMC-SDN';
+            $mail->Body =  $OTP . " is your verification code. For your protection, do not share this code with anyone." . '<br>' . 
+                            'After verifying your account, you can now proceed on creating and authorization of the user account(s) '; // OTP value from sdn_reg
             $mail->AltBody = 'This is the plain text message body';
 
             $mail->send();

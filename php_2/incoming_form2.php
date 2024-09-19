@@ -10,9 +10,9 @@
     // hold the data of the running timer opon logout
     $post_value_reload = '';
 
-    $sql = "SELECT * FROM incoming_referrals WHERE progress_timer IS NOT NULL AND refer_to = '" . $_SESSION["hospital_name"] . "'";
+    $sql = "SELECT * FROM incoming_referrals WHERE progress_timer IS NOT NULL AND refer_to = ? ";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION["hospital_name"]]);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if(count($data) > 0){
@@ -22,9 +22,9 @@
 
 
     // holds the data upon logging out
-    $sql = "SELECT * FROM incoming_referrals WHERE logout_date!='null' AND refer_to = '" . $_SESSION["hospital_name"] . "' ";
+    $sql = "SELECT * FROM incoming_referrals WHERE logout_date!='null' AND refer_to = ? ";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION["hospital_name"]]);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $logout_data = json_encode($data);
@@ -75,7 +75,7 @@
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000034'";
+    // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000003'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
@@ -91,13 +91,13 @@
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000034'";
+    // $sql = "UPDATE hperson SET status='Pending' WHERE hpercode='PAT000003'";
     // $stmt = $pdo->prepare($sql);
     // $stmt->execute();
 
-    $sql = "DELETE FROM sdn_hospital";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    // $sql = "DELETE FROM incoming_interdept";
+    // $stmt = $pdo->prepare($sql);
+    // $stmt->execute();
 
     // $sql = "UPDATE incoming_referrals SET status='Pending', reception_time=null, final_progressed_timer=null, approved_time=null, approval_details=null, status_interdept=null, sent_interdept_time=null, last_update=null, pat_class=null WHERE hpercode='PAT000034'";
     // $stmt = $pdo->prepare($sql);
@@ -119,9 +119,9 @@
 
     // echo '<pre>'; print_r($_SESSION['approval_details_arr']); echo '</pre>';
 
-    $sql = "SELECT status_interdept FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to='". $_SESSION["hospital_name"] ."' ORDER BY date_time ASC";
+    $sql = "SELECT status_interdept FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to=? ORDER BY date_time ASC";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION["hospital_name"]]);
     $status_interdept_arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // echo $_SESSION['datatable_index'];
@@ -258,9 +258,9 @@
 
                         // SQL query to fetch data from your table
                         try{
-                            $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to='". $_SESSION["hospital_name"] ."' ORDER BY date_time ASC";
+                            $sql = "SELECT * FROM incoming_referrals WHERE (status='Pending' OR status='On-Process') AND refer_to=? ORDER BY date_time ASC";
                             $stmt = $pdo->prepare($sql);
-                            $stmt->execute();
+                            $stmt->execute([$_SESSION["hospital_name"]]);
                             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             // echo count($data);
@@ -545,7 +545,7 @@
 </body>
 </html>
 
-<?php $_SESSION['current_content'] = 'incoming_ref' ?>
+<?php $_SESSION['current_content'] = 'incoming_ref'; ?>
 
 <!-- Interdepartment: Surgery - Status approved - div
 491

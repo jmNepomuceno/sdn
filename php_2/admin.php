@@ -67,9 +67,9 @@
     // print_r($users_curr_hospitals);
     // echo count($users_curr_hospitals);
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to='". $_SESSION['hospital_name'] ."'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION['hospital_name']]);
     $incoming_num = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
@@ -172,10 +172,6 @@
 
             <div id="dashboard-outgoing-btn" class="nav-drop-btns">
                 <h2 class="nav-drop-btns-txt">Dashboard (Outgoing)</h2>
-            </div>
-
-            <div class="nav-drop-btns">
-                <h2 class="nav-drop-btns-txt">Dashboard (ER/OPD)</h2>
             </div>
 
             <div id="history-log-btn" class="nav-drop-btns">

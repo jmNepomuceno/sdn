@@ -46,10 +46,10 @@ $(document).ready(function(){
     if(running_bool === "true" || running_bool === true){
         loadContent('../php_2/incoming_form2.php')
     }else{
-        // loadContent('../php_2/default_view2.php')
+        loadContent('../php_2/default_view2.php')
         // loadContent('../php_2/patient_register_form2.php')
         // loadContent('php/opd_referral_form.php?type=OB&code=BGHMC-0001')
-        loadContent('../php_2/incoming_form2.php')
+        // loadContent('../php_2/incoming_form2.php')
         // loadContent('../php_2/bucas_queue.php')
         // loadContent('../php_2/bucas_history.php')
         // loadContent('../php_2/outgoing_form2.php')
@@ -245,6 +245,10 @@ $(document).ready(function(){
         }
     })
 
+    $('#nav-drop-account-div').on('mouseleave', function() {
+        $("#nav-drop-account-div").css("display" , "none")
+    });
+
     //welcome modal
     $('#closeModal').on('click' , function(event){
         $('#myModal').addClass('hidden')
@@ -366,6 +370,11 @@ $(document).ready(function(){
         document.getElementById('notif-sub-div').style.display = 'none'
     })
 
+    $('#notif-sub-div').on('mouseleave' , function(event){
+        $('#notif-sub-div').css('display' , 'none')
+        notif_sub_div_open = true
+    })
+
     // mikas
     // MIKAS3255
 
@@ -430,10 +439,16 @@ $(document).ready(function(){
         let width = $("#side-bar-div").width()
         if(width === 0){
             $('#side-bar-div').css("width", "250px")
-            $('#main-side-bar-1-subdiv').css("display", "none")
-            $('#main-side-bar-2-subdiv').css("display", "none")
+            $('#main-side-bar-1-subdiv').css("display", "flex")
+            $('#main-side-bar-2-subdiv').css("display", "flex")
 
             $('#main-div .aside-main-div #container').css("width", "87%")
+
+            $('.side-bar-navs-class').css('display' , 'flex')
+            $('#bgh-name').css('display' , 'block')
+            
+            $('#license-div').css('width' , '87%')
+
         }else{
             console.log('asdf')
             $('#side-bar-div').css("width", "0")
@@ -442,6 +457,12 @@ $(document).ready(function(){
             $('#main-side-bar-2-subdiv').css("display", "none")
 
             $('#main-div .aside-main-div #container').css("width", "100%")
+
+            $('.side-bar-navs-class').css('display' , 'none')
+            $('#bgh-name').css('display' , 'none')
+            
+
+            $('#license-div').css('width' , '100%')
         }
 
         // let  width = ((($("#side-bar-div").width() / $("#side-bar-div").parent().width()) * 100).toFixed(1)) + "%";

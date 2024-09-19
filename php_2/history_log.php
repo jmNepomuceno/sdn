@@ -9,9 +9,9 @@
         $user_name = $_SESSION['hospital_name'];
     }
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to='". $_SESSION['hospital_name'] ."'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND refer_to=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION['hospital_name']]);
     $incoming_num = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>

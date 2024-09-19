@@ -465,6 +465,11 @@
     font-size: 1.5rem;
 }
 
+.container .otp-modal-div #email-sent-div h3 #new-otp-sent-txt{
+    color:#ffff33;
+    opacity: 0.0;
+}
+
 .container .otp-modal-div #email-sent-div button{
     margin-right: 2%;
     font-size: 2rem;
@@ -554,6 +559,7 @@
     opacity: 0.5;
     pointer-events: none;
     border:none;
+    background: transparent;
 }
 
 .container .otp-modal-div #resend-otp-div #resend-otp-timer{

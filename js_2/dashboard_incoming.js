@@ -288,6 +288,44 @@ $('#notif-sub-div').on('click' , function(event){
     }
   })
 
+  $('#nav-drop-account-div').on('mouseleave', function() {
+    $("#nav-drop-account-div").css("display" , "none")
+  });
+
+  let notif_sub_div_open = true
+    $('#notif-div').on('click' , function(event){
+        console.log(notif_sub_div_open)
+
+        if(!notif_sub_div_open){
+            document.getElementById('notif-sub-div').style.display = 'none'
+            notif_sub_div_open = true
+        }else{
+            notif_sub_div_open = false
+            document.getElementById('notif-sub-div').style.display = 'flex'
+        }
+    })
+
+    $('#notif-sub-div').on('click' , function(event){
+        console.log('rofl')
+        if(parseInt($('#notif-span').text() === 0)){
+            $('#notif-circle').addClass('hidden')
+            document.getElementById("notif-sound").pause();
+            document.getElementById("notif-sound").currentTime = 0;
+        }else{
+            $('#notif-sub-div').addClass('hidden')
+            loadContent('../php_2/incoming_form2.php')
+            current_page = "incoming_page"
+            $('#current-page-input').val(current_page)
+        }
+
+        document.getElementById('notif-sub-div').style.display = 'none'
+    })
+
+    $('#notif-sub-div').on('mouseleave' , function(event){
+        $('#notif-sub-div').css('display' , 'none')
+        notif_sub_div_open = true
+    })
+
   $('#admin-module-btn').on('click' , function(event){
       event.preventDefault();
       window.location.href = "../php_2/admin.php";

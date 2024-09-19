@@ -220,9 +220,9 @@
     $dataPatType = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $dataPatType_json = json_encode($dataPatType);
 
-    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND referred_by='". $_SESSION['hospital_name'] ."'";
+    $sql = "SELECT COUNT(*) FROM incoming_referrals WHERE status='Pending' AND referred_by=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$_SESSION['hospital_name']]);
     $incoming_num = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>

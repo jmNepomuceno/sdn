@@ -21,6 +21,7 @@ $(document).ready(function(){
             success: function(response){
                 
                 if(response === 'verified'){
+                    clearInterval(timerInterval);
                     $('#myModal').modal('show');
                     // sdn_loading_modal_div.classList.remove('z-10')
                     // sdn_loading_modal_div.classList.add('hidden')
@@ -99,7 +100,6 @@ $(document).ready(function(){
 
             }
         })
-
     })
 
     window.addEventListener('beforeunload', function (event) {

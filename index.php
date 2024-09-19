@@ -126,7 +126,7 @@
         }
         //verification for admin user logged in
         else if($sdn_username == "admin" && $sdn_password == "admin"){
-            $_SESSION['hospital_code'] = '1437';
+            $_SESSION['hospital_code'] = '1111';
             $_SESSION['hospital_name'] = "Bataan General Hospital and Medical Center";
             $_SESSION['hospital_landline'] = '333-3333';
             $_SESSION['hospital_mobile'] = '3333-3333-333';
@@ -184,6 +184,9 @@
             $hpercode = " ";
             $action = 'online';
             $user_name = 'admin';
+
+            // echo $act_type . "---" . $_SESSION['hospital_code'] . "---" . $temp_date . "---" . $action . "---" . $pat_name  . "---" . $user_name ;
+
             $sql = "INSERT INTO history_log (hpercode, hospital_code, date, activity_type, action, pat_name, username) VALUES (?,?,?,?,?,?,?)";
             $stmt = $pdo->prepare($sql);
 
@@ -478,7 +481,7 @@
 
         <div class="otp-modal-div">
             <div id="email-sent-div">
-                <h3>OTP <span>Email sent</span></h3>
+                <h3>OTP <span>Email sent</span> <span id="new-otp-sent-txt"> - New OTP Email sent</span></h3>
                 <button id="sdn-otp-modal-btn-close" class="sdn-otp-modal-btn-close">X</button>
             </div>
             
