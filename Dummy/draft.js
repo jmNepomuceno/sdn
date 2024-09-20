@@ -50,7 +50,7 @@ function runTimer(index, sec, min, hrs) {
                 }
                 // console.log(data)
                 $.ajax({
-                    url: '../php_2/session_timer.php',
+                    url: '../SDN/session_timer.php',
                     method: "POST", 
                     data:data,
                     success: function(response){

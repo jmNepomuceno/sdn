@@ -362,14 +362,18 @@
     padding:0;
 }
 
+#pendingModal .modal-content .modal-header{
+    justify-content: space-between;
+}
+
 #pendingModal .modal-content .modal-header button{
-    background: #0587ca;
-    width:100px;
+    background: #198754;
+    width:300px;
     color:white;
-    border-radius: 0.125rem;
+    border-radius: 5px;
     /* text-align: center; */
     border:none;
-    margin-left:3%;
+    /* margin-left:3%; */
     font-size: 1.1rem;
     padding:0;
 }
@@ -441,6 +445,20 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+/* Specific scrollbar styling for the container */
+#pendingModal .modal-content .modal-body-incoming .container::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+
+#pendingModal .modal-content .modal-body-incoming .container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5); /* Set scrollbar color */
+    border-radius: 4px; /* Make the scrollbar rounded */
+}
+
+#pendingModal .modal-content .modal-body-incoming .container::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Set scrollbar track color */
 }
 
 
@@ -622,6 +640,11 @@
     align-items: center;
 
     border: 1px solid #c4cfd4;
+}
+
+#pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-b-2{
+    opacity: 0.2;
+    pointer-events: none;
 }
 
 #pendingModal .modal-content .modal-body-incoming .container .right-div #right-sub-div-b-2 textarea,
