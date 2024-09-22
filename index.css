@@ -284,6 +284,7 @@
     overflow-y: auto;
     margin-top:2%;
     /* display:none; */
+
 }
 
 .container .sub-content .sub-content-authorization-form{
@@ -293,11 +294,6 @@
     margin-top:2%;
 
     display:none;
-}
-
-.container .sub-content .sub-content-registration-form .reg-form-divs:nth-child(1),
-.container .sub-content .sub-content-authorization-form .autho-form-divs:nth-child(1){
-    margin-top:0;
 }
 
 .container .sub-content .sub-content-registration-form .reg-form-divs,
@@ -317,6 +313,16 @@
     -webkit-backdrop-filter: blur(10px);
     border:1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+}
+
+.container .sub-content .sub-content-registration-form .reg-form-divs:nth-child(1),
+.container .sub-content .sub-content-authorization-form .autho-form-divs:nth-child(1){
+    margin-top:0;
+}
+
+#reg-form-divs-1,
+#auth-form-divs-1{
+    margin-top: 0;
 }
 
 .container .sub-content .sub-content-registration-form .reg-form-divs .reg-labels,
@@ -359,9 +365,26 @@
 }
 
 
-.sub-content-registration-form::-webkit-scrollbar,
+/* .sub-content-registration-form::-webkit-scrollbar,
 .sub-content-authorization-form::-webkit-scrollbar {
     display: none;
+} */
+
+
+.container .sub-content .sub-content-registration-form::-webkit-scrollbar,
+.container .sub-content .sub-content-authorization-form::-webkit-scrollbar {
+    width: 8px; 
+}
+
+.container .sub-content .sub-content-registration-form::-webkit-scrollbar-thumb,
+.container .sub-content .sub-content-authorization-form::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5); 
+    border-radius: 4px; 
+}
+
+.container .sub-content .sub-content-registration-form::-webkit-scrollbar-track,
+.container .sub-content .sub-content-authorization-form::-webkit-scrollbar-track {
+    background-color: #f1f1f1; 
 }
 
 .container .sub-content .sub-content-registration-form .register-confirm-div,

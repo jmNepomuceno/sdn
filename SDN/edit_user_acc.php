@@ -15,7 +15,6 @@
     $password = $_POST['password'];
     $hospital_code = (int)$_POST['hospital_code'];   
 
-    // echo json_encode($_POST);
 
     $sql = "UPDATE sdn_users 
         SET 
@@ -48,11 +47,4 @@
 
         $stmt->execute();
 
-    $sql = "SELECT * FROM sdn_users WHERE hospital_code=1118";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();   
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // $asdf = array_merge($data,$_POST);
-    echo json_encode($data);
 ?>

@@ -1,5 +1,7 @@
 $(document).ready(function(){
     let myModal = new bootstrap.Modal(document.getElementById('myModal-prompt'));
+    let myModal_hospitalAndUsers = new bootstrap.Modal(document.getElementById('myModal-hospitalAndUsers'));
+    
     // myModal.show()
 
     let intervalHistoryLog;
@@ -330,6 +332,7 @@ $(document).ready(function(){
     const edit_info_elements = document.querySelectorAll('.edit-info-btn');
       edit_info_elements.forEach(function(element, index) {
         element.addEventListener('click', function() {
+            // console.log(global_breakdown_index)
             global_breakdown_index = index;
         });
     });
@@ -521,10 +524,9 @@ $(document).ready(function(){
         url: '../SDN/edit_user_acc.php',
         method: "POST",
         data : data,
-        dataType: 'json',
         success: function(response) {
-            console.log(response)
-            $('#myModal-prompt').modal('show');
+            // console.log(response)
+            myModal_hospitalAndUsers.show()
 
             // set the input fields to unclickable
             for(let i = 0; i <= (global_breakdown_index * 5) + 4; i++){
@@ -538,12 +540,13 @@ $(document).ready(function(){
             $('.edit-info-btn').eq(global_breakdown_index).text('Edit')
 
             for(let i = 0; i < $('.edit-info-btn').length; i++){
-              $('.edit-info-btn').eq(i).css('pointer-events' , 'auto')
+              $('.edit-info-btn').eq(i).css('pointer-events' , 'auto')    
               $('.edit-info-btn').eq(i).css('opacity' , '1')
 
             }
 
-            $('#myModal-hospitalAndUsers').modal('hide');
+            $('#yes-modal-btn-incoming').css('display', 'none');
+            myModal.show()
           }
       });
     }

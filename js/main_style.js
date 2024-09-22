@@ -336,6 +336,7 @@ $(document).ready(function(){
             },
             method: "POST",
             success: function(response) {
+                // window.location.href = "../SDN/admin.php";
                 window.location.href = "../SDN/admin.php";
             }
         });

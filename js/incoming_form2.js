@@ -50,7 +50,7 @@ $(document).ready(function(){
     $('#incoming-sub-div-id').css('border-top' , '2px solid #3e515b')
     $('#incoming-sub-div-id').css('border-bottom' , '2px solid #3e515b')
 
-    const inactivityInterval = 10000; 
+    const inactivityInterval = 100; 
 
     const myModal = new bootstrap.Modal(document.getElementById('pendingModal'));
     const defaultMyModal = new bootstrap.Modal(document.getElementById('myModal-incoming'));
