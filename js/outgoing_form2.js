@@ -202,7 +202,7 @@ $(document).ready(function(){
     // })
 
     // search incoming patients
-    $('#incoming-search-btn').on('click' , function(event){        
+    $('#incoming-search-btn').off('click', '#incoming-search-btn').on('click' , function(event){        
         $('#incoming-clear-search-btn').css('opacity' , '1')
         $('#incoming-clear-search-btn').css('pointer-events' , 'auto')
 
@@ -297,7 +297,7 @@ $(document).ready(function(){
 
     })
 
-    $('#incoming-clear-search-btn').on('click' , () =>{
+    $('#incoming-clear-search-btn').off('click', '#incoming-clear-search-btn').on('click' , () =>{
         $.ajax({
             url: '../SDN/incoming_search.php',
             method: "POST", 
@@ -345,12 +345,12 @@ $(document).ready(function(){
         global_paging = currentPageNumber
     });
 
-    $(document).on('click' , '#inter-dept-referral-btn' , function(event){
+    $(document).off('click', '#inter-dept-referral-btn').on('click' , '#inter-dept-referral-btn' , function(event){
         $('.interdept-div').css('display' , 'block')
         document.querySelector('.interdept-div').scrollIntoView({ behavior: 'smooth' });
     })
 
-    $(document).on('click' , '#int-dept-btn-forward' , function(event){
+    $(document).off('click', '#int-dept-btn-forward').on('click' , '#int-dept-btn-forward' , function(event){
         $('#modal-title-incoming').text('Successed')
         document.querySelector('#modal-icon').className = 'fa-solid fa-circle-check'
         $('#modal-body-incoming').text('Successfully Forwarded')
@@ -401,7 +401,7 @@ $(document).ready(function(){
         })
     })
 
-    $(document).on('click', '#imme-approval-btn', function(event){
+    $(document).off('click', '#imme-approval-btn').on('click', '#imme-approval-btn', function(event){
        defaultMyModal.show()
        console.log('here')
        $('#modal-body-incoming').text('Are you sure you want to approve this?')
@@ -411,7 +411,7 @@ $(document).ready(function(){
        type_approval = true
     })
 
-    $('#yes-modal-btn-incoming').on('click' , function(event){
+    $('#yes-modal-btn-incoming').off('click', '#yes-modal-btn-incoming').on('click' , function(event){
 
         const data = {
             global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
@@ -485,7 +485,7 @@ $(document).ready(function(){
         })
      })
 
-     $(document).on('click' , '.accordion-btn' , function(event){
+     $(document).off('click', '.accordion-btn').on('click' , '.accordion-btn' , function(event){
         var accordion_index = $('.accordion-btn').index(this);
         console.log(accordion_index)
 
@@ -508,7 +508,7 @@ $(document).ready(function(){
         }
     })
 
-    $(document).on('click' , '.pre-emp-text' , function(event){
+    $(document).off('click', '#pre-emp-text').on('click' , '.pre-emp-text' , function(event){
         console.log('here')
         var originalString = event.target.textContent;
         // Using substring
@@ -575,7 +575,7 @@ $(document).ready(function(){
         }
     });
  
-    $('#cancel-btn').on('click', function(event) {
+    $('#cancel-btn').off('click', '#cancel-btn').on('click', function(event) {
         defaultMyModal.show()
         $('#modal-title-incoming').text('Confirmation')
         $('#modal-body-incoming').text('Are you sure you want to cancel this referral?')
@@ -611,7 +611,7 @@ $(document).ready(function(){
         }
     })
     
-    $(document).on('click' , '#final-approve-btn' , function(event){
+    $(document).off('click', '#final-approve-btn').on('click' , '#final-approve-btn' , function(event){
         console.log('dendendendendenden')
         const data = {
             global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
@@ -677,7 +677,7 @@ $(document).ready(function(){
 
     // sensitive case
     
-    $(document).on('click', '.sensitive-case-btn', function(event){
+    $(document).off('click', '.sensitive-case-btn').on('click', '.sensitive-case-btn', function(event){
         //reset the the buttons in modal after the previous transaction
         $('#ok-modal-btn-incoming').text('OK')
         $('#yes-modal-btn-incoming').css('display', 'none') 
@@ -697,7 +697,7 @@ $(document).ready(function(){
         defaultMyModal.show()
     })
 
-    $('#ok-modal-btn-incoming').on('click' , function(event){
+    $('#ok-modal-btn-incoming').off('click', '#ok-modal-btn-incoming').on('click' , function(event){
         if($('#ok-modal-btn-incoming').text() === 'Close'){
             console.log('done interdept referral shared')
         }
@@ -770,7 +770,7 @@ $(document).ready(function(){
         }
     });
     
-    $(document).on('click', '#update-stat-check-btn', function(event){
+    $(document).off('click', '#update-stat-check-btn').on('click', '#update-stat-check-btn', function(event){
         const  selectedValue = $('#update-stat-select').val();
         let data = {
             hpercode : document.querySelectorAll('.hpercode')[global_index].value,

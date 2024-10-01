@@ -21,6 +21,11 @@
         array_push($classification_arr, $data[$i]['classifications']);
     }
 
+    $sql = "SELECT COUNT(*) FROM doctors_list WHERE hospital_code=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$_SESSION['hospital_code']]);
+    $doctors_list = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -903,6 +908,30 @@
         </div>  
     </div>
 
+    <div class="modal fade" id="myModal_prompt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-sub">
+                    <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Warning</h5>
+                    <i id="modal-icon" class="fa-solid fa-triangle-exclamation"></i>
+                    <!-- <i class="fa-solid fa-circle-check"></i> -->
+                </div>
+                <button type="button" class="close text-3xl" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                Fill in first the Referring Doctors List
+            </div>
+            <div class="modal-footer">
+                <button id="ok-modal-btn" type="button" data-bs-dismiss="modal">OK</button>
+                <button id="redirect-modal-btn" type="button" data-bs-dismiss="modal">Redirect</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
     <div id="stopwatch-sub-div" style="display:none">
         Processing: <span class="stopwatch"></span>
     </div>
@@ -913,7 +942,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <script src="../js/patient_register_form2.js?v=<?php echo time(); ?>"></script>
-    <script src="../js/search_name_2.js?v=<?php echo time(); ?>"></script>    
+    <script src="../js/search_name_2.js?v=<?php echo time(); ?>"></script>
+
+    <script>
+        var doctor_list = <?php echo $doctors_list['COUNT(*)']; ?>
+    </script>
 </body>
 </html>
 

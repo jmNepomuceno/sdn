@@ -22,8 +22,8 @@ $(document).ready(function(){
     // patHistoryModal
     const patHistoryModal = new bootstrap.Modal(document.getElementById('patHistoryModal'));
     let patRegModal = new bootstrap.Modal(document.getElementById('myModal_pat_reg'));
-    
-    // patHistoryModal.show()
+    let prompt_modal = new bootstrap.Modal(document.getElementById('myModal_prompt'));
+    // prompt_modal.show()
 
     // loadContent('php/opd_referral_form.php?type=' + $('#tertiary-case').val() + "&code=" + $('#hpercode-input').val())
     // loadContent('../SDN/referral_form.php?type="OB"&code="BGHMC-0058"')
@@ -52,7 +52,7 @@ $(document).ready(function(){
     let zero_inputs = 0;
     let data;
 
-    $('#same-as-perma-btn').on('click' , function(event){
+    $('#same-as-perma-btn').off('click', '#same-as-perma-btn').on('click' , function(event){
         document.querySelector('#hperson-house-no-ca').value = document.querySelector('#hperson-house-no-pa').value
         document.querySelector('#hperson-street-block-ca').value = document.querySelector('#hperson-street-block-pa').value
         document.querySelector('#hperson-region-select-ca').value = document.querySelector('#hperson-region-select-pa').value
@@ -102,7 +102,7 @@ $(document).ready(function(){
     })
 
 
-    $('#add-patform-btn-id').on('click' , function(event){
+    $('#add-patform-btn-id').off('click', '#add-patform-btn-id').on('click' , function(event){
         event.preventDefault();
 
         if($('#add-patform-btn-id').text() == 'Add'){
@@ -151,7 +151,7 @@ $(document).ready(function(){
         }
     })
 
-    $('#clear-patform-btn-id').on('click' , function(event){
+    $('#clear-patform-btn-id').off('click', '#clear-patform-btn-id').on('click' , function(event){
         if($('#clear-patform-btn-id').text() == "Cancel"){
             $('#modal-body').text('Are you sure you want to cancel the Referral?')
             $('#ok-modal-btn').text('No')
@@ -179,7 +179,7 @@ $(document).ready(function(){
         
     })
 
-    $('#yes-modal-btn').on('click' , function(event){
+    $('#yes-modal-btn').off('click', '#yes-modal-btn').on('click' , function(event){
         // console.log($('#yes-modal-btn').val())
         if($('#yes-modal-btn').text() == 'Yes'){
             console.log('den')
@@ -448,12 +448,17 @@ $(document).ready(function(){
             
         }
         else if($('#yes-modal-btn').text() == 'Confirm'){
-            console.log($('#tertiary-case').val())
-            loadContent('../SDN/referral_form.php?type=' + $('#tertiary-case').val() + "&code=" + $('#hpercode-input').val())
+            // check if may laman yung mga referring doctor
+            console.log(doctor_list)
+            if(doctor_list > 0){
+                loadContent('../SDN/referral_form.php?type=' + $('#tertiary-case').val() + "&code=" + $('#hpercode-input').val())
+            }else{
+
+            }
         }
     })
 
-    $('#ok-modal-btn').on('click' , function(event){
+    $('#ok-modal-btn').off('click', '#ok-modal-btn').on('click' , function(event){
         // if($('#ok-modal-btn').text() == 'No' && $('#clear-patform-btn-id').text() == "Cancel"){
         //     console.log("den")
         //     $('#add-patform-btn-id').removeClass('hidden')
@@ -469,6 +474,9 @@ $(document).ready(function(){
         // }
     })
     
+    $('#redirect-modal-btn').off('click', '#redirect-modal-btn').on('click' , () =>{
+        window.location.href = "../SDN/setting.php";
+    })
 
     // let classification_dd_counter = true
     // $('#classification-dropdown').on('click' , function(event){
@@ -518,7 +526,7 @@ $(document).ready(function(){
       });
 
       var checkPatientRegUniq_var;
-      $('#check-pat-registration-btn').on('click' , function() {
+      $('#check-pat-registration-btn').off('click', '#check-pat-registration-btn').on('click' , function() {
         $('#searching-btn').css('display','block')
 
         setTimeout(() => {
@@ -550,7 +558,7 @@ $(document).ready(function(){
         }, 2000);
       });
 
-    $('#data-found-btn').on('click' , function() {
+    $('#data-found-btn').off('click', '#data-found-btn').on('click' , function() {
         console.log('data-found')
         
         var parentElement = document.querySelector('#hperson-province-select-pa');

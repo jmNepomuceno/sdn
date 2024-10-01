@@ -142,7 +142,7 @@
                     </div>
                 <?php } ?>
 
-                <div class="nav-drop-btns">
+                <div class="nav-drop-btns" id="setting-btn">
                     <h2 class="nav-drop-btns-txt">Settings</h2>
                 </div>
 
@@ -203,7 +203,7 @@
 
                         <?php if($_SESSION['user_name'] === 'admin'){?>
                         <!-- bucas referral with badge -->
-                        <div id="bucasPending-sub-div-id" class="side-bar-navs-class">
+                        <div id="bucasPending-sub-div-id" class="side-bar-navs-class" style="display:none;">
                             <i class="fa-solid fa-inbox"></i>
                             <h3>BUCAS (Incoming)</h3>
                             <span id="badge" class="position-absolute top-80 start-80 translate-middle badge rounded-pill bg-danger" style="left:30px;">

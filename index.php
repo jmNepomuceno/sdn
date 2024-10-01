@@ -329,7 +329,7 @@
                     <input id="sdn-hospital-name" type="text" class="reg-inputs form-control" required autocomplete="off">
                 </div>
 
-                <div class="reg-form-divs">
+                <div class="reg-form-divs" id="auth-form-divs-1">
                     <label for="" class="reg-labels">Hospital Code<span>*</span></label>
                     <input id="sdn-hospital-code" type="number" class="reg-inputs form-control" required autocomplete="off">
                 </div>
@@ -417,7 +417,7 @@
             <form class="sub-content-authorization-form">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
                             
-                <div class="autho-form-divs" id="auth-form-divs-1">
+                <div class="autho-form-divs">
                     <label for="" class="reg-labels">Hospital Code<span>*</span></label>
                     <input id="sdn-autho-hospital-code-id" type="number" class="reg-inputs form-control" autocomplete="off">
                 </div>

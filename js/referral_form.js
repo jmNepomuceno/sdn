@@ -1,6 +1,7 @@
 $(document).ready(function(){
     const myModal = new bootstrap.Modal(document.getElementById('myModal-referral'));
-
+    var selectedValue_doctor = ""
+    
     const loadContent = (url) => {
         $.ajax({
             url:url,
@@ -10,6 +11,16 @@ $(document).ready(function(){
             }
         })
     }
+
+    $("#referring-doctor-select").change(function() {
+        // Get the selected value using val()
+        selectedValue_doctor = $(this).val();
+  
+        // Display the selected value
+        console.log(selectedValue_doctor)
+    });
+
+
     $('#submit-referral-btn-id').on('click' , function(event){
         var selectedValue = $('input[name="sensitive"]:checked').val();
         console.log(selectedValue)
@@ -39,7 +50,8 @@ $(document).ready(function(){
                     sensitive_case : $('input[name="sensitive_case"]:checked').val(),
                     phic_member : $('#phic-member-select').val(),
                     transport : $('#transport-select').val(),
-                    referring_doc : $('#referring-doc-input').val(),
+                    // referring_doc : $('#referring-doc-input').val(),
+                    referring_doc : selectedValue_doctor,
     
                     complaint_history_input : $('#complaint-history-input').val(),
                     reason_referral_input : $('#reason-referral-input').val(),
@@ -63,8 +75,9 @@ $(document).ready(function(){
                     parent_guardian : $('#parent-guard-input').val(),
                     phic_member : $('#phic-member-select').val(),
                     transport : $('#transport-select').val(),
-                    referring_doc : $('#referring-doc-input').val(),
-    
+                    // referring_doc : $('#referring-doc-input').val(),
+                    referring_doc : selectedValue_doctor,
+
                     complaint_history_input : $('#complaint-history-input').val(),
                     reason_referral_input : $('#reason-referral-input').val(),
                     diagnosis : $('#diagnosis').val(),

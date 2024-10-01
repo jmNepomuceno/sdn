@@ -49,8 +49,8 @@ $(document).ready(function(){
     $('#incoming-sub-div-id').css('opacity' , '1')
     $('#incoming-sub-div-id').css('border-top' , '2px solid #3e515b')
     $('#incoming-sub-div-id').css('border-bottom' , '2px solid #3e515b')
-
-    const inactivityInterval = 100; 
+    // try and error
+    const inactivityInterval = 10000;
 
     const myModal = new bootstrap.Modal(document.getElementById('pendingModal'));
     const defaultMyModal = new bootstrap.Modal(document.getElementById('myModal-incoming'));
@@ -72,7 +72,8 @@ $(document).ready(function(){
     for(let i = 0; i < length_curr_table; i++){
         toggle_accordion_obj[i] = true
     }
-    
+
+1    
     // activity/inactivity user
     let inactivityTimer;
     let running_timer_interval = "", running_timer_interval_update;
@@ -176,7 +177,7 @@ $(document).ready(function(){
         })
     }
 
-
+    
     // for interdepartamental module. Whenever the first current referral is already pending on interdept, the next referral will be availabe to process.
     function enabledNextReferral(){
         // check the status of the referrals to get the index of the next referral to be enable
@@ -222,8 +223,9 @@ $(document).ready(function(){
             }, 
             // dataType : "JSON",
             success: function(response) {
+                // console.log(response)
                 console.log('fetched')
-                // console.log(response.length)
+                // console.log(dataTable.rows({ filter: 'applied' }).data().length)
 
                 dataTable.clear();
                 dataTable.rows.add($(response)).draw();
@@ -233,7 +235,7 @@ $(document).ready(function(){
                     toggle_accordion_obj[i] = true
                 }
 
-
+                
                 const expand_elements = document.querySelectorAll('.accordion-btn');
                     expand_elements.forEach(function(element, index) {
                     element.addEventListener('click', function() {
@@ -284,6 +286,12 @@ $(document).ready(function(){
     } 
 
     startInactivityTimer();
+
+    $(document).on("visibilitychange", function() {
+        if (document.hidden) {
+            startInactivityTimer();
+        }
+    });
 
     const ajax_method = (index, event) => {
         console.log(250)
@@ -526,6 +534,7 @@ $(document).ready(function(){
                 }else{
                     console.log('asdf')
                     if (global_paging === 1) {
+                        console.log(formatTime(elapsedTime))
                         document.querySelectorAll('.stopwatch')[0].textContent = formatTime(elapsedTime);
                     }
                 }
@@ -630,7 +639,7 @@ $(document).ready(function(){
     })
 
     // search incoming patients
-    $('#incoming-search-btn').on('click' , function(event){        
+    $('#incoming-search-btn').off('click', '#incoming-search-btn').on('click' , function(event){        
 
         let valid_search = false;
         let elements = [$('#incoming-referral-no-search').val(), $('#incoming-last-name-search').val(), $('#incoming-first-name-search').val(),
@@ -734,7 +743,7 @@ $(document).ready(function(){
 
     })
 
-    $('#incoming-clear-search-btn').on('click' , () =>{
+    $('#incoming-clear-search-btn').off('click', '#incoming-clear-search-btn').on('click' , () =>{
         $.ajax({
             url: '../SDN/incoming_search.php',
             method: "POST", 
@@ -792,12 +801,12 @@ $(document).ready(function(){
     }
 
 
-    $(document).on('click' , '#inter-dept-referral-btn' , function(event){
+    $(document).off('click', '#inter-dept-referral-btn').on('click' , '#inter-dept-referral-btn' , function(event){
         $('.interdept-div').css('display' , 'block')
         document.querySelector('.interdept-div').scrollIntoView({ behavior: 'smooth' });
     })
 
-    $(document).on('click' , '#int-dept-btn-forward' , function(event){
+    $(document).off('click', '#int-dept-btn-forward').on('click' , '#int-dept-btn-forward' , function(event){
         $('#modal-title-incoming').text('Successed')
         document.querySelector('#modal-icon').className = 'fa-solid fa-circle-check'
         $('#modal-body-incoming').text('Successfully Forwarded')
@@ -848,7 +857,7 @@ $(document).ready(function(){
         })
     })
 
-    $(document).on('click', '#imme-approval-btn', function(event){
+    $(document).off('click', '#imme-approval-btn').on('click', '#imme-approval-btn', function(event){
        defaultMyModal.show()
        console.log('here')
        $('#modal-body-incoming').text('Are you sure you want to approve this?')
@@ -858,15 +867,38 @@ $(document).ready(function(){
        type_approval = true
     })
 
-    $('#yes-modal-btn-incoming').on('click' , function(event){
+    $(document).off('click', '#imme-defer-btn').on('click', '#imme-defer-btn', function(event){
+        defaultMyModal.show()
+        console.log('here')
+        $('#modal-body-incoming').text('Are you sure you want to defer this?')
+        $('#modal-title-incoming').text('Confimation')
+        $('#ok-modal-btn-incoming').text('No')
+        $('#yes-modal-btn-incoming').css('display', 'block')
+        type_approval = true
+     })
 
-        const data = {
-            global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
-            timer : global_timer,
-            approve_details : $('#eraa').val(),
-            case_category : $('#approve-classification-select').val(),
-            action : 'Approve', // approve or deferr
-            type_approval : type_approval
+    // imme-defer-btn
+
+    $('#yes-modal-btn-incoming').off('click', '#yes-modal-btn-incoming').on('click' , function(event){
+        let data = {}
+        if($('#imme-approval-btn').css('display') === 'flex'){
+            data = {
+                global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
+                timer : global_timer,
+                approve_details : $('#eraa').val(),
+                case_category : $('#approve-classification-select').val(),
+                action : 'Approve', // approve or deferr
+                type_approval : type_approval
+            }
+        }else{
+            data = {
+                global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
+                timer : global_timer,
+                approve_details : $('#eraa').val(),
+                case_category : "",
+                action : 'Defer', // approve or deferr
+                type_approval : type_approval
+            }
         }
 
         console.log(data);
@@ -939,7 +971,7 @@ $(document).ready(function(){
         })
      })
 
-     $(document).on('click' , '.accordion-btn' , function(event){
+     $(document).off('click', '.accordion-btn').on('click' , '.accordion-btn' , function(event){
         var accordion_index = $('.accordion-btn').index(this);
         console.log(accordion_index)
 
@@ -1009,15 +1041,17 @@ $(document).ready(function(){
     
 
     $(document).on('input' , '#eraa' , function(event) {
-        console.log(1012)
         if ($('#approve-classification-select').val() !== '' && $('#eraa').val().length > 20) {
             $('#imme-approval-btn').css('opacity' , '1')
             $('#imme-approval-btn').css('pointer-events' , 'auto')
 
             $('#inter-dept-referral-btn').css('opacity' , '1')
             $('#inter-dept-referral-btn').css('pointer-events' , 'auto')
-        }else{
-            
+        }
+
+        if($('#imme-approval-btn').css('display') === 'none' && $('#eraa').val().length > 10){
+            $('#imme-defer-btn').css('opacity' , '1')
+            $('#imme-defer-btn').css('pointer-events' , 'auto')
         }
     });
 
@@ -1032,14 +1066,14 @@ $(document).ready(function(){
     //     }
     // });
  
-    $('#cancel-btn').on('click', function(event) {
+    $('#cancel-btn').off('click', '#cancel-btn').on('click', function(event) {
         defaultMyModal.show()
         $('#modal-title-incoming').text('Confirmation')
         $('#modal-body-incoming').text('Are you sure you want to cancel this referral?')
         clearInterval(running_timer_interval_update)
     });
 
-    $(document).on('click' , '#proceed-ref-res' , function(event){
+    $(document).off('click', '#proceed-ref-res').on('click' , '#proceed-ref-res' , function(event){
         document.getElementById('right-sub-div-b-1').scrollIntoView({ behavior: 'smooth' });
         // right-sub-div-b-1
     })
@@ -1103,7 +1137,7 @@ $(document).ready(function(){
         }
     })
     
-    $(document).on('click' , '#final-approve-btn' , function(event){
+    $(document).off('click', '#final-approve-btn').on('click' , '#final-approve-btn' , function(event){
         console.log('dendendendendenden')
         const data = {
             global_single_hpercode : document.querySelectorAll('.hpercode')[global_index].value,
@@ -1177,8 +1211,10 @@ $(document).ready(function(){
 
     // sensitive case
     
-    $(document).on('click', '.sensitive-case-btn', function(event){
+    $(document).off('click', '.sensitive-case-btn').on('click', '.sensitive-case-btn', function(event){
         //reset the the buttons in modal after the previous transaction
+        console.log("den")
+
         $('#ok-modal-btn-incoming').text('OK')
         $('#yes-modal-btn-incoming').css('display', 'none') 
 
@@ -1197,7 +1233,7 @@ $(document).ready(function(){
         defaultMyModal.show()
     })
 
-    $('#ok-modal-btn-incoming').on('click' , function(event){
+    $('#ok-modal-btn-incoming').off('click', '#ok-modal-btn-incoming').on('click' , function(event){
         if($('#ok-modal-btn-incoming').text() === 'Close'){
             console.log('done interdept referral shared')
         }
@@ -1211,7 +1247,7 @@ $(document).ready(function(){
                     }
                 }
             }
-            
+            console.log(mcc_passwords_validity)
             if (mcc_passwords_validity) {
                 let sensitive_hpercode = document.querySelectorAll('.sensitive-hpercode')
 
@@ -1277,6 +1313,7 @@ $(document).ready(function(){
             newStatus : selectedValue
         }
         console.log(data)
+
         $.ajax({
             url: '../SDN/update_referral_status.php',
             method: "POST",

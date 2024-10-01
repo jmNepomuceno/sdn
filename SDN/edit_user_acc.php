@@ -15,7 +15,6 @@
     $password = $_POST['password'];
     $hospital_code = (int)$_POST['hospital_code'];   
 
-
     $sql = "UPDATE sdn_users 
         SET 
             user_lastname = :last_name, 
@@ -46,5 +45,4 @@
         $stmt->bindParam(':prev_password', $prev_password, PDO::PARAM_STR);
 
         $stmt->execute();
-
 ?>

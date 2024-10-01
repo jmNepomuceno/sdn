@@ -46,7 +46,8 @@
         $others = true;
     } 
 
-    if(!empty($status)){
+    if($status != "default" && $status!="All"){
+        $conditions[] = "status = '" . $status . "'";
         $others = false;
     }
 

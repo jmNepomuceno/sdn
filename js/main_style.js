@@ -336,10 +336,13 @@ $(document).ready(function(){
             },
             method: "POST",
             success: function(response) {
-                // window.location.href = "../SDN/admin.php";
                 window.location.href = "../SDN/admin.php";
             }
         });
+    })
+
+    $('#setting-btn').on('click' , function(event){
+        window.location.href = "../SDN/setting.php";
     })
 
     let notif_sub_div_open = true

@@ -64,12 +64,10 @@
             $others = true;
         } 
 
-        if(!empty($status) && $status!="All"){
+        if($status != "default" && $status!="All"){
             $conditions[] = "status = '" . $status . "'";
             $others = false;
         }
-
-        
 
         if (count($conditions) > 0) {
             $sql .= implode(" AND ", $conditions);
@@ -371,6 +369,10 @@
                 $row['approved_time'] = "0000-00-00 00:00:00";
             }
 
+            if($row['deferred_time'] === ""){
+                $row['deferred_time'] = "0000-00-00 00:00:00";
+            }
+
             if($interdept_time[0]['final_progress_time'] == ""){
                 $interdept_time[0]['final_progress_time'] = "00:00:00";
             }
@@ -427,7 +429,7 @@
                                 <p class="interdept-proc-time-lbl"> Interdept Processed: '. $interdept_time[0]['final_progress_time'].'</p>
                                 <p class="processed-time-lbl"> Total Processed: '.$total_time.'  </p>  
                                 <p> Approval: '.$row['approved_time'] .'  </p>  
-                                <p> Deferral: 0000-00-00 00:00:00  </p>  
+                                <p> Deferral: '.  $row['deferred_time'] .'  </p>  
                                 <p> Cancelled: 0000-00-00 00:00:00  </p>  
                                 <p> Arrived: 0000-00-00 00:00:00  </p>  
                                 <p> Checked: 0000-00-00 00:00:00  </p>  

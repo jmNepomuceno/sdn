@@ -30,12 +30,17 @@
     $hospital_names = $data;
 
     $date_today =  date("Y-m-d H:i:s");
-
+    
     //get age
     $sql = "SELECT pat_age FROM hperson WHERE hpercode=?;";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$code]);
     $pat_age_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $sql = "SELECT last_name, first_name, middle_name FROM doctors_list WHERE hospital_code=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$_SESSION['hospital_code']]);
+    $doctors_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -138,21 +143,17 @@
                     
                     <div class="left-sub-div-1">
                         <label>Referring Doctor <span>*</span></label>
-                        <!-- <select class="rounded-md w-[100%] border-2  border-[#bfbfbf] outline-none">
+                        <select class="form-control" id="referring-doctor-select">
                             <option value="Disabled Selected">Select</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                            <option value="John Marvin Nepomuceno"> John Marvin Nepomuceno</option>
-                        </select> -->
+                            <?php for($i = 0; $i < count($doctors_list); $i++){ ?>
+                                <!-- <option class="cursor-pointer" value=<?php echo strtolower($classification_arr[$i]) ?>><?php echo $classification_arr[$i] ?></option> -->
+                                <option value="<?php echo $doctors_list[$i]['last_name'] . ', ' . $doctors_list[$i]['first_name'] . ' ' . $doctors_list[$i]['middle_name'] ?>">
+                                    <?php echo $doctors_list[$i]['last_name'] . ', ' . $doctors_list[$i]['first_name'] . ' ' . $doctors_list[$i]['middle_name'] ?>
+                                </option>
+                            <?php }?>
+                        </select>
 
-                        <input class="form-control" id="referring-doc-input" type="textbox">
+                        <!-- <input class="form-csontrol" id="referring-doc-input" type="textbox"> -->
                     </div>
 
                     <div class="left-sub-div-2">

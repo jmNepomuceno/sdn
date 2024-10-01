@@ -4,6 +4,14 @@ $(document).ready(function(){
   //----------------------------------------------------------------------------
   $('#total-processed-refer').text($('#total-processed-refer-inp').val())
   console.log($('#total-processed-refer-inp').val())
+
+  const stopSound = () =>{
+    let audio = document.getElementById("notif-sound")
+    audio.pause;
+    audio.muted = true;
+    audio.currentTime = 0;
+  }
+  
   const playAudio = () =>{
     let audio = document.getElementById("notif-sound")
     audio.muted = false;
