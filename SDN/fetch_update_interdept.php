@@ -12,7 +12,7 @@
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $sql = 'SELECT curr_time, department, final_progress_time, final_progress_date FROM incoming_interdept WHERE hpercode=:hpercode';
+    $sql = 'SELECT hpercode,curr_time, department, final_progress_time, final_progress_date, approved_by, rejected_by FROM incoming_interdept WHERE hpercode=:hpercode';
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':hpercode', $hpercode, PDO::PARAM_STR);
     $stmt->execute();

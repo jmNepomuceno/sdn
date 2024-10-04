@@ -68,12 +68,16 @@ $(document).ready(function(){
     let running = false;
     let requestId;
     let lastLoggedSecond = 0;
+    let rejection_data = {
+
+    }
+    let refer_again_bool = false
 
     for(let i = 0; i < length_curr_table; i++){
         toggle_accordion_obj[i] = true
     }
 
-1    
+
     // activity/inactivity user
     let inactivityTimer;
     let running_timer_interval = "", running_timer_interval_update;
@@ -94,7 +98,6 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(response){
                 clearInterval(running_timer_interval_update)
-                console.log(response)
 
                 if(response[0]['status_interdept'] === "Pending"){
                     $('#span-dept').text(response[1].department.toUpperCase() + " | ")
@@ -143,8 +146,8 @@ $(document).ready(function(){
                         }, 1000); 
                     }
                 }
-                else if(response[0]['status_interdept'] === "Approved"){
-                    console.log('107')
+                else if(response[0]['status_interdept'] === "Approved" || response[0]['status_interdept'] === "Rejected"){
+                    console.log(response)
                     $('#v2-update-stat').text(`Last update: ${response[1]['final_progress_date']}`)
 
                     // <label for="" id="v2-stat"> <span id="span-dept">Surgery</span> - <span id="span-status">Pending</span> - <span id="span-time">00:00:00</span></span></label>
@@ -170,9 +173,24 @@ $(document).ready(function(){
                     
                     // console.log(result);
                     final_time_total = result
-                    $('#final-approve-btn').css('display','block')
-                }
-                
+
+                    if(response[0]['status_interdept'] === "Approved"){
+                        $('#final-approve-btn').css('display','block')
+                        $('#refer-again-btn').css('display','none')
+                    }else{
+                        $('#final-approve-btn').css('display','none')
+                        $('#refer-again-btn').css('display','block')
+
+                        rejection_data = {
+                            department : response[1]['department'],                                                                      
+                            hpercode : response[1]['hpercode'],                                                                      
+                            rejected_by : response[1]['rejected_by'],                                                                      
+                            rejected_time : response[1]['curr_time'],                                                                      
+                            rejected_date : response[1]['final_progress_date'],
+                            action : "Add"
+                        }
+                    }
+                }      
             }
         })
     }
@@ -188,7 +206,6 @@ $(document).ready(function(){
             if (str && typeof str === 'string') {
                 hasTwoSpaces = str.match(/^[^\s]*\s[^\s]*\s[^\s]*$/);; // Check if the string contains two consecutive spaces
                 if (hasTwoSpaces) {
-                    console.log(hasTwoSpaces)
                     next_referral_index_table = i;
 
                     if(next_referral_index_table >= 0 && next_referral_index_table + 1 < document.querySelectorAll('.tr-incoming').length){
@@ -822,42 +839,124 @@ $(document).ready(function(){
             approve_details : $('#eraa').val(),
             case_category : $('#approve-classification-select').val(),
         }
-        console.log(data)
 
-        $.ajax({
-            url: '../SDN/incoming_interdept.php',
-            method: "POST", 
-            data:data,
-            dataType: "JSON",
-            success: function(response){
-                console.log(response)
+        // check first if the current interdept is already rejected from the other department and ready for referral again
+        if(refer_again_bool){
+            rejection_data['action'] = "Check"
+            console.log(846)
 
-                $('.interdept-div').css('display','none')
-                $('#cancel-btn').css('display','block')
-                $('.approval-main-content').css('display','none')
+            $.ajax({
+                url: '../SDN/reject_interdept.php',
+                method: "POST", 
+                data:rejection_data,
+                dataType : "json",
+                success: function(response){ 
+                    console.log(response)
+                    response_value = response
+                    
+                    if(response){
+                        let timeString = response['sent_interdept_time'];
+                        let additionalSeconds = response['rejected_time']
 
-                runTimer().stop()
-                runTimer().reset()
-                // clearInterval(running_timer_interval)
-                
-                document.querySelectorAll('.pat-status-incoming')[global_index].textContent = 'Pending - ' + $('#inter-depts-select').val().toUpperCase();
+                        // Split the time string into hours, minutes, and seconds
+                        let parts = timeString.split(':');
+                        let hours = parseInt(parts[0], 10) * 3600; // Convert hours to seconds
+                        let minutes = parseInt(parts[1], 10) * 60; // Convert minutes to seconds
+                        let seconds = parseFloat(parts[2]);        // Keep seconds as is
 
-                // enable the second request on the table while waiting for the current request that is on interdepartment already
-                // document.querySelectorAll('.tr-incoming').
-                myModal.hide()
+                        // Calculate total seconds (use Math.floor to round down to whole seconds)
+                        let totalSeconds = Math.floor(hours + minutes + seconds + parseFloat(additionalSeconds));
 
-                // reset the value of approval details
-                const selectElement = document.getElementById('approve-classification-select');
-                selectElement.value = '';
-                selectElement.value = selectElement.options[0].value;
-                $('#eraa').val("")
+                        // Extract hours, minutes, and seconds from totalSeconds
+                        let newHours = Math.floor(totalSeconds / 3600);
+                        let newMinutes = Math.floor((totalSeconds % 3600) / 60);
+                        let newSeconds = totalSeconds % 60;
 
-                enabledNextReferral()
-            }
-        })
+                        // Format the result back to HH:MM:SS format (without milliseconds)
+                        let result = [
+                            newHours.toString().padStart(2, '0'),
+                            newMinutes.toString().padStart(2, '0'),
+                            newSeconds.toString().padStart(2, '0')
+                        ].join(':');
+
+                        data['pause_time'] = result
+                        $.ajax({
+                            url: '../SDN/incoming_interdept.php',
+                            method: "POST", 
+                            data:data,
+                            dataType: "JSON",
+                            success: function(response){
+                                console.log(response)
+
+                                $('.interdept-div').css('display','none')
+                                $('#cancel-btn').css('display','block')
+                                $('.approval-main-content').css('display','none')
+
+                                runTimer().stop()
+                                runTimer().reset()
+                                // clearInterval(running_timer_interval)
+                                
+                                document.querySelectorAll('.pat-status-incoming')[global_index].textContent = 'Pending - ' + $('#inter-depts-select').val().toUpperCase();
+
+                                // enable the second request on the table while waiting for the current request that is on interdepartment already
+                                // document.querySelectorAll('.tr-incoming').
+                                myModal.hide()
+
+                                // reset the value of approval details
+                                const selectElement = document.getElementById('approve-classification-select');
+                                selectElement.value = '';
+                                selectElement.value = selectElement.options[0].value;
+                                $('#eraa').val("")
+
+                                enabledNextReferral()
+                            }
+                        })
+
+                    }
+                }
+            })
+
+            
+        }
+
+        else{
+            console.log(923)
+            // $.ajax({
+            //     url: '../SDN/incoming_interdept.php',
+            //     method: "POST", 
+            //     data:data,
+            //     dataType: "JSON",
+            //     success: function(response){
+            //         console.log(response)
+    
+            //         $('.interdept-div').css('display','none')
+            //         $('#cancel-btn').css('display','block')
+            //         $('.approval-main-content').css('display','none')
+    
+            //         runTimer().stop()
+            //         runTimer().reset()
+            //         // clearInterval(running_timer_interval)
+                    
+            //         document.querySelectorAll('.pat-status-incoming')[global_index].textContent = 'Pending - ' + $('#inter-depts-select').val().toUpperCase();
+    
+            //         // enable the second request on the table while waiting for the current request that is on interdepartment already
+            //         // document.querySelectorAll('.tr-incoming').
+            //         myModal.hide()
+    
+            //         // reset the value of approval details
+            //         const selectElement = document.getElementById('approve-classification-select');
+            //         selectElement.value = '';
+            //         selectElement.value = selectElement.options[0].value;
+            //         $('#eraa').val("")
+    
+            //         enabledNextReferral()
+            //     }
+            // })
+        }
+        
     })
 
-    $(document).off('click', '#imme-approval-btn').on('click', '#imme-approval-btn', function(event){
+    $('#pendingModal').off('click', '#imme-approval-btn').on('click', '#imme-approval-btn', function(event){
        defaultMyModal.show()
        console.log('here')
        $('#modal-body-incoming').text('Are you sure you want to approve this?')
@@ -867,7 +966,7 @@ $(document).ready(function(){
        type_approval = true
     })
 
-    $(document).off('click', '#imme-defer-btn').on('click', '#imme-defer-btn', function(event){
+    $('#pendingModal').off('click', '#imme-defer-btn').on('click', '#imme-defer-btn', function(event){
         defaultMyModal.show()
         console.log('here')
         $('#modal-body-incoming').text('Are you sure you want to defer this?')
@@ -879,7 +978,8 @@ $(document).ready(function(){
 
     // imme-defer-btn
 
-    $('#yes-modal-btn-incoming').off('click', '#yes-modal-btn-incoming').on('click' , function(event){
+    $('#myModal-incoming').off('click', '#yes-modal-btn-incoming').on('click', '#yes-modal-btn-incoming', function(event){
+        console.log(883)
         let data = {}
         if($('#imme-approval-btn').css('display') === 'flex'){
             data = {
@@ -994,7 +1094,7 @@ $(document).ready(function(){
         }
     })
 
-    $(document).on('click' , '.pre-emp-text' , function(event){
+    $('#pendingModal').on('click' , '.pre-emp-text' , function(event){
         console.log('here')
         var originalString = event.target.textContent;
         // Using substring
@@ -1078,13 +1178,14 @@ $(document).ready(function(){
         // right-sub-div-b-1
     })
     
-    $(document).on('change' , '#select-response-status' , function(event){
+    $('#pendingModal').off('change', '#select-response-status').on('change', '#select-response-status', function(event) {
         var selectedValue = $(this).val();
         console.log(selectedValue)
         
         $('#right-sub-div-c').css('display' , 'flex')
         document.getElementById('right-sub-div-c').scrollIntoView({ behavior: 'smooth' });
 
+        $('#approval-form').css('display','flex')
         if (selectedValue === 'Approved') {
             $('#approval-form').css('height','650px')
 
@@ -1211,10 +1312,8 @@ $(document).ready(function(){
 
     // sensitive case
     
-    $(document).off('click', '.sensitive-case-btn').on('click', '.sensitive-case-btn', function(event){
-        //reset the the buttons in modal after the previous transaction
-        console.log("den")
-
+    $('.incoming-container').off('click', '.sensitive-case-btn').on('click', '.sensitive-case-btn', function(event){
+        //reset the the buttons in modal after the previous 
         $('#ok-modal-btn-incoming').text('OK')
         $('#yes-modal-btn-incoming').css('display', 'none') 
 
@@ -1232,6 +1331,7 @@ $(document).ready(function(){
 
         defaultMyModal.show()
     })
+
 
     $('#ok-modal-btn-incoming').off('click', '#ok-modal-btn-incoming').on('click' , function(event){
         if($('#ok-modal-btn-incoming').text() === 'Close'){
@@ -1271,7 +1371,6 @@ $(document).ready(function(){
                             .css('color', 'lightgreen')
                             .removeClass('fa-solid fa-lock')
                             .addClass('fa-solid fa-lock-open');
-                    
                         $('.pencil-btn').eq(sensitive_case_btn_index)
                             .css('pointer-events', 'auto')
                             .css('opacity', '1');
@@ -1331,5 +1430,27 @@ $(document).ready(function(){
          })
     });
 
-    
+    $('#pendingModal').off('click', '#refer-again-btn').on('click', '#refer-again-btn', function(event) {
+        // close yung interdept status
+        $('#right-sub-div-e').css('display' , 'none')
+        $('#select-response-status').css('pointer-events' , 'auto')
+        $('#select-response-status').css('background' , 'transparent')
+        $('#select-response-status option:first').text('Select');
+
+        // enable yung status choices ulit
+        // get the time spent ng unang dept, i add sa current main timer.
+        rejection_data['action'] = "Add"
+        console.log(rejection_data)
+
+        $.ajax({
+            url: '../SDN/reject_interdept.php',
+            method: "POST", 
+            data:rejection_data,
+            // dataType : 'json', 
+            success: function(response){
+                refer_again_bool = true;
+                // console.log(response)
+            }
+        })
+    })
 })

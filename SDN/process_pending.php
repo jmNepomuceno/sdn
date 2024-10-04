@@ -116,7 +116,7 @@
     $selected_response = "Select";
     $select_style = "pointer-events:auto; background: none;";
 
-    if($response[0]['status_interdept'] != '' || $response[0]['status_interdept'] != null){
+    if($response[0]['status_interdept'] != '' || $response[0]['status_interdept'] != null ){
         $pat_status = $response[0]['status'] . " - " .$response[0]['status_interdept'] . ": Interdept";
         $pat_status = "Interdept: " . $response[0]['status_interdept'];
 
@@ -293,6 +293,7 @@
                 <div class="int-dept-btn-div-v2">
                     <button id="cancel-btn" >Cancel</button>
                     <button id="final-approve-btn">Proceed to Approval</button>
+                    <button id="refer-again-btn" style="display:none"> Refer Again </button>
                 </div>
             </div>
         </div>

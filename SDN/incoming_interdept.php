@@ -46,7 +46,7 @@
     $_SESSION['running_hpercode'] = "";
     $_SESSION['running_index'] = null;
     
-    $arr = [$_SESSION['running_timer'] , $_SESSION['running_bool'] , $_SESSION['running_startTime'] , $_SESSION['running_hpercode'] , $_SESSION['running_index']];
+    $arr = [$_SESSION['running_timer'] , $_SESSION['running_bool'] , $_SESSION['running_startTime'] , $_SESSION['running_hpercode'] , $_SESSION['running_index'] , $pause_time];
 
     $response = json_encode($arr);
     echo $response;

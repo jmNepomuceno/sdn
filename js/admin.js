@@ -4,6 +4,13 @@ $(document).ready(function(){
   
   // myModal.show()
 
+  const stopSound = () =>{
+    let audio = document.getElementById("notif-sound")
+    audio.pause;
+    audio.muted = true;
+    audio.currentTime = 0;
+  }
+
   let intervalHistoryLog;
   let inactivityTimer;
   let userIsActive = true;
