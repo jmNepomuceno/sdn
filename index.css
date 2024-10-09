@@ -172,7 +172,7 @@
 
 }
 
-.container .main-content .glass-div .query-signin-div label{
+.container .main-content .glass-div .query-signin-div #query-signin-txt{
     margin-right:5%;
     font-size: 1rem;
     cursor: pointer;
@@ -180,12 +180,12 @@
     opacity: 0.7;
 }
 
-.container .main-content .glass-div .query-signin-div label span{
+.container .main-content .glass-div .query-signin-div #query-signin-txt #sign-up-txt{
     /* color:#597E52; */
     font-weight: 300;
 }
 
-.container .main-content .glass-div .query-signin-div span:hover{
+.container .main-content .glass-div .query-signin-div #sign-up-txt:hover{
     text-decoration: underline;
     opacity: 1;
 }

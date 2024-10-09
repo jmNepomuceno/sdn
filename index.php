@@ -299,7 +299,7 @@
                 </form>
                 
                 <div class="query-signin-div">
-                    <label for="" id="query-signin-txt">No account yet? <span>Sign up</span></label>
+                    <span id="query-signin-txt">No account yet? <span id="sign-up-txt">Sign up</span></span>
                 </div>
             </div>
         </div>
@@ -325,17 +325,17 @@
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
 
                 <div class="reg-form-divs" id="reg-form-divs-1">
-                    <label for="" class="reg-labels">Hospital Name<span>*</span></label>
-                    <input id="sdn-hospital-name" type="text" class="reg-inputs form-control" required autocomplete="off">
+                    <label for="sdn-hospital-name" class="reg-labels">Hospital Name<span>*</span></label>
+                    <input id="sdn-hospital-name"  type="text" class="reg-inputs form-control" required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs" id="auth-form-divs-1">
-                    <label for="" class="reg-labels">Hospital Code<span>*</span></label>
+                    <label for="sdn-hospital-code" class="reg-labels">Hospital Code<span>*</span></label>
                     <input id="sdn-hospital-code" type="number" class="reg-inputs form-control" required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Region<span>*</span></label>
+                    <label for="sdn-region-select" class="reg-labels">Address: Region<span>*</span></label>
                     <select id="sdn-region-select" class="reg-inputs form-control" name="region" required autocomplete="off" style="cursor:pointer;" onchange="getLocations('region' , 'sdn-region')">
                         <option value="" class="">Select</option>
                         <?php 
@@ -348,63 +348,63 @@
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Province<span>*</span></label>
+                    <label for="sdn-province-select" class="reg-labels">Address: Province<span>*</span></label>
                     <select id="sdn-province-select" class="reg-inputs form-control" name="province" required autocomplete="off" onchange="getLocations('province' , 'sdn-province')">
                         <option value="" class="">Select</option>
                     </select>
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Municipality<span>*</span></label>
+                    <label for="sdn-city-select" class="reg-labels">Address: Municipality<span>*</span></label>
                     <select id="sdn-city-select" class="reg-inputs form-control" name="city" required autocomplete="off" onchange="getLocations('city', 'sdn-city')">
                         <option value="" class="">Select</option>
                     </select>
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Address: Barangay<span>*</span></label>
+                    <label for="sdn-brgy-select" class="reg-labels">Address: Barangay<span>*</span></label>
                     <select id="sdn-brgy-select" class="reg-inputs form-control" name="brgy" required autocomplete="off">
                         <option value="" class="">Select</option>
                     </select>
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Zip Code<span>*</span></label>
+                    <label for="sdn-zip-code" class="reg-labels">Zip Code<span>*</span></label>
                     <input id="sdn-zip-code" type="number" class="reg-inputs form-control" required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Email Address<span>*</span></label>
+                    <label for="sdn-email-address" class="reg-labels">Email Address<span>*</span></label>
                     <input id="sdn-email-address" type="email" class="reg-inputs form-control"  required autocomplete="off">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Landline No.<span>*</span></label>
+                    <label for="sdn-landline-no" class="reg-labels">Hospital Landline No.<span>*</span></label>
                     <input id="sdn-landline-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="999-9999">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Mobile No.<span>*</span></label>
+                    <label for="sdn-hospital-mobile-no" class="reg-labels">Hospital Mobile No.<span>*</span></label>
                     <input id="sdn-hospital-mobile-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="9999-999-9999">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Director<span>*</span></label>
+                    <label for="sdn-hospital-director" class="reg-labels">Hospital Director<span>*</span></label>
                     <input id="sdn-hospital-director" type="text" class="reg-inputs form-control" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Hospital Director Mobile No.<span>*</span></label>
+                    <label for="sdn-hospital-director-mobile-no" class="reg-labels">Hospital Director Mobile No.<span>*</span></label>
                     <input id="sdn-hospital-director-mobile-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="9999-999-9999">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Point Person<span>*</span></label>
+                    <label for="sdn-point-person" class="reg-labels">Point Person<span>*</span></label>
                     <input id="sdn-point-person" type="text" class="reg-inputs form-control" required autocomplete="off" onkeydown="return /[a-zA-Z\s.,-]/i.test(event.key)">
                 </div>
 
                 <div class="reg-form-divs">
-                    <label for="" class="reg-labels">Point Person Mobile No.<span>*</span></label>
+                    <label for="sdn-point-person-mobile-no" class="reg-labels">Point Person Mobile No.<span>*</span></label>
                     <input id="sdn-point-person-mobile-no" type="text" class="reg-inputs form-control" required autocomplete="off" placeholder="9999-999-9999">
                 </div>
 
@@ -418,47 +418,47 @@
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['_csrf_token']; ?>">
                             
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Hospital Code<span>*</span></label>
+                    <label for="sdn-autho-hospital-code-id" class="reg-labels">Hospital Code<span>*</span></label>
                     <input id="sdn-autho-hospital-code-id" type="number" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Cipher Key<span>*</span></label>
+                    <label for="sdn-autho-cipher-key-id" class="reg-labels">Cipher Key<span>*</span></label>
                     <input id="sdn-autho-cipher-key-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Last Name<span>*</span></label>
+                    <label for="sdn-autho-last-name-id" class="reg-labels">Last Name<span>*</span></label>
                     <input id="sdn-autho-last-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">First Name<span>*</span></label>
+                    <label for="sdn-autho-first-name-id" class="reg-labels">First Name<span>*</span></label>
                     <input id="sdn-autho-first-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Middle Name<span>*</span></label>
+                    <label for="sdn-autho-middle-name-id" class="reg-labels">Middle Name<span>*</span></label>
                     <input id="sdn-autho-middle-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Extension Name</label>
+                    <label for="sdn-autho-ext-name-id" class="reg-labels">Extension Name</label>
                     <input id="sdn-autho-ext-name-id" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Username<span>*</span></label>
+                    <label for="sdn-autho-username" class="reg-labels">Username<span>*</span></label>
                     <input id="sdn-autho-username" type="text" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Password<span>*</span></label>
+                    <label for="sdn-autho-password" class="reg-labels">Password<span>*</span></label>
                     <input id="sdn-autho-password" type="password" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
                 <div class="autho-form-divs">
-                    <label for="" class="reg-labels">Confirm Password<span>*</span></label>
+                    <label for="sdn-autho-confirm-password" class="reg-labels">Confirm Password<span>*</span></label>
                     <input id="sdn-autho-confirm-password" type="password" class="reg-inputs form-control" autocomplete="off">
                 </div>
 
@@ -512,7 +512,7 @@
 
             <div id="resend-otp-div">
                 <button id="resend-otp-btn">Resend OTP</button>
-                <label id="resend-otp-timer">00:00</label>
+                <span id="resend-otp-timer">00:00</span>
             </div>
 
             <div id="otp-verify-div">
@@ -604,7 +604,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
 
-
     <script src="./index.js?v=<?php echo time(); ?>"></script>
     <script src="./js/location.js?v=<?php echo time(); ?>"></script>
     <script src="./js/sdn_reg.js?v=<?php echo time(); ?>"></script>
@@ -612,11 +611,78 @@
     <script src="./js/sdn_autho.js?v=<?php echo time(); ?>"></script>
     <script src="./js/resend_otp.js?v=<?php echo time(); ?>"></script>
     <script src="./js/closed_otp.js?v=<?php echo time(); ?>"></script>
-    
+
+    <script src="https://rawgit.com/mrdoob/stats.js/r16/build/stats.min.js"></script>
     <script type="text/javascript">
-        particlesJS("particles-js", {"particles":{"number":{"value":6,"density":{"enable":true,"value_area":800}},"color":{"value":"#4F6F52"},"shape":{"type":"polygon","stroke":{"width":0,"color":"#000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.3,"random":true,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":160,"random":false,"anim":{"enable":true,"speed":10,"size_min":40,"sync":false}},"line_linked":{"enable":false,"distance":200,"color":"#ffffff","opacity":1,"width":2},"move":{"enable":true,"speed":8,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":false,"mode":"grab"},"onclick":{"enable":false,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});
-        var count_particles, stats, update; stats = new stats; 
-        stats.setMode(0); stats.domElement.style.position = 'absolute'; stats.domElement.style.left = '0px'; stats.domElement.style.top = '0px'; document.body.appendChild(stats.domElement); count_particles = document.querySelector('.js-count-particles'); update = function() { stats.begin(); stats.end(); if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) { count_particles.innerText = window.pJSDom[0].pJS.particles.array.length; } requestAnimationFrame(update); }; requestAnimationFrame(update);;
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {"value": 6, "density": {"enable": true, "value_area": 800}},
+                "color": {"value": "#4F6F52"},
+                "shape": {
+                    "type": "polygon",
+                    "stroke": {"width": 0, "color": "#000"},
+                    "polygon": {"nb_sides": 5},
+                    "image": {"src": "img/github.svg", "width": 100, "height": 100}
+                },
+                "opacity": {
+                    "value": 0.3,
+                    "random": true,
+                    "anim": {"enable": false, "speed": 1, "opacity_min": 0.1, "sync": false}
+                },
+                "size": {
+                    "value": 160,
+                    "random": false,
+                    "anim": {"enable": true, "speed": 10, "size_min": 40, "sync": false}
+                },
+                "line_linked": {"enable": false, "distance": 200, "color": "#ffffff", "opacity": 1, "width": 2},
+                "move": {
+                    "enable": true,
+                    "speed": 8,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {"enable": false, "rotateX": 600, "rotateY": 1200}
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {"onhover": {"enable": false, "mode": "grab"}, "onclick": {"enable": false, "mode": "push"}, "resize": true},
+                "modes": {
+                    "grab": {"distance": 400, "line_linked": {"opacity": 1}},
+                    "bubble": {"distance": 400, "size": 40, "duration": 2, "opacity": 8, "speed": 3},
+                    "repulse": {"distance": 200, "duration": 0.4},
+                    "push": {"particles_nb": 4},
+                    "remove": {"particles_nb": 2}
+                }
+            },
+            "retina_detect": true
+        });
+
+        var count_particles, stats, update;
+        
+        // Correct initialization of Stats object
+        stats = new Stats(); 
+        stats.setMode(0);
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        document.body.appendChild(stats.domElement);
+        document.body.removeChild(stats.domElement);
+        count_particles = document.querySelector('.js-count-particles');
+
+        update = function() {
+            stats.begin();
+            stats.end();
+            if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+                count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+            }
+            requestAnimationFrame(update);
+        };
+
+        requestAnimationFrame(update);
     </script>
+
 </body>
 </html>
